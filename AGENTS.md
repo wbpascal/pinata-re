@@ -146,3 +146,17 @@ The files here are big: `decomp.c` 15 MB with lines up to 6,700 chars, `strings.
 6. **Progress log:** keep `docs/plan/status/<ID>.md` current (done / in progress / remaining, with handler
    lists). A later session must be able to resume from it alone. Update it before you run low on context.
 7. Do not modify the binaries, `re-data/exports/*/decomp.c`, or another item's output files.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live in this repo's GitHub Issues (`gh` CLI); the `docs/plan/` work items are separate and keep their own workflow. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root, created lazily. See `docs/agents/domain.md`.
