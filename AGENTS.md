@@ -1,5 +1,9 @@
 # Fiesta server reconstruction: shared context for every session
 
+## Working on the Elixir server (`server/`)
+
+For work on the Elixir server read `server/AGENTS.md` first. The repository map, the tools and the context budget below apply to that work; the conventions for work items do not.
+
 The source code of our server is lost; only binaries remain. We are reconstructing a behavioural
 specification (protocol + pseudocode) from those binaries, split into work items. If you were given a
 plan file (`docs/plan/items/<ID>.md`), follow it. This file holds the shared conventions.
