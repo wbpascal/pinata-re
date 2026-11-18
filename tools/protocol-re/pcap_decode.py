@@ -1,6 +1,7 @@
 """Decode Fiesta client<->server traffic from a .pcap/.pcapng capture and check it against docs/protocol.
 
 usage: python3 -I pcap_decode.py <capture.pcapng|.pcap> [--port 9010=login ...] [--show-secrets] [--out DIR]
+       python3 -I pcap_decode.py --transcript DIR <capture> ...   # only <name>.txt per capture: ADR 0008 transcript, passwords not masked
        python3 -I pcap_decode.py --selftest
 outputs: <capture>.decoded.txt, <capture>.report.md, <capture>.json   (next to the capture, or in --out)
 
@@ -796,6 +797,29 @@ def to_json(res, rows):
                 report=rows)
 
 
+def transcript_problems(res):
+    """reasons why the client-facing streams of res cannot give an exact transcript (ADR 0008)"""
+    out = []
+    for s in res["streams"]:
+        if s["kind"] == "link":
+            continue
+        out += [f"{s['id']}: {d}: gap of {n} bytes at offset {o}" for d in (C2S, S2C) for o, n in s["gaps"][d]]
+        out += [f"{s['id']}: {x}" for x in s["problems"] if "retransmitted/duplicate" not in x]
+        out += [f"{s['id']}: {x}" for x in s["decrypt"] if "brute-forced" in x]
+    return out
+
+
+def transcript_lines(res):
+    """ADR 0008 transcript, format in server/docs/technical/testing.md. res must be decoded with show_secrets=True."""
+    out = [f"# transcript of {os.path.basename(res['capture'])} (format: server/docs/technical/testing.md)",
+           f"# start {res['t0']:.6f}"]
+    for p in res["packets"]:
+        if p["server"] != "link":
+            out.append(f"{p['abs_time']:.6f} {p['stream']} {'C' if p['dir'] == C2S else 'S'} "
+                       f"0x{p['op']:04X} {p['payload'].hex() or '-'}")
+    return out
+
+
 def run(path, ports, show_secrets=False, out_dir=None):
     res = decode_capture(path, ports, show_secrets)
     rows = build_report(res)
@@ -997,6 +1021,16 @@ def selftest():
         assert j["packets"][3]["op"] == "0x0C5A" and b"secret".hex() not in json.dumps(j)
         res2 = decode_capture(path, default_ports(), show_secrets=True)
         assert dict(res2["packets"][3]["fields"])["sPassword"] == "secret"
+        tl = transcript_lines(res2)
+        assert tl[0].startswith("# transcript of ") and tl[1].startswith("# start "), tl[:2]
+        assert all(re.fullmatch(r"\d+\.\d{6} (login|wm|zone)#\d+ [CS] 0x[0-9A-F]{4} ([0-9a-f]+|-)", x) for x in tl[2:])
+        nc = sum(p["server"] != "link" for p in res2["packets"])
+        assert len(tl) - 2 == nc < len(res2["packets"])
+        p0 = res2["packets"][0]
+        assert tl[2] == f"{p0['abs_time']:.6f} login#1 S 0x0807 " + p0["payload"].hex(), tl[2]
+        pw = [x for x in tl if b"secret".hex() in x]
+        assert pw and all(" C 0x0C5A " in x for x in pw)
+        assert any("brute-forced" in x for x in transcript_problems(res2))
     # gap handling: drop the first half of the long 0x0C0A -> report gap, resync on 0x0C09
     path = os.path.join(tmp, "gap.pcap")
     with open(path, "wb") as f:
@@ -1019,7 +1053,7 @@ def selftest():
 def main(argv):
     if "--selftest" in argv:
         return selftest()
-    ports, show, out, files, i = default_ports(), False, None, [], 0
+    ports, show, out, files, i, tdir = default_ports(), False, None, [], 0, None
     while i < len(argv):
         a = argv[i]
         if a == "--port":
@@ -1031,15 +1065,34 @@ def main(argv):
             show = True
         elif a == "--out":
             out, i = argv[i + 1], i + 1
+        elif a == "--transcript":
+            tdir, i = argv[i + 1], i + 1
         else:
             files.append(a)
         i += 1
     if not files:
         print(__doc__)
         return 1
+    rc = 0
     for path in files:
+        if tdir is not None:
+            res = decode_capture(path, ports, True)
+            bad = transcript_problems(res)
+            if bad:
+                print(f"{path}: no transcript:", file=sys.stderr)
+                print("\n".join("  " + b for b in bad), file=sys.stderr)
+                rc = 1
+                continue
+            lines = transcript_lines(res)
+            os.makedirs(tdir, exist_ok=True)
+            target = os.path.join(tdir, os.path.splitext(os.path.basename(path))[0] + ".txt")
+            with open(target, "w", encoding="ascii", newline="\n") as f:
+                f.write("\n".join(lines) + "\n")
+            print(f"{path}: {len(lines) - 2} packets -> {target}")
+            continue
         res, rows, stem = run(path, ports, show, out)
         print(f"{path}: {len(res['packets'])} packets in {len(res['streams'])} streams -> {stem}.decoded.txt/.report.md/.json")
+    return rc
 
 
 if __name__ == "__main__":
