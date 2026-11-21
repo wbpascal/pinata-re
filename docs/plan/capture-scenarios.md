@@ -1,4 +1,4 @@
-# Capture scenarios 14–52 (X02; 45–50 added by X05, 51–52 by X07)
+# Capture scenarios 14–54 (X02; 45–50 added by X05, 51–52 by X07, 53–54 by X09)
 
 Continues the 13 scenarios of `docs/plan/capture-guide.md`. Those gave seven captures (login, idle, walk and
 portals, shop and storage, combat with `&levelup` / `&linkto`); everything else in the reconstruction is read
@@ -8,7 +8,7 @@ values they give. A capture that differs from the prediction is a finding; P02 v
 (`docs/plan/items/P02.md`), then X02 is re-run to update the ratings.
 
 State of this file: scenarios, GM setups and boundary values (X02 part 8); the SQL of the database setups
-**S1–S21** (§8; S17–S19 added by X05, S20–S21 by X07) and the table / config experiments **X1–X7** (§9) (X02 part 9; §6 is the index). The SQL was
+**S1–S24** (§8; S17–S19 added by X05, S20–S21 by X07, S22–S24 by X09) and the table / config experiments **X1–X7** (§9) (X02 part 9; §6 is the index). The SQL was
 written from stored-procedure source and has not been run against a database: read §8's first paragraph.
 
 State after capture batch 3 (X05): scenarios 14, 21 (with S13, S16, X3) and 37 are recorded and carry a "Result
@@ -29,7 +29,10 @@ State after capture batch 5 (X09): scenarios 45 (`s45`), 46 (`s46`) and 52 (`s52
 and their steps and predictions carry the fixes (46: the client's money and soul-stone refusals, the first empty
 cell; 45: four hits, 970 units, three aborts by a step, no `0x2022`; 52: a changed row, not an appended byte, the
 decrypted buffer, the renamed character started). Scenario 39 has a notes template and a run kit but no capture.
-The map from each open thing of batch 5 to its scenario is `docs/knowledge/X09.md`.
+What batch 5 left open is in scenarios **53** (items: a stack that may not move back, the logout) and **54** (shared
+names, the emote keys, a refused rename), placed after 52, before 41, setups **S22–S24**, test-client cases
+**T26–T28** and scenario 39 as written; the map from each open thing of batch 5 to its scenario is
+`docs/knowledge/X09.md` §2.
 
 ## 1. Conventions
 
@@ -1490,6 +1493,98 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   Of the "Disproved by" events only (2)'s first one occurred (`0x1412 {0xD0}` for the name in use; `sp_helpindex`
   showed no unique `sID` index, so this is the case the step named, not a contradiction of the unique-index rule).
 
+### 53. Items VI: what `s46` left open: a stack that may not move back, and the logout (added by X09)
+
+- **Claims:** Z04 §4.1 with its correction (`sp_ItemReloc` @ FUN_00536780: capture-validation §26.2's branch table;
+  `docs/knowledge/X05.md`), `ItemBelongAttribute::iba_CanInvenReloc` @ FUN_00648910 → `CItemAuthorityBase::IA_CanInvenReloc`
+  @ FUN_00632280 (Z30 §9, D08's matrix after `CItemAuthorityBase` @ FUN_0042efb0: `IA_ChrBelong` allows 6 → 9 but not
+  9 → 6, a character-bound item may leave the account storage but not enter it); Z05 §4 (`0x3428` /
+  `0x3429`); capture-validation §23.3 (the quit's saves, which `s46` did not record).
+- **Why a DB setup:** "may move back" is computed for the **target** stack (`iba_CanInvenReloc(target, to → from)`)
+  from its `ItemInfo.BT_Inx` row of `BelongTypeInfo.shn` alone: two stacks of one item id have the same answer, so the
+  source must already sit in a box the item may not enter. Only the DB puts it there (S22).
+- **Setup:** one client, GM character `<Char>` (S1); `&makeitem Q_HpPotion10 -l50` and `-l40` and `-l20` (Warrior's HP
+  Potion (10~19), item 3203, `MaxLot` 50, `BT_Inx` 6 = NoDrop + NoStorage + NoTrade + NoSell: character-bound, read with
+  `shn.py` from `ItemInfo.shn` and `BelongTypeInfo.shn`); log out to the login screen; **S22** moves the x20 into
+  account-storage cell 0 (or the first free cell its list shows); log in. The run kit `tools/capture/46` fits
+  (`snapshot` before the login and after the logout); start the capture before the login and stop it only after
+  the logout (step 4).
+- **Steps and predictions:**
+  (1) **Target full, may not move back.** At the storage keeper (pages `0x3C08` as at every open, capture-validation
+  §20.1), drag the storage x20 onto the inventory x50: C `0x300B {from 0x18nn (type 6), to 0x24nn (type 9)}` → Z →
+  C **`0x300C {0x24A}`** "you cannot transfer an item that has been bound to yourself." at once, **no DB request**, no
+  `0x3001`. If the storage page does not show the x20 at all, the zone or the client filtered it at load: note it and
+  stop (not predicted).
+  (2) **Inventory full, may not move back.** `&makeitem` until the inventory has no empty cell (the last one gets no
+  answer, Z11-B12); drag the storage x20 onto the inventory x40: **`0x300C {0x20A}`** (client FUN_004ab910: every
+  code other than `0x241` / `0x24A` is "Failed to move the item."), no DB request.
+  (3) **The `irm_Move` branch.** Drop or sell one filler item (one cell empty, note which), drag the storage x20 onto
+  the x40 again: **no** `0x3431` and no merge: Z → D `0x3428 NC_ITEMDB_RELOC_REQ {ref, lock, ownerA = userNo (storage),
+  ownerB = charNo, the x20's key → the first empty unlocked inventory cell, …}` (the layout of capture-validation
+  §20.1 with the owners swapped) → `0x3429` → `0x3001` storage cell emptied, `0x3001` the **empty** cell with lot 20,
+  `0x300C {0x241}`; the x40 stays 40; a GameLog row for the move (§20.1 had `0x044C` for inventory → storage; the
+  code of this direction is not predicted). "First empty" = the lowest free cell (as `ii_RepurchaseAll`'s buy-back,
+  §3.46 result 3).
+  (4) **The logout `s46` did not record.** Quit to the login screen with the capture running: `0x1071`, the client's
+  10-s countdown, `0x0C18 {0}`, the zone's saves (StoreType 4, 7, 4, then 9 + `0x0C31` about 13 s after the
+  `0x1071`, or one save when the zone handles the `0x0C18` before the WM's `0x0C19`; §23.3) and **no** item request:
+  the "after logout" snapshot shows the cells of step 3 (the item moves were written when they happened, D03 check 3).
+- **Disproved by:** (1) a `0x342B` exchange or a `0x3431` for the full target, or `0x300C {0x241}`; (2) any DB request
+  or another code; (3) a `0x3431` / `0x342E`, the x20 landing in another cell than the lowest empty one, or the x40
+  changing; (4) an item DB request in the logout, or a save pattern §23.3 does not list.
+- If the 2016 client refuses the drags itself (no `0x300B` in steps 1–3; its drag checks were not read), use
+  test-client case T28.
+
+### 54. Shared names, the emote keys and a refused rename: what `s45` / `s52` left open (added by X09)
+
+- **Claims:** W04 §2.1 (whisper; `Clients_FindByCharName` FUN_00437990: the session list from its head, skips
+  sessions without CHARDATA, lower-cases A–Z of both names, first match wins, no state check), W02 §2.1 (party
+  invite: `CWMClientSessionManager::GetSession(Name5)` FUN_004378a0 *(pdb2016)*, the same list, an **exact** compare,
+  and it returns the first equal name only when that session's first field is 1, else null without looking further), Z11 §4.5 (`&kickout`: `ShineObjectManager::som_FindPlayer`
+  FUN_00550430 runs `ShineCharIDFinder::lid_Call` FUN_00550180 over `som_Player` and stops at the first object whose
+  20-byte name is **equal**, case-sensitive, this zone only); Z02 §4 (`0x2022` → `0x2023`, `0x2020` rows); D02 §3.5
+  (`0x1412 {0xD1}`); P02-B42 (capture-validation §28.3).
+- **Setup:** three clients on three accounts (one PC is enough, as `s45`): A (GM, S1), B and C, all on one map of
+  **one** zone process (the other-zone kick is broken, Z11-B6); with all three at the login screen, **S23** gives C
+  B's name (so the twins are "B" in the steps). Log in B first, then C, then A. Run kit: `tools/capture/52`
+  (`snapshot`, `collect` with the server logs) or `45` for steps 1–2.
+- **Steps and predictions:**
+  (1) **Emote pause / resume (key function 0x6F).** B dances (Dance 2, `0x2020 {23}`), A beside it. In the client's
+  key-setting window, find the entry whose key reaches function 0x6F (client FUN_00494890 → FUN_00490a00; the
+  2016 `ressystem/KeyMapping.mco` holds the bindings, its index → function map was not read) and press it during the
+  dance: C → Z **`0x2022 NC_ACT_EMOTICONSTOP_CMD {23, frame}`** (FUN_0049e580, frame = the playing frame × the scale
+  `_DAT_0096fd40` *(inferred)*) → A **`0x2023 {B's handle, 23, frame}`**, nothing to B (capture-validation §27.3); B's
+  dance freezes on both screens. Press it again: **`0x2020 {23}`** (resume *(inferred)*) → `0x2021` to B and A. Then
+  let C walk into sight: C's brief info of B (`0x1C06`) carries emote 23 with the frozen frame (Z02 §4) *(inferred)*.
+  Note the key's name. No key found: test-client case T19.
+  (2) **`0x2020 {6}`.** No 2016 client path sends it: the Sit action sends row 7 (`s14`, `s45`, capture-validation
+  §27.3) and `EmotionFilter.shn` (the chat words that play an emote) has `/stand` (row 7's action) but no `/sit`. B
+  types `/stand` in the chat, sitting and standing: note what goes on the wire (not predicted: the filter's path to a
+  packet is not traced). `0x2020 {6}` itself: test-client case T27.
+  (3) **Whisper to the shared name.** A whispers "B": W **`0x200D`** to **one** twin only (the first session of the
+  WM's list with that name), A `0x200F` with that twin's stored spelling; the other gets nothing. Which one (the
+  earlier login B or the later C) shows the list order, not read in the WM *(inferred: one of the two, the same one
+  every time)*. A whispers the name in lower case: the same twin (the WM lower-cases both names). C logs out and in
+  again; A whispers once more: note who gets it (order change = the list is ordered by login).
+  (4) **Party invite to the shared name.** A `0x3802 {target "B"}`: the invitation `0x3803 NC_PARTY_JOINPROPOSE_REQ {mastername A}`
+  reaches the twin step 3 found (the same list from its head) *(inferred)*, nothing to the other; that twin declines
+  (`0x3805`, W02 §2.3). Then `0x3802 {"b"}` (lower case): `0x3807 {0x4C5}` "You must select a character first."
+  (exact compare, unlike the whisper).
+  (5) **`&kickout` the shared name.** A `&kickout B`: the zone kicks the **first twin of `som_Player`** (Z → W `0x0C1A
+  {…, usrregnum = that twin's user number, 0x68B}` → that client `0x0C17 {0x68B}`, A "B is banned"); the other stays.
+  Which one is the zone's list order (not read), not necessarily the WM's of step 3. Wait 15 s (the kicked object is
+  freed by `sp_Schedule_Kickout` after 10 s, capture-validation §23.3) and `&kickout B` again: the other twin. Then
+  `&kickout b` (lower case) with a twin logged in again: the zone compares exactly, so nobody is found here and the
+  ring `0x1068` comes back as "… is not in game" with the name read one byte early (Z11-B6, capture-validation §28.5).
+  (6) **Rename onto a taken name with a unique index (`0x1412 {0xD1}`).** Restore S23 (the twins gone), install S20
+  and **S24** (a unique index on `tCharacter.sID`), rename a `-` character (S20's prep, §3.52 step 2) to A's name:
+  W → D `0x1411` → **`0x1412 {0xD1}`** → C `0x1410 {slot, name, 0xD1}` "The name cannot be used." (the `UPDATE` fails,
+  `@@ERROR` ≠ 0, D02 §3.5); the DB row and the WM's name unchanged; a free name then `0xD0`. Restore S24 and S20.
+- **Disproved by:** (1) a `0x2023` to B, or a key that sends `0x2022` but A gets nothing; (3) a whisper delivered to
+  both twins, to neither, or `0x200E {0x0F69}`; (4) the invitation reaching the other twin than step 3's (note it: the two
+  walks would then differ, not read), or a lower-case invitation that arrives; (5) both twins kicked by one command, or
+  a lower-case `&kickout` that kicks; (6) `0x1412 {0xD0}` with the index in place, or the WM storing the refused name.
+
 ### 41. Test client: crafted client packets
 
 These need a scripted client (framing and XOR-499 cipher of `docs/protocol/README.md`; a replay of a captured
@@ -1522,6 +1617,9 @@ login plus one crafted packet is enough). One connection per case: several end i
 | T23 | Z03 §9.1, Z23 §4, Z23-B8 / B9 (added by X07: the 2016 client refused each first, capture-validation §24.3; use with scenario 51 step 1) | in game, Slice and Dice [01] (skill 0) learned with 1 damage point, no Skill Reset Scroll: (a) `0x4811 {0, plus 0, minus {damage 1}}`; (b) `{0, plus {damage 1}, minus {damage 1}}`; (c) `{0, plus {damage 5}}`; (d) `{0, plus {15, 15, 15, 15}}` (more than the level's points); (e) dead (mode 3, killed by a mob) `{0, plus {sp 1}}`; (f) after `&learnskill 1` and with one scroll: `{1, 0, minus {damage 1}}`; (g) **last test of the session**: `{0xFFFE (no such skill), 0, 0}` | (a) `0x4814 {0, 0x886}`; (b) `{0, 0x889}`; (c) `{0, 0x884}` (1 + 5 > 5); (d) `{0, 0x883}`; (e) `{0xFFFF, 0x882}`; none with a DB request, the client shows "Skill Empower failed." each time; (f) D `0x4812 {…, empower {damage 15}}` → `0x4813 {0x885}` → `0x4814 {1, 0x885}`, then `0x0C1A {A's user number, …, 0x68A}` → `0x0C17 {0x68A}` (Z23-B8); (g) the zone crashes (null `skilldatabox` entry, Z23-B9) | a DB request for (a)–(e); another code; (f) `0x881`; (g) any answer |
 | T24 | Z07 §2.2 / §2.3 (added by X07; complements T10: the 2016 client counts the points and sends nothing it would refuse, capture-validation §24.4) | in game with free stat points left: (a) `0x1062 {0}` without a Stat Reset Scroll; (b) with one scroll `0x1062 {s}` for a stat `s` with no free point in it; (c) two `0x105C {0}` in one segment; (d) dead (mode 3): `0x105C {0}`, then `0x1062 {0}` with a scroll | (a) `0x1067 {0xAC6}`; (b) `0x1067 {0xAC5}`; (c) one D `0x10D1`; `0x1061 {0xAC7}` for the second (free stats locked until `0x10D2`), then `0x105F {0}` for the first; (d) `0x1061 {0xAC7}`; **no reply** to the `0x1062` (Z07 §2.3 original bug); no DB request in (a), (b), (d); no client text for any (`StatPointReqTask`) | a DB request in (a), (b), (d); a second `0x10D1` in (c); a reply to the dead `0x1062` |
 | T25 | Z03 §2.6 (added by X07: **no client path**: the 2016 client export has no `0x243e` literal, and in the 2017 client `GameFrameWork::Assist` @ 0x4c8690 takes the target's last attack target locally and otherwise calls `GameFrameWork::NcBatAssistReq` @ 0x4a2130, an empty function *(pdb2017)*; capture-validation §25.5) | A, B and a mob; B targets the mob, the mob fights A: `0x243E {tanker = B's handle}`; `{tanker = the mob's handle}`; `{tanker = 0xFFFE}` (no object); B without a target: `{B's handle}` | `0x243F NC_BAT_ASSIST_ACK {target = the mob's handle}`; `{A's handle}` (the mob's current target); nothing; `{0xFFFF}`; the server changes no target (the client would follow with a TARGETTING_REQ) | an answer for the unknown handle; A's target changed by the server |
+| T26 | Z04 §2.5 (added by X09: the 2016 client refuses a buy-back it cannot pay with its own text 810 500 413, capture-validation §26.4) | at an item merchant (Merchant role "Item" / "Weapon"), after a sale (`0x305C` gives the entry handle `h`) and a purchase that leaves the purse below `SellPrice` × lot: `0x3059 {h}` | `0x305A {0x366C}` "Not enough money to buy the item.", no DB request, the entry stays (`0x305D` absent); the level check comes first (capture-validation §26.4), so use an entry whose `BuyDemandLv` the character meets | a `0x34B9` / `0x34BB`; another code for the money case |
+| T27 | Z02 §4 (added by X09: no 2016 client path sends `0x2020 {6}`, §3.54 step 2) | B in A's sight: `0x2020 {6}` (`sit`); `0x2020 {31}` (a charged dance, `eActionType` 2); `0x2020 {200}` (no row) | `0x2021 {B, 6}` to B and to A (`includeSelf` 1, as for every free row); nothing for 31 and 200 | no `0x2021` for 6; a `0x2021` for 31 or 200 |
+| T28 | Z04 §4.1 / capture-validation §26.2 (added by X09; use only if the 2016 client sent no `0x300B` in scenario 53 steps 1–3) | S22's state, storage open: `0x300B {from = the storage x20, to = the inventory x50}`; inventory full: `{… to the x40}`; one cell free: the same | `0x300C {0x24A}`; `{0x20A}`; `0x3428` into the lowest empty cell → `0x3429` → two `0x3001`, `{0x241}` | as scenario 53 |
 
 ### 42. Races: drop menu, two money pick-ups, link with a dead WM session
 
@@ -1684,6 +1782,9 @@ checked against their `{CALL …}` strings (`bak.py cover`); the "Checked agains
 | S19 | 49 steps 5–7 | a forced insert failure on `tItem` / `tUserMoney` for one owner (added by X05) | §8.20 |
 | S20 | 52 step 2 | the 2016 `p_Char_Rename` on the test DB (added by X07) | §8.21 |
 | S21 | 51 steps 6–7 | a forced failure of the charged stat / empower reset or of an item's destruction for one character (added by X07) | §8.22 |
+| S22 | 53 steps 1–3; T28 | a character-bound stack (item 3203) in the account storage (added by X09) | §8.23 |
+| S23 | 54 steps 3–5 | two characters with one name (added by X09) | §8.24 |
+| S24 | 54 step 6 | a unique index on `tCharacter.sID` (added by X09) | §8.25 |
 | X1 | 39, §5 | drop experiments: limited drop `Num` runs out (V22, Z09-B20); Hunter voucher vs `SNS_DropUp` (V19) | §9.2 |
 | X2 | 15, 31, 39 | party-battle maps, maps without party, instance gates, PK fields | §9.3 (read only) |
 | X3 | 21 step 12 (recorded); 47 step 5 (sell, use, move-merge: §9.4 steps 4–7) | a stack that holds more than the item's `MaxLot`, then a pick-up onto it | §9.4 |
@@ -1820,7 +1921,7 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | **Total** | 2042 | 793 | 225 | 1004 | 18 | 2 | |
 <!-- COVER:end -->
 
-## 8. Database setups (S1–S21)
+## 8. Database setups (S1–S24)
 
 **Run these on the test server only.** They change or delete rows, two of them install a trigger that makes the
 server fail on purpose, and none of them was run: no SQL Server holds these backups yet (`db-backups.md`), so
@@ -2451,6 +2552,79 @@ reaches the Character server's ODBC call instead, the code is the "other failure
 `0x9009` / `0x900A`. While (b) stands, an empower take-back to 0 on every field fails too (`p_Skill_SetPowerAll`):
 do nothing else in that capture. Prediction and disproof: scenario 51 step 6. Not verified: no SQL Server on the
 analysis machine; which of the two codes comes is *(inferred)*.
+
+### 8.23 S22: a character-bound stack in the account storage (added by X09)
+
+The game cannot put it there: `IA_ChrBelong` has no 9 → 6 (D08's `CItemAuthorityBase` matrix), and the 2016 zone
+refuses the deposit with `0x300C {0x24A}` (Z04 §4.1). The setup moves an inventory stack's row instead. Account at
+the login screen (the storage pages are read from the DB at each open, capture-validation §20.1, but the zone holds
+the inventory from `0x1004` on). Account storage = `nStorageType` 6 with `nOwner` = the user number (D03 check 3,
+the `s46` snapshot: `nOwner 103`); inventory = 9.
+
+```sql
+USE w00_Character;
+DECLARE @c int = (SELECT nCharNo FROM tCharacter WHERE sID = N'TestCharA' AND bDeleted = 0);
+DECLARE @u int = (SELECT nUserNo FROM tCharacter WHERE nCharNo = @c);
+SELECT @c AS charNo, @u AS userNo;                                      -- both must be non-NULL
+SELECT i.nItemKey, i.nStorage, o.nOptionType, o.nOptionData             -- the item-3203 stacks: pick the x20
+  FROM tItem i LEFT JOIN tItemOptions o ON o.nItemKey = i.nItemKey
+ WHERE i.nOwner = @c AND i.nStorageType = 9 AND i.nItemID = 3203;
+SELECT nStorage FROM tItem WHERE nOwner = @u AND nStorageType = 6 ORDER BY nStorage;   -- account-storage cells in use
+DECLARE @key bigint = 0;          -- nItemKey of the x20
+DECLARE @cell smallint = 0;       -- a free account-storage cell from the list (a low one: the first page)
+SELECT nItemKey, nOwner, nStorageType, nStorage INTO dbo.X09_save_22 FROM tItem WHERE nItemKey = @key;
+UPDATE tItem SET nOwner = @u, nStorageType = 6, nStorage = @cell WHERE nItemKey = @key;
+-- restore (only if scenario 53 stopped before step 3 moved the stack out; account at the login screen,
+-- the stack's old inventory cell must still be free)
+UPDATE i SET nOwner = s.nOwner, nStorageType = s.nStorageType, nStorage = s.nStorage
+  FROM tItem i JOIN dbo.X09_save_22 s ON s.nItemKey = i.nItemKey;
+DROP TABLE dbo.X09_save_22;
+```
+
+After scenario 53 step 3 the stack is back in the inventory by the game's own `0x3428`: drop the save table only.
+Prediction and disproof: scenario 53. Not verified: no SQL Server on the analysis machine; whether the zone or the
+client filters a bound item out of a storage page at load was not read (scenario 53 step 1 says what to do then).
+
+### 8.24 S23: two characters with one name (added by X09)
+
+The state P02-B42 leaves (capture-validation §28.3: the 2016 `p_Char_Rename` runs only `UPDATE tCharacter SET sID`, and
+the test DB has no unique index on `sID`), made directly. All accounts involved at the login screen: the WM keeps
+the avatar list from world select on (§8.1). Use characters without friends, guild or party: tables that keep a
+copy of the name are not touched.
+
+```sql
+USE w00_Character;
+EXEC sp_helpindex N'dbo.tCharacter';    -- a unique index on sID makes the UPDATE fail: then scenario 54 steps 3-5 cannot run
+DECLARE @b int = (SELECT nCharNo FROM tCharacter WHERE sID = N'TestCharB' AND bDeleted = 0);
+DECLARE @t int = (SELECT nCharNo FROM tCharacter WHERE sID = N'TestCharC' AND bDeleted = 0);
+SELECT @b AS b, @t AS c;                 -- both must be non-NULL and on two different accounts
+SELECT nCharNo, sID INTO dbo.X09_save_23 FROM tCharacter WHERE nCharNo = @t;
+UPDATE tCharacter SET sID = N'TestCharB' WHERE nCharNo = @t;
+-- restore (both accounts at the login screen)
+UPDATE c SET sID = s.sID FROM tCharacter c JOIN dbo.X09_save_23 s ON s.nCharNo = c.nCharNo;
+DROP TABLE dbo.X09_save_23;
+```
+
+Prediction and disproof: scenario 54 steps 3–5. Not verified: no SQL Server on the analysis machine.
+
+### 8.25 S24: a unique index on the character name (added by X09)
+
+Whether the original 2016 database had one is not known (capture-validation §15; the backups come from a
+private-server install). With it, the 2016 `p_Char_Rename` (S20) fails on a taken name and the Character server
+answers `0xD1` (D02 §3.5). Restore S23 first.
+
+```sql
+USE w00_Character;
+SELECT sID, COUNT(*) AS n FROM tCharacter GROUP BY sID HAVING COUNT(*) > 1;   -- must be empty: rename every pair
+    -- first (s52 left one, "Test1235", if its cleanup did not undo it, capture-validation §28.3)
+CREATE UNIQUE NONCLUSTERED INDEX X09_uq_sID ON dbo.tCharacter (sID);
+-- restore
+DROP INDEX X09_uq_sID ON dbo.tCharacter;
+```
+
+The index compares under the column's collation (case-insensitive in a default install *(inferred)*): "B" and "b"
+then count as one name, as the WM's whisper lookup does. Prediction and disproof: scenario 54 step 6. Not verified:
+no SQL Server on the analysis machine.
 
 ## 9. Table and config experiments (X1–X7)
 
