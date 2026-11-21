@@ -1,0 +1,30 @@
+﻿---- 12:30:36.679 52-prep.sql
+Changed database context to 'World00_Character'.
+Msg 50000, Level 16, State 1, Server WIN-VFB0550VC0S\SQLEXPRESS, Line 41
+X37Del must be on account admin, X52B on testaccountB
+---- 12:32:39.063 52-prep.sql
+Changed database context to 'World00_Character'.
+admin has 3 character(s): one slot must be free for X52Tut (step 1)
+characters done: X37Del -> X52-Dash (GM 100, RouN), X52B at RouN (old values in dbo.X52_save)
+---- sp_helpindex tCharacter (step 2: is an index on sID unique?)
+index_name|index_description|index_keys
+----------|-----------------|----------
+PK__tCharacter__2610A626|clustered, unique, primary key located on PRIMARY|nCharNo
+check_name|index_name|is_unique|is_primary_key
+----------|----------|---------|--------------
+proc_name|variant
+---------|-------
+p_Char_Rename before S20|2018 Fixes copy (renames only with an open tCharacterChangeID row)
+proc_name|variant
+---------|-------
+p_Char_Rename after S20|2016: plain UPDATE, nRet = @@ERROR
+nCharNo|nUserNo|nSlotNo|sID|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY
+-------|-------|-------|---|-----------|----------|-----------|-----------
+7|103|2|X52-Dash|100|RouN|5874|6530
+13|104|1|X52B|0|RouN|5950|6530
+open_x_object
+-------------
+X02_save_13a
+X02_save_13b
+X07_save_20
+X52_save

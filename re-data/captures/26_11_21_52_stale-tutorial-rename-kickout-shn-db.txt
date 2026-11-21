@@ -1,0 +1,129 @@
+﻿---- 12:32:39.237 52-snapshot.sql
+Changed database context to 'World00_Character'.
+snapshot|db_time
+--------|-------
+after_prep|12:32:39:143
+nUserNo|nCharNo|nSlotNo|sID|bDeleted|nLevel|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY
+-------|-------|-------|---|--------|------|-----------|----------|-----------|-----------
+103|2|0|Test1235|0|120|100|RouN|5756|8745
+103|5|1|Test2|0|33|100|RouN|5758|8789
+103|7|2|X52-Dash|0|1|100|RouN|5874|6530
+103|3|1|CharCreateTest~2026November15#0|1|1|100|RouN|6888|7045
+103|4|1|Test2~2026November15#0|1|60|100|Eld|12921|13922
+103|6|2|X37Del~2026November15#0|1|1|100|RouN|6888|7045
+103|9|3|X24A~2026November16#0|1|100|100|RouN|6536|9825
+103|11|3|X46A~2026November16#0|1|20|100|RouN|7226|8978
+103|12|3|X52B~2026November21#0|1|1|100|RouN|6888|7045
+104|8|0|X14B|0|1|0|RouN|6431|8801
+104|13|1|X52B|0|1|0|RouN|5950|6530
+104|10|1|X24B~2026November16#0|1|20|100|RouN|6479|9855
+duplicate_name|n
+--------------|-
+no dbo.tTutorialInfo with nCharNo: tutorial state not shown
+proc_name|variant
+---------|-------
+p_Char_Rename|2016 plain UPDATE (S20)
+what|nCharNo|nUserNo|sID|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY|saved
+----|-------|-------|---|-----------|----------|-----------|-----------|-----
+dash|7|103|X37Del|100|RouN|6888|7045|2026-11-21 12:32:38.917
+b|13|104|X52B|0|RouN|6888|7045|2026-11-21 12:32:38.917
+---- 12:41:01.943 52-snapshot.sql
+Changed database context to 'World00_Character'.
+snapshot|db_time
+--------|-------
+after_taken_name|12:41:01:837
+nUserNo|nCharNo|nSlotNo|sID|bDeleted|nLevel|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY
+-------|-------|-------|---|--------|------|-----------|----------|-----------|-----------
+103|2|0|Test1235|0|120|100|RouN|5756|8745
+103|5|1|Test2|0|33|100|RouN|5758|8789
+103|7|2|Test1235|0|1|100|RouN|5874|6530
+103|14|3|X52Tut|0|1|100|RouN|6888|7045
+103|3|1|CharCreateTest~2026November15#0|1|1|100|RouN|6888|7045
+103|4|1|Test2~2026November15#0|1|60|100|Eld|12921|13922
+103|6|2|X37Del~2026November15#0|1|1|100|RouN|6888|7045
+103|9|3|X24A~2026November16#0|1|100|100|RouN|6536|9825
+103|11|3|X46A~2026November16#0|1|20|100|RouN|7226|8978
+103|12|3|X52B~2026November21#0|1|1|100|RouN|6888|7045
+104|8|0|X14B|0|1|0|RouN|6431|8801
+104|13|1|X52B|0|1|0|RouN|5950|6530
+104|10|1|X24B~2026November16#0|1|20|100|RouN|6479|9855
+duplicate_name|n
+--------------|-
+Test1235|2
+no dbo.tTutorialInfo with nCharNo: tutorial state not shown
+proc_name|variant
+---------|-------
+p_Char_Rename|2016 plain UPDATE (S20)
+what|nCharNo|nUserNo|sID|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY|saved
+----|-------|-------|---|-----------|----------|-----------|-----------|-----
+dash|7|103|X37Del|100|RouN|6888|7045|2026-11-21 12:32:38.917
+b|13|104|X52B|0|RouN|6888|7045|2026-11-21 12:32:38.917
+---- 12:44:50.905 52-move-b.sql
+Changed database context to 'World00_Character'.
+sID|sLoginZone|nLoginZoneX|nLoginZoneY
+---|----------|-----------|-----------
+X52B|RouVal01|13658|7812
+---- 12:47:09.989 shn-break append C:\FiestaServer\2016\9Data\Shine\View\MapViewInfo.shn  md5 B6FCFBD3005D25F5539FE07F63C125E1 -> 8869190C7DFBAAFB8BECADB70D879983
+---- 12:49:30.558 shn-restore C:\FiestaServer\2016\9Data\Shine\View\MapViewInfo.shn  md5 B6FCFBD3005D25F5539FE07F63C125E1
+---- 12:55:24.289 shn-break row C:\FiestaServer\2016\9Data\Shine\View\MapViewInfo.shn  md5 B6FCFBD3005D25F5539FE07F63C125E1 -> 7A01298C392B74D7EC30911E3A74D437
+---- 12:56:11.266 shn-restore C:\FiestaServer\2016\9Data\Shine\View\MapViewInfo.shn  md5 B6FCFBD3005D25F5539FE07F63C125E1
+---- 12:57:31.311 52-snapshot.sql
+Changed database context to 'World00_Character'.
+snapshot|db_time
+--------|-------
+before_cleanup|12:57:31:227
+nUserNo|nCharNo|nSlotNo|sID|bDeleted|nLevel|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY
+-------|-------|-------|---|--------|------|-----------|----------|-----------|-----------
+103|2|0|Test1235|0|120|100|RouN|5756|8745
+103|5|1|Test2|0|33|100|RouN|5758|8789
+103|7|2|Test1235|0|2|100|RouN|6596|6931
+103|14|3|X52Tut|0|1|100|RouN|6888|7045
+103|3|1|CharCreateTest~2026November15#0|1|1|100|RouN|6888|7045
+103|4|1|Test2~2026November15#0|1|60|100|Eld|12921|13922
+103|6|2|X37Del~2026November15#0|1|1|100|RouN|6888|7045
+103|9|3|X24A~2026November16#0|1|100|100|RouN|6536|9825
+103|11|3|X46A~2026November16#0|1|20|100|RouN|7226|8978
+103|12|3|X52B~2026November21#0|1|1|100|RouN|6888|7045
+104|8|0|X14B|0|1|0|RouN|6431|8801
+104|13|1|X52B|0|1|0|RouVal01|13658|7812
+104|10|1|X24B~2026November16#0|1|20|100|RouN|6479|9855
+duplicate_name|n
+--------------|-
+Test1235|2
+no dbo.tTutorialInfo with nCharNo: tutorial state not shown
+proc_name|variant
+---------|-------
+p_Char_Rename|2016 plain UPDATE (S20)
+what|nCharNo|nUserNo|sID|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY|saved
+----|-------|-------|---|-----------|----------|-----------|-----------|-----
+dash|7|103|X37Del|100|RouN|6888|7045|2026-11-21 12:32:38.917
+b|13|104|X52B|0|RouN|6888|7045|2026-11-21 12:32:38.917
+---- 12:57:31.470 52-cleanup.sql
+Changed database context to 'World00_Character'.
+proc_name|variant
+---------|-------
+p_Char_Rename restored|2018 Fixes copy (as before the run)
+characters restored: 2
+X52B (13): p_Char_Delete returned 0 (0 = deleted)
+X52Tut (14): p_Char_Delete returned 0 (0 = deleted)
+nUserNo|nCharNo|nSlotNo|sID|bDeleted|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY
+-------|-------|-------|---|--------|-----------|----------|-----------|-----------
+103|2|0|Test1235|0|100|RouN|5756|8745
+103|5|1|Test2|0|100|RouN|5758|8789
+103|7|2|X37Del|0|100|RouN|6888|7045
+103|3|1|CharCreateTest~2026November15#0|1|100|RouN|6888|7045
+103|4|1|Test2~2026November15#0|1|100|Eld|12921|13922
+103|6|2|X37Del~2026November15#0|1|100|RouN|6888|7045
+103|9|3|X24A~2026November16#0|1|100|RouN|6536|9825
+103|11|3|X46A~2026November16#0|1|100|RouN|7226|8978
+103|12|3|X52B~2026November21#0|1|100|RouN|6888|7045
+103|14|3|X52Tut~2026November21#0|1|100|RouN|6888|7045
+104|8|0|X14B|0|0|RouN|6431|8801
+104|10|1|X24B~2026November16#0|1|100|RouN|6479|9855
+104|13|1|X52B~2026November21#0|1|0|RouN|6888|7045
+duplicate_name|n
+--------------|-
+open_x_object
+-------------
+X02_save_13a
+X02_save_13b
