@@ -1,0 +1,10 @@
+﻿---- 18:22:49.358 45-prep.sql
+Changed database context to 'World00_Character'.
+prep done: X45A level 40 GM at RouN 6443,9850; X45B SharpShooter 40 GM with Distant Shot [01] at RouN 6843,9850
+nCharNo|nUserNo|sID|nLevel|nExp|nClass|nAdminLevel|sLoginZone|nLoginZoneX|nLoginZoneY
+-------|-------|---|------|----|------|-----------|----------|-----------|-----------
+15|103|X45A|40|1389279|21|100|RouN|6443|9850
+16|104|X45B|40|1389279|14|100|RouN|6843|9850
+nCharNo|nSkillNo
+-------|--------
+16|4500

@@ -1,0 +1,5 @@
+# Scenario 45, client B (X45B, SharpShooter 40, GM), typed right after login, on the PC the clients run on:
+#   .\gmtype.ps1 -File .\45\45-setupB.txt -Client 2
+# Skill 4500 "Distant Shot [01]" comes from 45-prep.sql. Equip the bow by hand (Distant Shot needs a bow).
+&fullpoint
+&makeitem HeavyBow              # bow, level 40, SharpShooter (as in scenario 39)

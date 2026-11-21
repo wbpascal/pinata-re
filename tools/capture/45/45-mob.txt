@@ -1,0 +1,7 @@
+# Scenario 45 step 6: one aggressive mob next to B (B types it, so it spawns at B and A stays out of its reach).
+# ArchMageBook "Archmage Book": level 30, 841 HP, MobInfoServer EnemyDetectType 1 (aggressive), DetectCha 200.
+# A must stand more than ~300 away from B (the 400 of the login points) but in sight.
+# If it does not attack B within 10 s: &mb Goblin (level 41, 2 054 HP, also aggressive) and note it.
+#   .\gmtype.ps1 -File .\45\45-mob.txt -Client 2
+&fullpoint
+&mb ArchMageBook

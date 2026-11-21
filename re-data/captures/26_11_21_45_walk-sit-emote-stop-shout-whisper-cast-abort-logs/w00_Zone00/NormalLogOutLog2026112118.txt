@@ -1,0 +1,9 @@
+18:23:47 : ShineObjectClass::ShinePlayer::sp_NC_CHAR_LOGOUTREADY_CMD nCharNo - 15
+18:23:57 : ShineObjectClass::ShinePlayer::sp_NC_USER_NORMALLOGOUT_CMD nCharNo - 15
+18:23:57 : ShineObjectClass::ShinePlayer::sp_Schedule_Logout nCharNo - 15
+18:37:02 : ShineObjectClass::ShinePlayer::sp_NC_CHAR_LOGOUTREADY_CMD nCharNo - 16
+18:37:04 : ShineObjectClass::ShinePlayer::sp_NC_CHAR_LOGOUTREADY_CMD nCharNo - 15
+18:37:12 : ShineObjectClass::ShinePlayer::sp_NC_USER_NORMALLOGOUT_CMD nCharNo - 16
+18:37:12 : ShineObjectClass::ShinePlayer::sp_Schedule_Logout nCharNo - 16
+18:37:14 : ShineObjectClass::ShinePlayer::sp_NC_USER_NORMALLOGOUT_CMD nCharNo - 15
+18:37:14 : ShineObjectClass::ShinePlayer::sp_Schedule_Logout nCharNo - 15

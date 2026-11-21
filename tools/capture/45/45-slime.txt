@@ -1,0 +1,5 @@
+# Scenario 45 step 7: a passive target for the two Distant Shot casts (abort, then a full cast), full SP first
+# (Distant Shot [01] costs 520 of 800).
+#   .\gmtype.ps1 -File .\45\45-slime.txt -Client 2
+&fullpoint
+&mb Slime

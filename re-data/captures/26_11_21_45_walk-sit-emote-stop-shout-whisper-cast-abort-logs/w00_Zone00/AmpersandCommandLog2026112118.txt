@@ -1,0 +1,9 @@
+18:23:39 : [X45A] &adminlevel
+18:24:43 : [X45A] &adminlevel
+18:24:51 : [X45B] &adminlevel
+18:26:09 : [X45B] &fullpoint
+18:26:14 : [X45B] &makeitem HeavyBow
+18:32:15 : [X45B] &mb ArchMageBook
+18:33:06 : [X45B] &adminlevel
+18:34:25 : [X45B] &fullpoint
+18:34:28 : [X45B] &mb Slime
