@@ -116,7 +116,9 @@ SCEN = {
              0x101e, 0x1804, 0x104c, 0x2434, 0x2440, 0x0c66, 0x0c15)
          # T23-T25 (X07)
          + R(0x4811, 0x4814) + O(0x0c1a, 0x0c17, 0x105c, 0x105f, 0x1061, 0x1062, 0x1067, 0x10d1, 0x10d2)
-         + R(0x243e, 0x243f)),
+         + R(0x243e, 0x243f)
+         # T26-T28 (X09)
+         + R(0x3059, 0x305a) + R(0x2020, 0x2021) + R(0x300b, 0x300c) + R(0x3428, 0x3429) + O(0x3001)),
     42: ('Races: drop menu, two money pick-ups, link with a dead WM session', 10, '2 clients',
          R(0x3416, 0x341b) + R(0x3438, 0x343a) + O(0x180d, 0x180e)),
     43: ('OPTool listener (test tool)', 15, 'test tool',
@@ -147,10 +149,19 @@ SCEN = {
          'GM, 2 clients, DB setup S20, a zone restart',
          R(0x1001, 0x1004) + R(0x1110, 0x1113) + R(0x1410, 0x1412) + O(0x0c1a, 0x0c17, 0x0c18, 0x2011, 0x1068)
          + O(0x1801, 0x1804)),
+    # 53-54: added by X09 after capture batch 5 (what s45 / s46 / s52 left open)
+    53: ('Items VI: what `s46` left open: a stack that may not move back, and the logout', 10, 'GM, DB setup S22',
+         R(0x300b, 0x300c) + R(0x3428, 0x3429) + O(0x3001, 0x3c08, 0x3444, 0x1071, 0x0c18, 0x0c31, 0x0410)
+         + R(0x4001, 0x4035)),
+    54: ('Shared names, the emote keys and a refused rename: what `s45` / `s52` left open', 15,
+         'GM, 3 clients, DB setups S23, S24, S20',
+         R(0x2020, 0x2023) + O(0x1c06) + R(0x200c, 0x200f) + O(0x3802, 0x3803, 0x3805, 0x3807, 0x0c1a, 0x0c17,
+                                                               0x1068) + R(0x140f, 0x1412)),
 }
 
 # Recorded scenarios (capture batch): their row counts what the opcode set still leaves uncaptured.
-RECORDED = {14: 'batch 3', 21: 'batch 3', 37: 'batches 3 and 4', 24: 'batch 4', 38: 'batch 4'}
+RECORDED = {14: 'batch 3', 21: 'batch 3', 37: 'batches 3 and 4', 24: 'batch 4', 38: 'batch 4', 45: 'batch 5',
+            46: 'batch 5', 52: 'batch 5'}
 
 # Not a scenario of its own: records that every scenario produces on the server links (README §3.13, §3.15).
 LINKS = D(1, 50, 16)
@@ -217,13 +228,12 @@ def analyse():
 PRIORITY = [
     ('before the rebuild starts', [
         (37, 'its refusal steps 3–6 not yet run (S10, S11, X6) finish the login side; `s37b` ran only the character-select refusals'),
-        (52, 'closes the session paths `s37b` / `s38` left open: the stale tutorial copy, the zone-initiated kick with a real user number'),
         (51, 'the skill paths the client reached only with one learned step: empower wrap, toggle steps, skill-save columns'),
     ]),
     ('early: core gameplay', [
-        (46, 'closes what 21 left open on stack moves and buy-back'),
-        (39, 'party / PK death and exp loss are not captured at all'),
-        (45, 'walk, sit, emote stop: the remaining movement relays'),
+        (53, 'closes what 46 left open: a stack that may not move back (`0x24A`, `0x20A`, `irm_Move`) and the logout saves'),
+        (39, 'party / PK death and exp loss are not captured at all; not captured in batch 5 either'),
+        (54, 'closes what 45 / 52 left open: the emote pause key, lookups by a shared name, the refused rename'),
         (36, 'cheap, high reach; settles the option-save tail of `0x7037`'),
         (23, 'the quest engine has no capture-confirmed section'),
         (22, 'item attribute changes the client displays directly'),
@@ -265,6 +275,9 @@ PRIORITY = [
         (21, 'continued by 46, 47, 49'),
         (24, 'continued by 51 (refusals the client pre-empted: T23, T24, T25 in 41)'),
         (38, 'continued by 52'),
+        (46, 'continued by 53 (refusals the client pre-empted: T26 in 41, T18 for the soul stones)'),
+        (45, 'continued by 54 (the emote keys; `0x2020 {6}`: T27 in 41)'),
+        (52, 'continued by 54 (step 6: the refused rename)'),
     ]),
 ]
 

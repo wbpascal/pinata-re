@@ -147,9 +147,10 @@ absence means "not re-read by anyone", not "confirmed": P02 lists what the captu
 
 ## 2. Ratings per document
 
-State: re-run after capture batch 5 (X09 part 3). 49 pseudocode documents (2 249 headings: 149 high, 1 565 medium,
-209 low, 326 not rated) and 65 knowledge files (338 headings: 13 high, 251 medium, 28 low, 46 not rated; rated for
-the first time: `P05.md`, `X06.md` and `X09.md` §1–§3); 130 hand rows (125 + 5 of X09). Hand passes: Login, WM, the
+State: re-run after capture batch 5 (X09 parts 3 and 4). 49 pseudocode documents (2 249 headings: 149 high, 1 565
+medium, 209 low, 326 not rated) and 65 knowledge files (342 headings: 13 high, 253 medium, 28 low, 48 not rated; rated
+for the first time: `P05.md`, `X06.md` and `X09.md` §1–§7); 130 hand rows (125 + 5 of X09; Z01 §3.2's reason
+rewritten in part 4 after the code read of `docs/knowledge/X09.md` §4). Hand passes: Login, WM, the
 shared library and the DB servers (X02 part 2), the zone documents and the knowledge files (part 3), 4 rows set by
 the re-check of §3.2 (part 4: `Z01.md` §3 → high, §4 and §6 low → medium, `Z03.md` §2 stays medium), the passes
 after batch 3 (X05), batch 4 (X07) and batch 5 (X09), all at the end of §2.2. Before the batch-5 re-run: 150 high,
@@ -570,9 +571,9 @@ Knowledge files (`docs/knowledge/`):
 | `X05.md` | X05 | 7 | 0 | 7 | 0 | 0 | 0 |
 | `X06.md` | X06 | 6 | 0 | 4 | 0 | 2 | 0 |
 | `X07.md` | X07 | 6 | 0 | 4 | 0 | 2 | 0 |
-| `X09.md` | X09 | 3 | 0 | 3 | 0 | 0 | 0 |
+| `X09.md` | X09 | 7 | 0 | 5 | 0 | 2 | 0 |
 | `K01.md` | K01 | 19 | 0 | 15 | 0 | 4 | 0 |
-| **total** | | 338 | 13 | 251 | 28 | 46 | 10 |
+| **total** | | 342 | 13 | 253 | 28 | 48 | 10 |
 
 ### 2.4 L00: `login-server.md`
 
@@ -942,7 +943,7 @@ Knowledge files (`docs/knowledge/`):
 | · 2.3 Data tables and their loaders | **low** | sup×1 (README §5.4) | re-read the rest (§3) |
 | 3. Network layer | **low** | no function cited; sup×2 (README §5.4) | re-read the rest (§3) |
 | · 3.1 Packet buffer and send primitives | medium | weak inf1 | second reading / client check |
-| · 3.2 Broadcast (who receives a packet) | medium | sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; capture-validation §27.2, §27.6, §27.7), but the section gives every so_AllInMap0..5 the sight cells and ali_Work a sight check, while the shout of s45 (so_AllInMap1, "filtered as in Z01 §3.2" per Z02 §3.2) reached a player out of sight (§27.4): one of the two statements is too general (inferred; not in §13) (hand; baseline: medium) | re-read the rest (§3): which iterator and visitor so_AllInMap1 uses |
+| · 3.2 Broadcast (who receives a packet) | medium | sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; capture-validation §27.2, §27.6, §27.7) and so is a whole-map shout to a player out of sight (§27.4); the section is too general there (code read in X09 part 4, docs/knowledge/X09.md §4): so_AllInMap FUN_0054b8c0 -> so_AllInMapNomal FUN_0054be00 walks the whole map list with a layer filter only, and FUN_0049ac70 in ali_Work is so_SubLayer_CanSee, not a sight check; the sight radius is so_AllOfRange FUN_0054baf0 (hand; baseline: medium) | the README §5 superseded-statement row (X08) and a capture of a so_AllOfRange broadcast not reaching a player just outside MapInfo.Sight |
 | · 3.3 Server-to-server handshake and heartbeat | medium | cap 7/9; cv ok; sup×1 (README §5.4); cv corr; B×3 | re-read the rest (§3); read with P02 "Corrections"; follow the return value to the parser |
 | 4. Objects | **low** | no function cited; sup×7 (README §5.4) | re-read the rest (§3) |
 | · 4.1 Class hierarchy (RTTI) | **low** | no function cited; pre-S01 prose without a function | cite and re-read the function |
@@ -3706,6 +3707,10 @@ Knowledge files (`docs/knowledge/`):
 | 1. Batch 5: result lines, corrected notes, run kits | medium | cap 11/14 | capture 0x5005 |
 | 2. What batch 5 left open → scenario | medium | cap 8/13; client×1 | capture 0x2023, 0x3807, 0x5005 |
 | 3. Ratings after batch 5 | medium | cap 2/6; weak inf1 | capture 0x0845, 0x5005 |
+| 4. Which broadcasts stop at sight (Z01 §3.2 against `s45`'s sho… | medium | read in code | second reading / client check |
+| 5. Order of work and reach after batch 5 (`capture-scenarios.md… | medium | cap 25/30 | capture 0x2023, 0x3803, 0x3807 |
+| 6. Left open, uncertain | – | open points / boundary list, no claim to rate |  |
+| 7. Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
 ### 2.117 K01 knowledge: `docs/knowledge/K01.md`
 

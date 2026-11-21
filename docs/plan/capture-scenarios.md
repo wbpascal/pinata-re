@@ -2,7 +2,7 @@
 
 Continues the 13 scenarios of `docs/plan/capture-guide.md`. Those gave seven captures (login, idle, walk and
 portals, shop and storage, combat with `&levelup` / `&linkto`); everything else in the reconstruction is read
-from code only (`docs/review/confidence.md` §2: 2 042 sections rated medium or low after capture batch 4, 2 058 after batch 3). Each scenario here names the
+from code only (`docs/review/confidence.md` §2: 2 055 sections rated medium or low after capture batch 5, 2 042 after batch 4, 2 058 after batch 3). Each scenario here names the
 claims it tests, the steps, and a **prediction**: the opcodes our documents expect, in order, with the field
 values they give. A capture that differs from the prediction is a finding; P02 validates the captures as usual
 (`docs/plan/items/P02.md`), then X02 is re-run to update the ratings.
@@ -95,58 +95,62 @@ the whole Login / WM departments, of which one login of Test2 delivers only the 
 uncaptured rest needs another character (guild, pet, house: log in again after scenarios 18, 25, 28) or the
 refusals of its steps 3–6 not yet run (`s37b` of batch 4 ran only the character-select refusals). 14 and 21 are
 continued by 45 and by 46, 47, 49; 24 and 38 (batch 4) by 51 and 52 (X07), with T23–T25 of 41 for the refusals
-the 2016 client pre-empted.
+the 2016 client pre-empted; 45, 46 and 52 (batch 5) by 54, 53 and 54 (X09), with T26–T28 of 41 and T18 for what
+the 2016 client pre-empts or may not send (`docs/knowledge/X09.md` §2). 39 was not captured in batch 5 (notes only)
+and keeps its rank.
 
 <!-- ORDER:begin -->
 | Rank | # | Scenario | When | Needs | Minutes | Sections reached | Opcodes not yet captured | Why at this rank |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 37 | Login side: idle heartbeat, refusals, character delete *(recorded, batches 3 and 4)* | before the rebuild starts | DB / config setup | 6 | 134 | 71 | its refusal steps 3–6 not yet run (S10, S11, X6) finish the login side; `s37b` ran only the character-select refusals |
-| 2 | 52 | Character select and session II: what `s37b` / `s38` left open | before the rebuild starts | GM, 2 clients, DB setup S20, a zone restart | 15 | 19 | 2 | closes the session paths `s37b` / `s38` left open: the stale tutorial copy, the zone-initiated kick with a real user number |
-| 3 | 51 | Skills II: what `s24` left open | before the rebuild starts | GM, 2 clients for steps 2 (heals) and 4, DB setup S21 for steps 6–7 | 80 | 8 | 5 | the skill paths the client reached only with one learned step: empower wrap, toggle steps, skill-save columns |
-| 4 | 46 | Items III: no DB change | early: core gameplay | GM | 12 | 10 | 5 | closes what 21 left open on stack moves and buy-back |
-| 5 | 39 | Combat extras: death penalty, PK, revive item, knock-back | early: core gameplay | 2 clients, GM | 8 | 50 | 27 | party / PK death and exp loss are not captured at all |
-| 6 | 45 | Second client in sight II | early: core gameplay | 2 clients | 8 | 8 | 3 | walk, sit, emote stop: the remaining movement relays |
-| 7 | 36 | Block list, reports, options, megaphone | early: core gameplay | 2 clients | 5 | 65 | 89 | cheap, high reach; settles the option-save tail of `0x7037` |
-| 8 | 23 | Quest: accept, kill, finish, give up; class change | early: core gameplay | GM | 8 | 86 | 49 | the quest engine has no capture-confirmed section |
-| 9 | 22 | Upgrade, gems, random options, endurance | early: core gameplay | GM | 8 | 53 | 58 | item attribute changes the client displays directly |
-| 10 | 15 | Party across two zones | early: core gameplay | 2 clients | 8 | 53 | 52 | party is the first social feature; the zone change itself is captured |
-| 11 | 17 | Friends and character titles | early: core gameplay | 2 clients | 4 | 40 | 38 | cheap; fills the WM social packets |
-| 12 | 20 | Trade and booth | early: core gameplay | 2 clients | 10 | 28 | 65 | not captured at all; item duplication if wrong |
-| 13 | 18 | Guild life cycle and guild storage | with its feature | 2 clients, GM | 12 | 158 | 242 | largest uncaptured area; log in again afterwards for the guild load blocks |
-| 14 | 19 | Guild academy | with its feature | 2 clients, GM | 6 | 97 | 147 | same session as 18 |
-| 15 | 16 | Raid | with its feature | 2 clients (3 better) | 6 | 37 | 66 | builds on party |
-| 16 | 25 | Pet | with its feature | GM | 8 | 29 | 19 | log in again afterwards for the pet load blocks |
-| 17 | 26 | Mounts and minimon | with its feature | GM | 5 | 27 | 23 | small, self-contained |
-| 18 | 27 | Wing stone and silver wing | with its feature | GM | 5 | 47 | 13 | small, self-contained |
-| 19 | 34 | Premium inventory, charged buffs | with its feature | DB setup | 5 | 39 | 23 | needed once charged items are sold |
-| 20 | 40 | Gathering, production, item emotes, way-finding gate, tutorial, attendance | with its feature | GM | 8 | 68 | 45 | several small systems in one run |
-| 21 | 32 | GM command session | with its feature | GM, 2 clients | 12 | 42 | 18 | only for the commands the rebuild keeps |
-| 22 | 28 | Mini-house | with its feature | 2 clients, GM | 10 | 81 | 92 | log in again afterwards for the house load blocks; 35 needs it |
-| 23 | 35 | Dice table, gamble house, card collection | with its feature | GM, mini-house | 10 | 83 | 140 | many uncaptured opcodes, but late content |
-| 24 | 31 | Instance dungeon | with its feature | 2 clients (party), GM | 10 | 34 | 34 | needs party first |
-| 25 | 30 | Kingdom quest | with its feature | 2 clients, GM, SHN / schedule setup | 20 | 94 | 93 | longest setup; only the WM minute skips are captured |
-| 26 | 29 | Wedding | with its feature | 2 clients, GM | 15 | 50 | 44 | late content |
-| 27 | 44 | Holy promise (mentor and pupil) | with its feature | 2 clients, GM | 8 | 25 | 41 | late content |
-| 28 | 33 | Prison | with its feature | GM, 2 clients | 8 | 16 | 17 | late content, small |
-| 29 | 41 | Test client: crafted client packets | optional | test client | 15 | 85 | 34 | how the original reacts to bad input: validation rules, not features |
-| 30 | 42 | Races: drop menu, two money pick-ups, link with a dead WM session | optional | 2 clients | 10 | 15 | 5 | original race behaviour; the rebuild designs its own locking |
-| 31 | 43 | OPTool listener (test tool) | optional | test tool | 15 | 60 | 59 | only if the original OPTool must work |
-| 32 | 49 | Items V: refusals by the Character server | optional | DB setup per step, a second client or drops | 25 | 37 | 13 | DB faults the rebuild's own persistence does not have |
-| 33 | 47 | Items IV: the zone and the DB disagree | optional | GM, DB / table setup per step, 2 clients for step 6 | 25 | 23 | 11 | every step tampers with the DB or tables under an online player |
+| 1 | 37 | Login side: idle heartbeat, refusals, character delete *(recorded, batches 3 and 4)* | before the rebuild starts | DB / config setup | 6 | 130 | 70 | its refusal steps 3–6 not yet run (S10, S11, X6) finish the login side; `s37b` ran only the character-select refusals |
+| 2 | 51 | Skills II: what `s24` left open | before the rebuild starts | GM, 2 clients for steps 2 (heals) and 4, DB setup S21 for steps 6–7 | 80 | 8 | 5 | the skill paths the client reached only with one learned step: empower wrap, toggle steps, skill-save columns |
+| 3 | 53 | Items VI: what `s46` left open: a stack that may not move back, and the logout | early: core gameplay | GM, DB setup S22 | 10 | 23 | 13 | closes what 46 left open: a stack that may not move back (`0x24A`, `0x20A`, `irm_Move`) and the logout saves |
+| 4 | 39 | Combat extras: death penalty, PK, revive item, knock-back | early: core gameplay | 2 clients, GM | 8 | 50 | 27 | party / PK death and exp loss are not captured at all; not captured in batch 5 either |
+| 5 | 54 | Shared names, the emote keys and a refused rename: what `s45` / `s52` left open | early: core gameplay | GM, 3 clients, DB setups S23, S24, S20 | 15 | 22 | 6 | closes what 45 / 52 left open: the emote pause key, lookups by a shared name, the refused rename |
+| 6 | 36 | Block list, reports, options, megaphone | early: core gameplay | 2 clients | 5 | 66 | 87 | cheap, high reach; settles the option-save tail of `0x7037` |
+| 7 | 23 | Quest: accept, kill, finish, give up; class change | early: core gameplay | GM | 8 | 86 | 49 | the quest engine has no capture-confirmed section |
+| 8 | 22 | Upgrade, gems, random options, endurance | early: core gameplay | GM | 8 | 53 | 58 | item attribute changes the client displays directly |
+| 9 | 15 | Party across two zones | early: core gameplay | 2 clients | 8 | 55 | 52 | party is the first social feature; the zone change itself is captured |
+| 10 | 17 | Friends and character titles | early: core gameplay | 2 clients | 4 | 40 | 38 | cheap; fills the WM social packets |
+| 11 | 20 | Trade and booth | early: core gameplay | 2 clients | 10 | 28 | 65 | not captured at all; item duplication if wrong |
+| 12 | 18 | Guild life cycle and guild storage | with its feature | 2 clients, GM | 12 | 158 | 242 | largest uncaptured area; log in again afterwards for the guild load blocks |
+| 13 | 19 | Guild academy | with its feature | 2 clients, GM | 6 | 97 | 147 | same session as 18 |
+| 14 | 16 | Raid | with its feature | 2 clients (3 better) | 6 | 37 | 66 | builds on party |
+| 15 | 25 | Pet | with its feature | GM | 8 | 29 | 19 | log in again afterwards for the pet load blocks |
+| 16 | 26 | Mounts and minimon | with its feature | GM | 5 | 27 | 23 | small, self-contained |
+| 17 | 27 | Wing stone and silver wing | with its feature | GM | 5 | 46 | 13 | small, self-contained |
+| 18 | 34 | Premium inventory, charged buffs | with its feature | DB setup | 5 | 39 | 23 | needed once charged items are sold |
+| 19 | 40 | Gathering, production, item emotes, way-finding gate, tutorial, attendance | with its feature | GM | 8 | 69 | 45 | several small systems in one run |
+| 20 | 32 | GM command session | with its feature | GM, 2 clients | 12 | 38 | 17 | only for the commands the rebuild keeps |
+| 21 | 28 | Mini-house | with its feature | 2 clients, GM | 10 | 81 | 92 | log in again afterwards for the house load blocks; 35 needs it |
+| 22 | 35 | Dice table, gamble house, card collection | with its feature | GM, mini-house | 10 | 83 | 140 | many uncaptured opcodes, but late content |
+| 23 | 31 | Instance dungeon | with its feature | 2 clients (party), GM | 10 | 33 | 34 | needs party first |
+| 24 | 30 | Kingdom quest | with its feature | 2 clients, GM, SHN / schedule setup | 20 | 94 | 93 | longest setup; only the WM minute skips are captured |
+| 25 | 29 | Wedding | with its feature | 2 clients, GM | 15 | 50 | 44 | late content |
+| 26 | 44 | Holy promise (mentor and pupil) | with its feature | 2 clients, GM | 8 | 25 | 41 | late content |
+| 27 | 33 | Prison | with its feature | GM, 2 clients | 8 | 15 | 17 | late content, small |
+| 28 | 41 | Test client: crafted client packets | optional | test client | 15 | 87 | 33 | how the original reacts to bad input: validation rules, not features |
+| 29 | 42 | Races: drop menu, two money pick-ups, link with a dead WM session | optional | 2 clients | 10 | 15 | 5 | original race behaviour; the rebuild designs its own locking |
+| 30 | 43 | OPTool listener (test tool) | optional | test tool | 15 | 60 | 59 | only if the original OPTool must work |
+| 31 | 49 | Items V: refusals by the Character server | optional | DB setup per step, a second client or drops | 25 | 33 | 11 | DB faults the rebuild's own persistence does not have |
+| 32 | 47 | Items IV: the zone and the DB disagree | optional | GM, DB / table setup per step, 2 clients for step 6 | 25 | 24 | 7 | every step tampers with the DB or tables under an online player |
 | – | 48 | WM stop and start with its log | dropped (original processes only) | server PC only | 10 | 0 | 0 | the WM's own stop cause and log |
 | – | 50 | Timing with one clock and without delayed ACKs | dropped (original processes only) | capture on the server PC, a registry change | 15 | 0 | 0 | timing between the original processes |
-| – | 14 | Second client in sight *(recorded, batch 3)* | recorded | 2 clients | 5 | 47 | 25 | continued by 45 |
-| – | 21 | Items II: drop, split, storage, use, shop *(recorded, batch 3)* | recorded | GM | 10 | 131 | 90 | continued by 46, 47, 49 |
-| – | 24 | Skills, abstates, stat points *(recorded, batch 4)* | recorded | GM, 2 clients for revive | 10 | 61 | 38 | continued by 51 (refusals the client pre-empted: T23, T24, T25 in 41) |
+| – | 14 | Second client in sight *(recorded, batch 3)* | recorded | 2 clients | 5 | 50 | 24 | continued by 45 |
+| – | 21 | Items II: drop, split, storage, use, shop *(recorded, batch 3)* | recorded | GM | 10 | 135 | 86 | continued by 46, 47, 49 |
+| – | 24 | Skills, abstates, stat points *(recorded, batch 4)* | recorded | GM, 2 clients for revive | 10 | 62 | 38 | continued by 51 (refusals the client pre-empted: T23, T24, T25 in 41) |
 | – | 38 | Session loss, kicks, back to character select *(recorded, batch 4)* | recorded | GM, 2 clients, process kill | 10 | 20 | 13 | continued by 52 |
+| – | 46 | Items III: no DB change *(recorded, batch 5)* | recorded | GM | 12 | 5 | 1 | continued by 53 (refusals the client pre-empted: T26 in 41, T18 for the soul stones) |
+| – | 45 | Second client in sight II *(recorded, batch 5)* | recorded | 2 clients | 8 | 10 | 2 | continued by 54 (the emote keys; `0x2020 {6}`: T27 in 41) |
+| – | 52 | Character select and session II: what `s37b` / `s38` left open *(recorded, batch 5)* | recorded | GM, 2 clients, DB setup S20, a zone restart | 15 | 0 | 0 | continued by 54 (step 6: the refused rename) |
 <!-- ORDER:end -->
 
-Sessions that fit together (same setup): **I** one client, GM (51 needs a second one for steps 2 and 4): 51, 46, 22, 23, 27, 40, 26, 25, 34, 32 (37, 21 and 24
-are recorded; 37's steps 3–6 with S10, S11, X6 where `s37` did not reach them, see its result line; 51's step 4
+Sessions that fit together (same setup): **I** one client, GM (51 needs a second one for steps 2 and 4): 51, 53, 22, 23, 27, 40, 26, 25, 34, 32 (37, 21, 24
+and 46 are recorded; 53 needs S22 while logged out; 37's steps 3–6 with S10, S11, X6 where `s37` did not reach them, see its result line; 51's step 4
 needs B for a few minutes, step 2 B or `&sethp` for 25 minutes, steps 6–7 S21; about 80 minutes in all).
-**II** two clients: 45, 17, 15, 16, 36, 44, 18, 19, 20, 39 (14 is recorded). **III** content with a longer setup:
-28, 35, 29, 31, 30, 33, 52 (38 is recorded; 52 needs S20 and a zone restart). **IV** tools: 42, 41 (T15–T25 with
-the others), 43. **V** DB and table setups under an
+**II** two clients: 54 (three, with S23 / S24 / S20), 17, 15, 16, 36, 44, 18, 19, 20, 39 (14 and 45 are recorded).
+**III** content with a longer setup: 28, 35, 29, 31, 30, 33 (38 and 52 are recorded). **IV** tools: 42, 41
+(T15–T28 with the others), 43. **V** DB and table setups under an
 online owner, one short capture per step, the SQL window open next to the client (added by X05): 47, 49.
 **VI** server PC only (added by X05): 48, 50.
 
@@ -1695,11 +1699,11 @@ login plus one crafted packet is enough). One connection per case: several end i
 
 ## 5. What the scenarios do not reach
 
-- **Sections with no opcode (793 of the 2 042; counts of §7 as rebuilt by X07 after batch 4; X05: 796 of 2 058):** data tables, formulas, loaders, internal classes (most of Z09,
+- **Sections with no opcode (795 of the 2 055; counts of §7 as rebuilt by X09 after batch 5; X07: 793 of 2 042; X05: 796 of 2 058):** data tables, formulas, loaders, internal classes (most of Z09,
   Z10, Z12, Z19–Z22, Z24, Z27–Z29, S02). A capture raises them only through an effect: a damage or stat number
   (Z12, Z20, Z21: note the character window before and after each equip in 21 and 22), a drop rate (X1), a
   table value (X1–X7). The rest is second reading, as `confidence.md` §2 says per row.
-- **Link records only (18 sections):** GameLog and AccountLog records and the dept-16 saves appear in every
+- **Link records only (15 sections; 18 before scenario 53 named the logout's save burst):** GameLog and AccountLog records and the dept-16 saves appear in every
   scenario when the server links are recorded; D05 and D01 §4 are checked against all of them at once.
 - **Opcodes no scenario names** (`X02-scen.py left`): `0x0C1D` / `0x0C1E` / `0x0C20` (Netmarble / Outspark login:
   no first sender in the 2016 client, E4), `0x0820`, `0x0823`–`0x0825`, `0x0832`, `0x0837`–`0x083A` (event and
@@ -1804,6 +1808,9 @@ reached).
 Rebuilt by X07 after capture batch 4: ratings as re-run in `confidence.md` §2 (50 documents, 61 knowledge files with
 a medium or low section), scenarios 51–52 and T23–T25 counted, 24 and 38 recorded (X05's build: 2 058 sections, 1 061
 reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 not reached in both).
+Rebuilt by X09 after capture batch 5: ratings as re-run in `confidence.md` §2 (49 documents, 64 knowledge files with
+a medium or low section), scenarios 53–54 and T26–T28 counted, 45, 46 and 52 recorded (X07's build: 2 042 sections,
+1 004 reached, 225 all captured, 18 link records only; now 2 055, 1 010, 233, 15; 2 not reached in both).
 
 <!-- COVER:begin -->
 | Document | Medium / low sections | No opcode | Opcodes all captured | Reached by a scenario | Link records only | Not reached | Scenarios (sections) |
@@ -1811,35 +1818,35 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | L00 | 12 | 3 | 2 | 7 | 0 | 0 | 37 (6), 41 (3), 43 (1) |
 | L01 | 14 | 8 | 2 | 4 | 0 | 0 | 43 (3), 37 (2) |
 | W01 | 24 | 2 | 3 | 19 | 0 | 0 | 37 (9), 41 (7), 43 (4), 40 (4), 38 (3) |
-| W02 | 37 | 1 | 0 | 36 | 0 | 0 | 16 (21), 15 (20), 41 (3), 17 (1) |
+| W02 | 37 | 1 | 0 | 36 | 0 | 0 | 16 (21), 15 (20), 54 (6), 41 (3), 17 (1) |
 | W03 | 54 | 2 | 1 | 51 | 0 | 0 | 18 (48), 19 (20), 37 (19), 43 (2), 41 (1) |
 | W04 | 47 | 1 | 1 | 44 | 0 | 1 | 43 (11), 36 (8), 17 (8), 30 (5), 33 (5) |
 | W05 | 23 | 8 | 7 | 8 | 0 | 0 | 30 (2), 40 (2), 41 (2), 43 (2), 19 (1) |
 | W06 | 16 | 5 | 0 | 11 | 0 | 0 | 18 (7), 19 (3), 37 (2), 44 (1), 36 (1) |
-| Z01 | 29 | 8 | 5 | 16 | 0 | 0 | 37 (9), 41 (7), 27 (6), 52 (5), 28 (3) |
+| Z01 | 28 | 8 | 6 | 14 | 0 | 0 | 37 (7), 27 (5), 41 (5), 28 (3), 40 (3) |
 | Z02 | 27 | 3 | 2 | 22 | 0 | 0 | 40 (7), 14 (6), 36 (6), 21 (4), 30 (4) |
 | Z03 | 36 | 17 | 7 | 12 | 0 | 0 | 24 (9), 39 (3), 41 (1), 32 (1), 19 (1) |
-| Z04 | 53 | 5 | 7 | 41 | 0 | 0 | 21 (16), 22 (12), 30 (4), 49 (4), 41 (4) |
+| Z04 | 54 | 5 | 8 | 41 | 0 | 0 | 21 (16), 22 (12), 30 (4), 41 (4), 49 (3) |
 | Z05 | 45 | 6 | 1 | 38 | 0 | 0 | 21 (20), 49 (9), 22 (8), 28 (7), 18 (6) |
 | Z06 | 23 | 2 | 0 | 21 | 0 | 0 | 20 (11), 35 (11), 43 (3), 21 (1) |
 | Z07 | 39 | 5 | 4 | 30 | 0 | 0 | 28 (13), 40 (4), 29 (4), 37 (3), 39 (3) |
-| Z08 | 23 | 2 | 0 | 21 | 0 | 0 | 15 (5), 23 (5), 39 (4), 16 (3), 17 (3) |
+| Z08 | 23 | 2 | 1 | 20 | 0 | 0 | 15 (5), 23 (5), 39 (4), 16 (3), 17 (3) |
 | Z09 | 217 | 112 | 27 | 76 | 2 | 0 | 30 (35), 14 (13), 18 (11), 31 (8), 40 (7) |
 | Z10 | 31 | 29 | 1 | 1 | 0 | 0 | 37 (1) |
-| Z11 | 55 | 22 | 10 | 23 | 0 | 0 | 30 (7), 32 (7), 52 (4), 18 (3), 21 (3) |
-| Z12 | 32 | 15 | 12 | 5 | 0 | 0 | 24 (2), 27 (2), 29 (1) |
+| Z11 | 55 | 22 | 10 | 23 | 0 | 0 | 30 (7), 32 (7), 53 (4), 18 (3), 21 (3) |
+| Z12 | 32 | 15 | 12 | 5 | 0 | 0 | 24 (2), 27 (2), 29 (1), 53 (1) |
 | Z13 | 68 | 8 | 3 | 56 | 1 | 0 | 28 (17), 26 (15), 25 (14), 29 (11), 14 (6) |
 | Z14 | 24 | 7 | 1 | 16 | 0 | 0 | 31 (7), 19 (5), 16 (4), 23 (3), 18 (2) |
-| Z15 | 46 | 16 | 0 | 30 | 0 | 0 | 23 (30), 27 (1), 30 (1) |
+| Z15 | 46 | 16 | 0 | 30 | 0 | 0 | 23 (30), 27 (1), 53 (1), 30 (1) |
 | Z16 | 43 | 6 | 2 | 35 | 0 | 0 | 18 (22), 30 (13), 36 (2), 41 (2), 27 (1) |
-| Z17 | 31 | 18 | 3 | 9 | 1 | 0 | 22 (6), 40 (4), 21 (1), 26 (1) |
+| Z17 | 31 | 18 | 3 | 10 | 0 | 0 | 22 (6), 40 (4), 21 (1), 26 (1), 53 (1) |
 | Z18 | 33 | 15 | 4 | 14 | 0 | 0 | 39 (4), 24 (3), 37 (2), 14 (2), 17 (2) |
 | Z19 | 17 | 17 | 0 | 0 | 0 | 0 |  |
 | Z20 | 20 | 19 | 1 | 0 | 0 | 0 |  |
 | Z21 | 27 | 20 | 4 | 3 | 0 | 0 | 21 (2), 40 (1), 39 (1) |
 | Z22 | 47 | 28 | 16 | 3 | 0 | 0 | 39 (2), 24 (1) |
 | Z23 | 29 | 14 | 12 | 3 | 0 | 0 | 24 (2), 27 (1), 41 (1), 34 (1), 51 (1) |
-| Z24 | 32 | 22 | 0 | 10 | 0 | 0 | 21 (6), 34 (4), 27 (3), 40 (1) |
+| Z24 | 32 | 22 | 0 | 10 | 0 | 0 | 21 (6), 34 (4), 27 (3), 53 (1), 40 (1) |
 | Z25 | 28 | 12 | 10 | 6 | 0 | 0 | 24 (5), 27 (1), 41 (1) |
 | Z26 | 19 | 3 | 8 | 8 | 0 | 0 | 27 (6), 21 (5), 41 (4) |
 | Z27 | 31 | 30 | 0 | 0 | 1 | 0 |  |
@@ -1850,7 +1857,7 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | Z32 | 40 | 18 | 1 | 21 | 0 | 0 | 35 (20), 21 (2) |
 | D01 | 17 | 4 | 4 | 9 | 0 | 0 | 37 (8), 43 (2), 38 (1), 36 (1) |
 | D02 | 24 | 4 | 4 | 16 | 0 | 0 | 37 (6), 29 (5), 28 (4), 36 (4), 23 (4) |
-| D03 | 43 | 7 | 1 | 35 | 0 | 0 | 21 (18), 49 (9), 22 (6), 47 (5), 23 (5) |
+| D03 | 44 | 7 | 1 | 36 | 0 | 0 | 21 (19), 49 (8), 47 (6), 22 (6), 23 (5) |
 | D04 | 25 | 1 | 0 | 24 | 0 | 0 | 18 (9), 19 (6), 17 (5), 39 (4), 36 (4) |
 | D05 | 25 | 6 | 1 | 10 | 8 | 0 | 39 (3), 29 (2), 43 (2), 30 (1), 40 (1) |
 | D06 | 49 | 19 | 4 | 25 | 0 | 1 | 37 (10), 18 (4), 21 (3), 28 (3), 36 (3) |
@@ -1868,7 +1875,7 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | knowledge Z02 | 3 | 0 | 1 | 2 | 0 | 0 | 26 (1), 28 (1), 14 (1), 21 (1), 36 (1) |
 | knowledge Z03 | 1 | 0 | 1 | 0 | 0 | 0 |  |
 | knowledge Z04 | 5 | 3 | 0 | 2 | 0 | 0 | 21 (1), 24 (1), 36 (1), 39 (1), 18 (1) |
-| knowledge Z05 | 3 | 0 | 1 | 2 | 0 | 0 | 21 (2), 49 (2), 15 (1), 41 (1), 17 (1) |
+| knowledge Z05 | 3 | 0 | 1 | 2 | 0 | 0 | 21 (2), 49 (2), 15 (1), 41 (1), 54 (1) |
 | knowledge Z06 | 3 | 1 | 1 | 1 | 0 | 0 | 20 (1), 21 (1), 35 (1), 43 (1) |
 | knowledge Z07 | 3 | 0 | 0 | 3 | 0 | 0 | 24 (1), 29 (1), 40 (1), 39 (1), 28 (1) |
 | knowledge Z08 | 2 | 0 | 0 | 2 | 0 | 0 | 15 (2), 16 (2), 39 (2), 31 (1), 17 (1) |
@@ -1880,7 +1887,7 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | knowledge Z14 | 1 | 0 | 0 | 1 | 0 | 0 | 15 (1), 16 (1), 18 (1), 19 (1), 23 (1) |
 | knowledge Z15 | 3 | 0 | 1 | 2 | 0 | 0 | 23 (2) |
 | knowledge Z16 | 3 | 1 | 0 | 2 | 0 | 0 | 18 (2), 30 (1) |
-| knowledge Z17 | 5 | 1 | 1 | 2 | 1 | 0 | 22 (2), 40 (1) |
+| knowledge Z17 | 5 | 1 | 1 | 3 | 0 | 0 | 22 (2), 53 (2), 40 (1) |
 | knowledge Z18 | 1 | 0 | 0 | 1 | 0 | 0 | 27 (1), 37 (1), 41 (1) |
 | knowledge Z19 | 1 | 1 | 0 | 0 | 0 | 0 |  |
 | knowledge Z20 | 3 | 3 | 0 | 0 | 0 | 0 |  |
@@ -1894,7 +1901,7 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | knowledge Z28 | 6 | 5 | 1 | 0 | 0 | 0 |  |
 | knowledge Z29 | 5 | 5 | 0 | 0 | 0 | 0 |  |
 | knowledge Z30 | 2 | 0 | 0 | 2 | 0 | 0 | 27 (1), 37 (1), 21 (1), 44 (1) |
-| knowledge Z31 | 4 | 0 | 0 | 3 | 1 | 0 | 21 (3), 20 (2), 18 (1), 28 (1), 19 (1) |
+| knowledge Z31 | 4 | 0 | 0 | 4 | 0 | 0 | 21 (3), 20 (2), 53 (2), 18 (1), 28 (1) |
 | knowledge Z32 | 5 | 2 | 1 | 2 | 0 | 0 | 35 (2) |
 | knowledge D01 | 3 | 0 | 1 | 2 | 0 | 0 | 43 (2), 36 (1), 37 (1) |
 | knowledge D02 | 3 | 1 | 0 | 2 | 0 | 0 | 37 (2), 38 (1) |
@@ -1907,18 +1914,21 @@ reached, 183 all captured, 16 link records only; now 2 042, 1 004, 225, 18; 2 no
 | knowledge S01 | 21 | 8 | 2 | 11 | 0 | 0 | 39 (6), 32 (5), 37 (5), 35 (5), 17 (4) |
 | knowledge S02 | 5 | 4 | 0 | 1 | 0 | 0 | 32 (1) |
 | knowledge C01 | 11 | 2 | 1 | 8 | 0 | 0 | 41 (3), 30 (3), 37 (3), 40 (3), 18 (2) |
-| knowledge C02 | 11 | 4 | 1 | 6 | 0 | 0 | 37 (6), 41 (4), 21 (4), 35 (4), 19 (4) |
+| knowledge C02 | 11 | 4 | 2 | 5 | 0 | 0 | 37 (5), 21 (4), 35 (4), 19 (4), 18 (3) |
 | knowledge P01 | 6 | 2 | 1 | 3 | 0 | 0 | 37 (3) |
 | knowledge P03 | 5 | 1 | 2 | 2 | 0 | 0 | 37 (2) |
 | knowledge P04 | 2 | 1 | 0 | 1 | 0 | 0 | 37 (1) |
-| knowledge X01 | 4 | 2 | 0 | 2 | 0 | 0 | 43 (2), 44 (2), 23 (1), 30 (1), 33 (1) |
+| knowledge P05 | 3 | 0 | 2 | 1 | 0 | 0 | 40 (1) |
+| knowledge X01 | 4 | 2 | 0 | 2 | 0 | 0 | 43 (2), 44 (2), 23 (1), 30 (1), 53 (1) |
 | knowledge X02 | 4 | 3 | 0 | 1 | 0 | 0 | 14 (1), 15 (1), 17 (1), 18 (1), 19 (1) |
 | knowledge X03 | 2 | 2 | 0 | 0 | 0 | 0 |  |
 | knowledge X04 | 4 | 1 | 2 | 1 | 0 | 0 | 37 (1) |
-| knowledge X05 | 7 | 1 | 0 | 6 | 0 | 0 | 21 (4), 39 (4), 41 (4), 47 (4), 14 (4) |
+| knowledge X05 | 7 | 1 | 0 | 6 | 0 | 0 | 21 (4), 39 (4), 41 (4), 14 (4), 27 (3) |
+| knowledge X06 | 4 | 1 | 2 | 1 | 0 | 0 | 24 (1), 41 (1) |
 | knowledge X07 | 4 | 0 | 0 | 4 | 0 | 0 | 24 (4), 41 (4), 34 (2), 51 (2), 29 (1) |
+| knowledge X09 | 5 | 1 | 0 | 4 | 0 | 0 | 41 (4), 14 (3), 21 (3), 45 (3), 46 (3) |
 | knowledge K01 | 15 | 8 | 7 | 0 | 0 | 0 |  |
-| **Total** | 2042 | 793 | 225 | 1004 | 18 | 2 | |
+| **Total** | 2055 | 795 | 233 | 1010 | 15 | 2 | |
 <!-- COVER:end -->
 
 ## 8. Database setups (S1–S24)

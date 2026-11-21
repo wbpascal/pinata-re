@@ -222,10 +222,12 @@ OVERRIDE.update({
                      '"Corrections"'),
     # captured beside a bystander; the shout of s45 reached a player out of sight (not in capture-validation §13)
     ('Z01', '3.2'): ('medium', 'sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; '
-                     'capture-validation §27.2, §27.6, §27.7), but the section gives every so_AllInMap0..5 the sight '
-                     'cells and ali_Work a sight check, while the shout of s45 (so_AllInMap1, "filtered as in Z01 §3.2" '
-                     'per Z02 §3.2) reached a player out of sight (§27.4): one of the two statements is too general '
-                     '(inferred; not in §13)', 're-read the rest (§3): which iterator and visitor so_AllInMap1 uses'),
+                     'capture-validation §27.2, §27.6, §27.7) and so is a whole-map shout to a player out of sight '
+                     '(§27.4); the section is too general there (code read in X09 part 4, docs/knowledge/X09.md §4): '
+                     'so_AllInMap FUN_0054b8c0 -> so_AllInMapNomal FUN_0054be00 walks the whole map list with a layer '
+                     'filter only, and FUN_0049ac70 in ali_Work is so_SubLayer_CanSee, not a sight check; the sight '
+                     'radius is so_AllOfRange FUN_0054baf0', 'the README §5 superseded-statement row (X08) and a '
+                     'capture of a so_AllOfRange broadcast not reaching a player just outside MapInfo.Sight'),
     # corrected by batch 5; the open branches are scenarios of X09
     ('Z04', '4.1'): ('medium', 'captured: split-and-merge and the exchange onto a stack at MaxLot (capture-validation '
                      '§26.2), and the capture extended the branch list (b >= MaxLot -> irm_Exchange; §13 -> X08); the '
