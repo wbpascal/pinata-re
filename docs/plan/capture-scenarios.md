@@ -24,6 +24,13 @@ scenario is `docs/knowledge/X07.md`: scenarios **51** (skills) and **52** (chara
 50, before 41, setups **S20–S21** and test-client cases **T23–T25**; §2, §6 and §7 count them, and 24 and 38 now
 stand among the recorded rows of §2.
 
+State after capture batch 5 (X09): scenarios 45 (`s45`), 46 (`s46`) and 52 (`s52`) are recorded and carry a "Result
+(P02 batch 5)" line and a "Notes corrected" line (capture-validation §13, §26–§28); their setups name their run kits
+and their steps and predictions carry the fixes (46: the client's money and soul-stone refusals, the first empty
+cell; 45: four hits, 970 units, three aborts by a step, no `0x2022`; 52: a changed row, not an appended byte, the
+decrypted buffer, the renamed character started). Scenario 39 has a notes template and a run kit but no capture.
+The map from each open thing of batch 5 to its scenario is `docs/knowledge/X09.md`.
+
 ## 1. Conventions
 
 - **Test server only.** Every scenario changes characters, some crash or disconnect on purpose (41, 42, 43).
@@ -922,6 +929,11 @@ online owner, one short capture per step, the SQL window open next to the client
   - **Disproved by:** a `0x2434` code other than the three; a `0x2445` before the `0x2438`; a party packet at the
     moment of the death; `0x042B` for the PK death; a `0x2411` whose number differs from the formula with the
     map's `FieldList` row (read it with `shn.py`), or one below the minimum level; a map login after `0x1102`.
+- **State after batch 5 (X09): not captured.** `re-data/captures/26_11_16_39_death-pk-revive-knockback-guildwar.md`
+  (commit caf8817) is the notes template of the run kit `tools/capture/39/39-server.ps1` (`prep`: X39A SharpShooter 40
+  and X39B Guardian 40, GM 100, 2 000 000 cen, A's exp mid-level, A Power Shot / Distant Shot, B Rebirth; `snapshot`,
+  `cleanup`, `collect`) with its blanks not filled; there is no pcapng and no `-db.txt` (capture-validation §1).
+  Every prediction of steps 1–10 is still open; record it as written (the run kit's notes file is the checklist).
 
 ### 40. Gathering, production, item emotes, way-finding gate, tutorial, attendance
 
@@ -971,13 +983,19 @@ online owner, one short capture per step, the SQL window open next to the client
   "Sit", 5 s later "Stand". (3) B plays a dance emote and ends it three ways, 10 s apart, the notes saying which:
   the same emote again, Esc, a step. (4) B runs out of A's sight on the same map (more than 1600 units; A no longer
   sees B); A shouts; B runs back. (5) A whispers with `X45Nobody` (no such character) as the **receiver**.
-  (6) B lets a mob hit it three times next to A without hitting back, then kills it. (7) B starts the cast and steps
-  before the bar is full; then casts once to the end. (8) B walks out of A's sight and stops (step 7 of 14).
+  (6) B lets a mob hit it next to A (inside A's sight; in `s45` B stood 970 units away) without hitting back, then
+  kills it; a level-30 mob (Archmage Book) kills a level-40 B in four swings, so count the hits and revive first if
+  B dies. (7) B starts the cast and steps before the bar is full (the client cuts the cast itself on a step; do it
+  once and note how many tries there were: `s45` had three); then casts once to the end. (8) B walks out of A's sight
+  and stops (step 7 of 14). Run kit: `tools/capture/45/45-server.ps1` (`prep`, `capture-start`, `snapshot`,
+  `cleanup -Dest`, `collect` with the server logs).
 - **Prediction:** (1) B `0x2017 {from, to}` → A `0x2018 NC_ACT_SOMEONEMOVEWALK_CMD` for B's handle, nothing to B;
   the run steps `0x2019` → `0x201A` as captured. (2) B `0x2020 {6}` → `0x2021 {B, 6}` to A **and** B, then `{7}`
-  *(inferred from the captured stand)*; no `0x2009`. (3) for at least one of the three ways B sends `0x2022
-  {emoticonid, emoticonframe}` → A `0x2023 {B, emoticonid, emoticonframe}` (Z02 §4); if none of them sends it, the
-  2016 client has no stop and the packet is test-client case T19. (4) `0x201F` reaches B out of sight (the whole map
+  *(inferred from the captured stand)*; no `0x2009`. (3) none of the three ways sends `0x2022` (corrected after
+  `s45`, capture-validation §27.3): the same emote again is a new `0x2020` → `0x2021` to both (the dance restarts),
+  Esc sends nothing (the dance goes on), a step ends it on both screens through the move relay (`0x2019` → A
+  `0x201A`). The 2016 client's only `0x2022` sender is its key function 0x6F (pause / resume an emote, "Open after
+  batch 5" below); without that key the packet stays test-client case T19. (4) `0x201F` reaches B out of sight (the whole map
   instance, `so_AllInMap1`). (5) WM → A `0x200E {ErrorType 0x0F69, receiver "X45Nobody"}` (25 bytes raw); no
   `0x200D`, no `0x200F`, no `0x6006` to A's zone. (6) as captured before (capture-validation §9.2, §18.5): B gets
   `0x2447` / `0x2448` per swing of the mob, A the bystander forms `0x2447` / `0x2449`; **no `0x242E`, no `0x242D`**.
@@ -989,6 +1007,41 @@ online owner, one short capture per step, the SQL window open next to the client
 - **Disproved by:** `0x2018` also to B; a `0x2009` for the sit; a shout that stops at sight range; `0x200F` or
   `0x6006` for the unknown receiver, or another `ErrorType`; a `0x242E` / `0x242D` for a mob's hit (then Z03 §3.5 holds for that mob: note its `MobInfo` row); a cast
   abort without `0x2438` to A.
+- **State after batch 5 (X09):** recorded as `s45` (`26_11_21_45_walk-sit-emote-stop-shout-whisper-cast-abort`, with
+  the prep / DB readings and the server `-logs/` folder; capture-validation §27): X45A (A, Trickster 40) and X45B (B,
+  SharpShooter 40) on zone 0, RouN, from one client PC.
+- **Notes corrected (`s45`, capture-validation §13, X09):** step 6: the book hit B **four** times (250, 238, 276, 86)
+  and B died before it could kill it (notes: "three hits"); B stood 970 units from A (notes: "~400"); B was revived
+  in town, came back and killed the book with one Distant Shot. Step 7: **three** aborted casts (93, 266 and 881 ms
+  into the cast, each cut by a step) before the full one (notes: one). Step 3: the step ended the emote; Esc did not.
+  Step 4: "x45 shoud A" is the notes' typo (the wire has "shout"). The steps above carry these fixes.
+- **Result (P02 batch 5, `s45`, capture-validation §27):**
+  (1) **confirmed** (§27.2): each B `0x2017` reached A 16–23 ms later as `0x2018 {handle 8005, from = the server's
+  position, to, speed 33 (B's walk speed), moveattr}` (stale `moveattr` bytes, Z02-B2); the runs as `0x201A {speed
+  127}`; no `0x2018` / `0x201A` with B's own handle went to B (decoder count, X09); no `0x203E` after a move.
+  (2) **disproved in part** (§27.3): the client sends `0x2020 {7}` for the sit (as `s14`), never `{6}`; the server
+  relays it as `0x2021 {8005, 7}` to B and then A (`includeSelf` 1), no `0x2009`; the stand sends **no** packet (the
+  client drops every `0x2020` in emotion state 4 and stands the character up locally, FUN_004ce0d0 / FUN_0049e520
+  *(inferred)*); how A saw B stand is not settled.
+  (3) **disproved**: none of the three ways sends `0x2022` (same emote: a new `0x2020` / `0x2021`, the dance
+  restarts; Esc: nothing; a step: `0x2019` + `0x2012`, A `0x201A` / `0x2013`, the dance stops on both screens);
+  `0x2022` / `0x2023` still never seen. The 2016 sender FUN_0049e580 is reached only through key function 0x6F (§27.3).
+  (4) **confirmed** (§27.4): B left A's sight at 1607 units (`0x1C0E` both ways); A's shout `0x201F {"X45A", flag
+  0x64, "x45 shout A"}` went to A **and** B out of sight (`so_AllInMap1`), so 1 ≤ `g_ShoutLevel` ≤ 39 with `s14`'s
+  level-1 refusal. Not predicted: A's client sent WM `0x0846 {0, 1, 55}` → CharDB `0x0847` (W04 §17.2, no answer).
+  (5) **confirmed** (§27.5): WM → A `0x200E {0x0F69, "X45Nobody"}` 10 ms after the `0x200C` (22 bytes payload, 25
+  raw); no `0x200D`, `0x200F`, `0x6006`; client "Cannot find the recipient". First capture of `0x200E`.
+  (6) **confirmed** (§27.6): four swings of the book (MobInfo 34), each B `0x2447` + `0x2448` + `0x240E`, A `0x2447` +
+  `0x2449` (no damage number) in the same ms; **no `0x242E` / `0x242D`**; `hpchangeorder` B *n*, A *n*+1, B's
+  `0x240E` *n*+2. Not predicted: B's death sends A only the `0x2449 {resthp 0}` (no death packet to the sight); the
+  town revive reaches A as `0x2427` + `0x1C18` + `0x1805 {8005}`, not `0x1C0E` (same-zone link).
+  (7) **confirmed with a different order** (§27.7): per abort B `0x2438 {8005}` + `0x2445 {0x20E8}` 4–11 ms after the
+  `0x2444`, then A `0x2438` 11–14 ms after B; `0x243D` to both 51–71 ms later; no SP change, no `0x2457`, no message
+  on B's screen. The full casts gave A `0x244F` at the start and the blast `0x2452` 1.5–1.6 s after `0x244E`, A's
+  32 ms before B's.
+  (8) **disproved**: leaving sight at walk speed gives `0x1C0E` both ways (1611 units, 731.3), not `0x1805`; A got no
+  relay after it (Z09 §9.6 `ali_Work`). `0x1805` is the removal of a same-zone revive or teleport (step 6).
+  None of the "Disproved by" events occurred; (2), (3) and (8) failed on points the list did not name.
 
 ### 46. Items III: what `s21` left open, no DB change (added by X05)
 
@@ -996,8 +1049,10 @@ online owner, one short capture per step, the SQL window open next to the client
   (`irm_Split_N_Merge` @ FUN_00532a20), §13.1 (`0x5005`); Z05 §2.2, §4; D03 §2.2 (`0x34B9` @ FUN_0042e060), §3.3
   (`0x3431` @ FUN_0040c000) and its SQL checks for **the character that plays** (capture-validation §19.8: the
   `s21` snapshots listed another one).
-- **Setup:** one client, GM character `<Char>`; `tools/capture/21/21-server.ps1 snapshot-before -Char <Char>` before
-  the login and `snapshot-after` after the logout (the script prints the name first: compare it with the notes).
+- **Setup:** one client, GM character `<Char>`; run kit `tools/capture/46/46-server.ps1` (`prep`, `capture-start`,
+  `snapshot -Label …` before the login and after the logout, `cleanup -Dest`, `collect`; the snapshot prints the
+  name first: compare it with the notes). Stop the capture only **after** the logout (`s46` stopped with the
+  character still in the world, so its logout save is not on the wire).
   `&makeitem BestLowHpPotion -l40` and `-l30` (`MaxLot` 50), `&makeitem LeatherBoots` (not stackable), one item whose
   `ItemInfo.BuyDemandLv` is above the character's level and whose `SellPrice` is not 0 (2016 data: `NormalEar117`,
   117: **the character must be below that level**, the level-120 GM of the earlier batches gets no `0x366B`; if
@@ -1021,17 +1076,56 @@ online owner, one short capture per step, the SQL window open next to the client
   refused by the zone, `0x300C {0x24A}`. (2) as captured (§3.21 result 8); the after-snapshot holds the stack with `nStorageType = 6`,
   `nOwner = userNo` (D03 check 3). (3) sale `0x3422` → `0x3423` → `0x305C`, `0x3005 {0x381}`; buy-back `0x3059` → D
   `0x34B9 NC_ITEMDB_REPURCHASE_ALL_REQ` (a **new** item key made by the zone, `nSellItemKey` = the sold one) →
-  `0x34BA {0x3668}` → `0x305D`, `0x305A {0x3668}`, the cell by `0x3001`; G `0x07FD {0x7F8}`, `0xC815`; the
-  after-snapshot has the boots under the new key only. (4) `0x305A {0x366C}` "Not enough money to buy the item.", no DB request
-  (the handler refuses only when the purse is below the price). (5) `0x3059` → **`0x3004 {0x366B}`** (a BUY_ACK,
+  `0x34BA {0x3668}` → `0x305D`, `0x305A {0x3668}`, the boots by `0x3001` in the **first empty unlocked cell**
+  (`ii_RepurchaseAll` @ FUN_00537ca0; not the cell they were sold from); G `0x07FD {0x7F8, nInt3 = the price}`,
+  `0xC815`; the after-snapshot has the boots under the new key only. (4) **nothing on the wire** (corrected after
+  `s46`, capture-validation §26.4): the 2016 client compares its purse with the entry's price itself and shows
+  810 500 413 "Cannot make the purchase due to insufficient money."; no `0x3059`, so the zone's `0x305A {0x366C}`
+  "Not enough money to buy the item." is out of reach of the 2016 client ("Open after batch 5" below). (5) `0x3059` → **`0x3004 {0x366B}`** (a BUY_ACK,
   Z04-B2), no `0x305A`, no DB request, no text *(inferred: the buy handler has texts for its own codes only, Z05
   §2.4)*. (6) `0x305A {0x366D}` "Inventory is full.",
-  no DB request. (7) with 0 cen `0x5005 NC_SOULSTONE_BUYFAIL_ACK {0x743}`; over the stock limit `{0x742}`; no D
-  `0x3441` for either *(the order of the two checks is inferred, Z04 §13.1)*. If the client refuses both itself, the
-  packets are test-client case T18.
+  no DB request. (7) both refusals are the **client's** (corrected after `s46`, capture-validation §26.5): with 0 cen
+  978 272 565 "You have insufficient money.", at the limit (held = `maxnum`) 1 677 983 971 "Cannot purchase more.",
+  no `0x5001` / `0x5002` for either; the number dialog offers at most `min(purse / price, maxnum − held)`. The zone's
+  `0x5005 NC_SOULSTONE_BUYFAIL_ACK` / `0x3443` refusals (Z04 §13.1) stay test-client case T18. The allowed purchase:
+  `0x5001 {n}` → D `0x3441 {flag 0, number n, price n × hp.price}` → `0x3442` → `0x1033`, `0x5003`, `0x3004 {0x201}`.
 - **Disproved by:** a `0x3431` or a refusal for the second drag (predicted: an exchange `0x342B`); `0x34BB` for the boots; the sold key
   coming back; `0x305A {0x366B}`; a DB request in (4)–(7); a refusal in (4)–(6) that removes the entry from the
   repurchase list (`0x305D`).
+- **State after batch 5 (X09):** recorded as `s46` (`26_11_16_46_items-merge-buyback-refusals`, with the prep output
+  and the DB snapshots "after prep", "after setup", "after logout"; capture-validation §26): X46A (charNo 11,
+  Trickster 20, GM 100, 1 000 cen, `admin` userNo 103), one client, zone 0, RouN. Setup items: `BestLowHpPotion`
+  ×40 / ×30, `LeatherBoots`, `NormalEar117` (Frozen Earrings), `BroadSword` in cells 0–4.
+- **Notes corrected (`s46`, capture-validation §13, X09):** step 3: the bought-back boots went to the first empty
+  cell (0, emptied by step 2's deposit), not the cell they were sold from (2; the notes had "an empty cell, e.g. 2" and
+  corrected themselves). Step 4: the money refusal is the client's text 810 500 413 with no packet (the notes' text),
+  not the zone's `0x366C`. Step 7: both soul-stone refusals are the client's (978 272 565, 1 677 983 971), no
+  `0x5001`; the number could not be typed (the dialog offered 36). The capture ends at 751.3 s with X46A in the world:
+  the logout is not on the wire, its save only in the "after logout" snapshot. The setup, steps and predictions
+  above carry these fixes.
+- **Result (P02 batch 5, `s46`, capture-validation §26):**
+  (1) **confirmed** (§26.2): `0x300B` → D `0x3431 {lock 8, 3500, MoveLot 10, cell 1 → cell 0, lots 30 / 40}` (44 bytes
+  = ref + the pdb2016 struct; layout corrected in P02.json) → `0x3432 {…, 10, 20, 50}` → `0x3001` ×2, `0x300C {0x241}`;
+  G `0x0456` with the target's result lot before the source's (D03 §3.3 corrected). The second drag onto the full
+  stack: **exchange as predicted**, `0x342B` → `0x342C` +11 ms → the two swap, `0x300C {0x241}`, no GameLog row;
+  `0x300C {0x24A}` and the `irm_Move` / `0x20a` branch were not reached (§26.2's branch table).
+  (2) **confirmed**: the ×20 to account storage cell 3 by `0x3428` (owner 11 → 103), `0x301C {1000}` → `0x345F` →
+  `0x3460` → `0x301D`; the after-logout snapshot has it with `nStorageType 6`, `nOwner 103` (D03 check 3).
+  (3) **confirmed with the cell corrected** (§26.3): sale `0x3006` → `0x3422 {price 2}` → `0x305C`; buy-back `0x3059 {0}`
+  → D `0x34B9 {lock 13, location 0x2400 (cell 0), a new key, nPrice 2, nSellItemKey = the sold key, UserNo 103,
+  Vendor 28}` + 13 attribute bytes (77 bytes; layout corrected) → `0x34BA {0x3668}` +10 ms, G `0x07FD {0x7F8, nInt3 2}`
+  and `0xC815 {BuyMoney 2}` → `0x1033`, `0x3001` cell 0, `0x305D`, `0x305A {0x3668}`; the snapshot has the boots
+  under the new key only. No `0x34BB`.
+  (4) **disproved**: no `0x3059` on the wire; the client refused with 810 500 413; the entry stayed listed (§26.4).
+  (5) **confirmed** (§26.4): seven `0x3059 {2}` → seven `0x3004 NC_ITEM_BUY_ACK {0x366B}` 0–17 ms later, no `0x305A`,
+  no DB request, no text on the client (`On_NC_ITEM_BUY_ACK` FUN_004ab770 has no case for it): Z04-B2 captured; the
+  level check comes before the money check (the purse would have paid).
+  (6) **confirmed** (§26.4): `0x3059 {3}` → `0x305A {0x366D}` +8 ms, no DB request, "Inventory is full."; on the way
+  the 46th `&makeitem` into the full bag got no answer at all (Z11-B12, as §19.2).
+  (7) **disproved**: both refusals are the client's, nothing sent (§26.5); the allowed purchase of 36 went `0x5001
+  {36}` → `0x3441 {flag 0, 36, price 972}` → `0x3442` → `0x1033 {89435}`, `0x5003 {51}`, `0x3004 {0x201}`.
+  Not predicted: the auto-save at 631.0 (`StoreType 10`, 600.014 s after the `0x1803`, §23.5).
+  None of the "Disproved by" events occurred; (4) and (7) failed because the client never sent the request.
 
 ### 47. Items IV: the zone and the DB disagree (added by X05)
 
@@ -1309,8 +1403,9 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
 - **Claims:** W01 §4.2 / §6.2 (`0x1001`, `TutorialLoginProcess`, P02-B33), W01 §3.3 (the list's "RouT" copy); D02 §3.5
   (`p_Char_Rename`, 0xD0 / 0xD1); Z11 §4.5 (`&kickout`, Z11-B6), Z01 §8.3, W01 §5.2 (`0x0C1A` → `0x0C17`); Z01 §5.2
   (SHN checksum, `0x1804 {0x147}`, 0x68E).
-- **Setup:** the run kits of scenarios 37 (`37b-server.ps1`) and 38 (`38-server.ps1`); S20 for step 2; A (GM, S1)
-  and B on two clients, both on a map of **one** zone process for step 3 (the other-zone kick is broken, Z11-B6).
+- **Setup:** run kit `tools/capture/52/52-server.ps1` (`prep` installs S20 and renames the `-` character, `move-b`,
+  `shn-break` / `shn-restore`, `snapshot`, `cleanup -Dest`, `collect` with the server logs); A (GM, S1) and B on two
+  clients, both on a map of **one** zone process for step 3's first kick (the other-zone kick is broken, Z11-B6).
 - **Steps and predictions:**
   (1) **Second `0x1001` with the stale "RouT" copy (P02-B33).** Create a character, quit to the login screen (so the
   next list comes from `0x0C13` with `nTutorialState` 0), log in, select it, answer **No** to "start the tutorial?":
@@ -1320,8 +1415,8 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   and still the map "RouT", W01 §4.2; capture-validation §22.2 *inferred*). Then leave to the server list, enter the
   world again (new `0x0C13`: state 2, RouN) and start: `0x1004` … `0x1003`, in game on RouN. This is the opposite of
   `s37b`'s rerun fix (§3.37: there the `-` character must **not** be in state 0): use another character.
-  Copy the WorldManager's log of both starts next to the notes by hand (`collect` copies only the capture and the
-  SQL outputs): the first logs "TutorialMap Search Fail" (capture-validation
+  `52-server.ps1 collect` copies the server logs written since `prep` (WM, zones) next to the notes: the first
+  start logs "TutorialMap Search Fail" (capture-validation
   §22.2, not on the wire); note whether the second logs it too or another line (not predicted: which check of the
   second start answers 0x145 is *inferred* from W01 §4.2).
   (2) **The 2016 `p_Char_Rename` (S20).** With S20 installed (note what its `sp_helpindex` printed), select the `-`
@@ -1330,9 +1425,10 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   (W01 §4.1), the DB row unchanged; the name still has its `-`, so selecting it opens the forced rename window again
   *(inferred from capture-validation §22.1: the client opens it itself for a name with `-`)*: start is reached only
   through a successful rename. Then a free name: `0x1412 {0xD0}`, `0x1410 {0xD0}`, the DB
-  row renamed, start works. **If `tCharacter.sID` has no unique index**, the UPDATE succeeds and two characters share
-  the name (`0xD0`): note it, it decides D02 §3.5's "a duplicate fails on the unique name" *(inferred there)*.
-  Restore S20 at the end.
+  row renamed, start works. **If `tCharacter.sID` has no unique index** (the test DB of `s52` has none, capture-validation
+  §28.3), the UPDATE succeeds and two characters share the name (`0xD0`, P02-B42): then start the renamed character
+  (it logs in under the shared name, `0x1007 charid` = that name) and the free-name rename is not reached. Note which
+  character you started (`s52`'s notes kept the template's "selected X52Ren"). Restore S20 at the end.
   (3) **Zone-initiated disconnect with a real `usrregnum` (`&kickout`).** A types `&kickout <B's name>`: Z → W
   **`0x0C1A NC_USER_CONNECTCUT2WORLDMANAGER_CMD {0xFFFF, −1, usrregnum = B's user number, wldmanhandle = B's WM
   handle, 0x68B}`** → W → B `0x0C17 {0x68B}` (W01 §5.2: sent only when the session's user number matches; `s37b`'s
@@ -1343,16 +1439,56 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   ring `0x1068` (0x1E bytes).
   (4) **SHN mismatch.** On the server, keep a copy of one zone-side View table the zone hashes (`9Data/Shine/View/MapViewInfo.shn`;
   only the 14 View tables of the zone's "SHN - ViewData Checksum - …" log strings count, `PupView.shn` is not one),
-  append one byte to it and restart that zone only; log in to a map it hosts: C `0x1801` → Z → C **`0x1804 {0x147,
-  idx}`** "The client has been illegally manipulated. Please reinstall the client." (first login), the zone log's
-  "DataFail" line names the table; Z → W `0x0C1A {usrregnum 0, 0x68E}` (the user number is set only by `0x104C`,
-  which this path never reaches, Z01 §5.2–§5.3), so **no** `0x0C17`. Restore the file, restart the zone. That the
-  zone hashes the raw file (so one appended byte is enough) is *inferred*; if the login succeeds, change a byte inside
-  a row instead.
+  **change one byte inside a row** (`52-server.ps1 shn-break`, default `-Mode row`: the file keeps its length) and
+  restart that zone only; log in to a map it hosts: C `0x1801` → Z → C **`0x1804 {0x147, idx}`** (idx 32 =
+  MapViewInfo) "The client has been illegally manipulated. Please reinstall the client." (first login); the zone log
+  `ZoneLinktoError` has `sp_NC_MAP_LOGIN_REQ : DataFail [CharID=…]`, without the table name; Z → W `0x0C1A {usrregnum
+  0, 0x68E}` (the user number is set only by `0x104C`, which this path never reaches, Z01 §5.2–§5.3), so **no**
+  `0x0C17`. Restore the file, restart the zone. The zone hashes the **decrypted** buffer, and the SHN cipher's key
+  starts from the file length: one **appended** byte (`-Mode append`) garbles the header and crashes the zone at start
+  (`std::bad_alloc` in `CDataReader::Read`, P02-B43; capture-validation §28.6), so it never reaches the login check.
 - **Disproved by:** (1) a `0x1110` or a CharDB round trip on the second start, or the second start succeeding; (2)
   `0x1412 {0xD0}` for the name in use while `sp_helpindex` shows a unique `sID` index, or the WM storing the refused
   name; (3) a `0x0C1A` with usrregnum 0, no `0x0C17`, or B staying in the game; (4) a `0x1804` with another code, or
   a `0x0C17` to the client.
+- **State after batch 5 (X09):** recorded as `s52` (`26_11_21_52_stale-tutorial-rename-kickout-shn`, with the prep
+  output, DB snapshots and the server `-logs/` folder; capture-validation §28): account `admin` (userNo 103) with
+  `X52-Dash` (charNo 7, slot 2, the prep's rename of `X37Del`) and `X52Tut` (14, created in step 1); `testaccountB`
+  (104) with `X52B` (13); zone 0 (9210) and zone 1 (9212, RouVal01, the SHN zone). S20 was installed;
+  `sp_helpindex tCharacter` showed only the primary key on `nCharNo` (no unique `sID`).
+- **Notes corrected (`s52`, capture-validation §13, X09):** step 4 had a first attempt the notes leave out: one byte
+  **appended** to MapViewInfo.shn (12:47:09) made zone 1 crash at start, twice (two minidumps, P02-B43); only the
+  second break (a byte changed inside a row, the md5 the notes record) reached the login check. The zone hashes the
+  decrypted buffer, not the raw file. Step 2's "selected X52Ren, Start" lines are the notes template's: the character
+  started was the renamed X52-Dash (now "Test1235"), at its prep position 5874 / 6530 (the notes guessed the old
+  Test1235's). Step 1: the world was entered a second time between the create and the first start (214.2–224.3).
+  The world is listed as "INITIO" by the login server ("Enid" is the client text). The steps above carry these fixes.
+- **Result (P02 batch 5, `s52`, capture-validation §28):**
+  (1) **confirmed** (§28.2): first start `0x1001` → `0x1110` (1 byte 0xD5, P02-B28) → `0x1111 {1}` → D `0x1112` →
+  `0x1113 {0x31E8}` → `0x1002 {0x145}` 20 ms after the answer, WM log "TutorialMap Search Fail" *(captured: server
+  log)*; second `0x1001` → `0x1002 {0x145}` **4 ms** later, no `0x1110`, no CharDB packet, **no** WM log line: the
+  `GetServiceMapZoneNo("RouT")` = −1 exit of `fc_NC_CHAR_LOGIN_REQ` @ FUN_00422be0 (the state-2 copy skips the
+  tutorial path). After a new WM session (list: RouN, state 2) `0x1001` → `0x1004` → `0x1003`, in game at the create
+  position without a tutorial question: P02-B33 is cleared only by a new list.
+  (2) **disproved** (§28.3): the taken name was accepted: `0x140F {2, "Test1235"}` → D `0x1411` → `0x1412 {0xD0}` →
+  `0x1410 {2, "Test1235", 0xD0}`, the client showed no message and listed the name; the DB has two `Test1235` rows
+  (charNo 2 and 7). Nothing on the 2016 path checks a taken name (P02-B42; D02 §3.5's "a duplicate fails on the unique
+  name" contradicted); `0x1412 {0xD1}` stays uncaptured. The renamed character starts normally (`0x1007 charid
+  "Test1235"`, the WM resolves `0x104B` by the session handle, so the two do not mix at the map login). The free
+  name and the second forced-rename window were not reached.
+  (3) **confirmed** (§28.4, §28.5): same zone: `0x0C1A {0xFFFF, −1, usrregnum 104, wldmanhandle 1, 0x68B}` → WM → B
+  `0x0C17 {0x68B}` 5 ms later, "Disconnected from the server.", B `0x0C18 {0}`; `so_banning`'s save burst
+  (`StoreType 4`), A `0x1805 {8002}` and `0x2011 " is banned"` **without the name** (P02-B41, not predicted). Other
+  zone: the ring `0x1068` zone 0 → 1 → 2 → 3 → 0 (first hop 28 bytes, then 27), A `0x2011 "\x0CX52B is not in game"`
+  (the name read one byte early, Z11-B6 confirmed), B stayed in game, no `0x0C1A`.
+  (4) **confirmed with the setup corrected** (§28.6): with a changed row, `0x1801` → Z → W `0x0C1A {usrregnum 0,
+  wldmanhandle 0, 0x68E}`, C `0x1804 {0x147, 32}` (32 = MapViewInfo in `CShnDataFileCheckSum` @ FUN_00631450), the
+  client's "illegally manipulated" text and the login screen; no `0x0C17` (the WM logs the user out when the client
+  closes its connection). The zone's log line names no table. With one appended byte the zone does not start at all.
+  Not predicted: A's auto-save came 599.92 s after the `&levelup` save, not after the `0x1803`: every `ws_save2DB`
+  restarts the 10-min timer (§28.7).
+  Of the "Disproved by" events only (2)'s first one occurred (`0x1412 {0xD0}` for the name in use; `sp_helpindex`
+  showed no unique `sID` index, so this is the case the step named, not a contradiction of the unique-index rule).
 
 ### 41. Test client: crafted client packets
 
