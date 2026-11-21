@@ -17,6 +17,11 @@ Evidence levels as in `AGENTS.md`: plain = read in the 2016 code (2016 server PD
 > capture-validation §22–§25): 13 corrections in §5 (§13 rows "→ X06"), P02-B33 … B40 and *(captured)* evidence in §6
 > (register written by `docs/plan/status/X06-register.py`), captured flows and the quit / Kickout / auto-save corrections
 > in §3 (new §3.32); counts and left-out rows in `docs/knowledge/X06.md`.
+> Brought up to date by X08 (`docs/plan/status/X08.md`) with P02's capture batch 5 (`s46`, `s45`, `s52`;
+> capture-validation §26–§28): 8 corrections in §5 (§13 rows "→ X08"), P02-B41 … B44, P02-B33's extension (§5.9) and
+> *(captured)* evidence in §6 (register now written by `docs/plan/status/X08-register.py`, which wraps X06's), captured
+> flows in §3 (stacking and buy-back, a bystander's view, whisper fail and spam filter, `&kickout` on one and two zones)
+> and the corrected rename onto a taken name and SHN refusal; counts and left-out rows in `docs/knowledge/X08.md`.
 
 ## 1. Reading guide
 
@@ -85,7 +90,7 @@ reference `<doc> §n` in this file and in the item files means that numbered sec
 ### 1.3 By feature
 
 The full message paths are the sequence index (§3; the captured one-zone flows of sight and GM visibility are §3.31,
-those of skills, stat points, abnormal states and death §3.32); this table only says which documents a feature touches.
+those of skills, stat points, abnormal states and death §3.32, both with a bystander's view since batch 5); this table only says which documents a feature touches.
 
 | Feature | Client-facing | Other processes |
 |---|---|---|
@@ -490,7 +495,7 @@ FUN_00558900 saves for every value except `REMOVE_WARP`):
 
 | Trigger | Zone path | To the Character server | To the WM cache | Docs |
 |---|---|---|---|---|
-| every 600 s in game (`tAutoSaveTime` +0x2aa40 = now + 6000 ticks of 0.1 s, first set at map-login completion by `so_SetAutoSaveTime` FUN_005608c0 (vt 0xac0, from FUN_00443390), reset by every save; StoreType 10 599.94–599.99 s after the `0x1803` *(captured, capture-validation §23.5)*) | `so_Routine` FUN_0056c790 → `ws_save2DB(p, 1, 10)` | `0x4018` PK count, `0x4001 NC_CHARSAVE_ALL_REQ` (level / exp / fame, position, stones / HP / SP), `0x4007` abstates, `0x4009` skills if changed, `0x400B` titles, `0x401A` rest-exp time, item cool times `0x4023`, pet / minimon saves; **no** `0x4005` quests (second argument 1). *(captured, capture-validation §10.1)*: `0x4018`, `0x4001`, `0x4007`, `0x400B` (only when titles are marked), G `0x0410`, `0x401A`, `0x4035` in one ms; the u16 after the ref is `bufferlocation`, always 0 ((original bug) P02-B21); `0x4008` is answered before `0x4002` | – | Z09 §2, Z01 §8.4 (as corrected in §5.4), D02 §6 |
+| every 600 s in game (`tAutoSaveTime` +0x2aa40 = now + 6000 ticks of 0.1 s, first set at map-login completion by `so_SetAutoSaveTime` FUN_005608c0 (vt 0xac0, from FUN_00443390), reset by every save; StoreType 10 599.94–599.99 s after the `0x1803` *(captured, capture-validation §23.5)*, 600.014 s in `s46` *(captured, §26.6)*) | `so_Routine` FUN_0056c790 → `ws_save2DB(p, 1, 10)` | `0x4018` PK count, `0x4001 NC_CHARSAVE_ALL_REQ` (level / exp / fame, position, stones / HP / SP), `0x4007` abstates, `0x4009` skills if changed, `0x400B` titles, `0x401A` rest-exp time, item cool times `0x4023`, pet / minimon saves; **no** `0x4005` quests (second argument 1). *(captured, capture-validation §10.1)*: `0x4018`, `0x4001`, `0x4007`, `0x400B` (only when titles are marked), G `0x0410`, `0x401A`, `0x4035` in one ms; the u16 after the ref is `bufferlocation`, always 0 ((original bug) P02-B21); `0x4008` is answered before `0x4002` | – | Z09 §2, Z01 §8.4 (as corrected in §5.4), D02 §6 |
 | level up, `&levelup` | `sp_GainExp` FUN_0042d830, FUN_0042fa00 → `ws_save2DB(p, 1, 8)` | as above | `0x1073 NC_CHAR_EXP_CHANGED_CMD` on every exp gain, `0x1074 NC_CHAR_LEVEL_CHANGED_CMD` (W FUN_0042e160 → G `0xC808`), `0x400E` alone (`ws_savelevel2worldmamager` FUN_00453580). *(captured)*: per level W `0x400E`, `0x1074`, G `0x041E`, the D save, D `0x1070 NC_CHAR_FAMESAVE_CMD` in one ms; the WM applies them in link-service order (`0xC808` logged levels 7, 6, 8; (original bug) P02-B12); then C→Z `0x4025` → D `0x4027` → `0x4028` → C `0x4026` | Z03 §8.3, Z12 §7, W01 §7.5; capture-validation §9.4, §10.6 |
 | link to another zone | `so_LinkTo` FUN_0049ad30 → `ws_save2DB(p, 0, 2)` + `ws_save2worldmanager` FUN_004536f0 | as above **plus** `0x4005` quests. `0x4009` holds only the skills cast since the last save, and a skill once more with cool-down 0 after its cool-down ended (Z23 §7.1): D `0x4009` (D FUN_00406760) → `0x400A` (Z FUN_00455570) 8 ms later *(captured, capture-validation §24.7)* | the dept-16 set in code order: `0x400E NC_CHARSAVE_2WLDMAN_ALL_CMD` (when a field is set), `0x400F`, `0x4010` (always), `0x4029`, `0x402B`, `0x4011`, `0x4012` (skills ≠ 0), `0x4013` ×4 items (a failure disconnects with 0x68C and skips the rest), `0x4015`, `0x4014`, `0x4016`, `0x4017`, `0x4021`, `0x402A`, `0xBC1D`, `0x402C`, [`0xCC0B` riding], `0x4032`, [`0x4033` pet state], [`0x4034` cool times], `0x4036`, [`0x4037` sold items] (W FUN_00429d40 … FUN_0042d080, W05 §5.5); one burst over the 4 WM links in 1–2 ms *(captured; Z01 §8.4's list is superseded, §5.4)* | Z01 §7.1, §8.4, W01 §7.4, Z23 §7.1; capture-validation §7.5.4, §24.7 |
 | link inside the zone, revive at another map | `so_Unmark` `REMOVE_NOW` / `REMOVE_REVIVE` → `ws_save2DB(p, 0, …)`; revive *(captured)*: `0x104E` (Z FUN_00452980) → W `0x180B`, G `0x042D` (hunt-log flush before the `REMOVE_REVIVE` case), `ws_save2DB(p, 0, 2)`, C `0x1C18` / `0x242A`, `0x104F`; the client's `0x1803` 158 ms later brings the full login burst and W `0x180C`; no WM saves, no `0xC809` | full | – | Z01 §7.1, Z07 §3.1; capture-validation §9.5 |
@@ -546,7 +551,7 @@ Captured item flows *(captured; "one ms" = sent in the same millisecond; every s
 | use | C→Z `0x3015` (Z FUN_005416b0) → after the cast (34 ms) D `0x343E` USELOT (D FUN_0040d5e0) / `0x343F` USEALL and C `0x301A` in one ms → `0x3440` (Z FUN_0053fa40) → G `0x0459` / `0x045A`, C `0x3016 {0x700}`, `0x3001`, `0x240E` together; full HP → `0x3016 {0x713}` without a DB request | Z04 §6.3, Z13 §8, Z05 §6.1, D03 §4; capture-validation §19.6 |
 | skill book | bought as any item (`0x3003` → D `0x340A` → … `0x3004 {0x201}`; the skill master's `0x3C0A` lists the books of every class); use C→Z `0x3015` (Z FUN_005416b0) → D `0x343F` USEALL (D FUN_0040d800) and C `0x301A` at once → `0x3440 {0x700}` (Z FUN_0053fa40; 14 ms) → `UseItemSkillScroll` → D `0x4801` (D FUN_00411f10) → `0x4802` (Z FUN_0044ec80; 11 ms) → G `0x0432` (map "Need", x / y 0, D03-B11) → C `0x3016 {0x700}`, `0x3001`, `0x4804`, `0x1035` in one burst | Z05 §6.1, Z23 §6.2, Z03 §9.3, D04 §2; capture-validation §24.1, §24.2 |
 | reset capsules (stats, empower) | C→Z `0x3015` → `sp_StatEmpowInitialize` FUN_005183f0 → D `0x9005` (D FUN_00416e60) / `0x9006` (D FUN_00417160) and C `0x3016 {0x700}` in one ms, before the DB → `0x9007` / `0x9008` (Z FUN_00518650 / FUN_00518780; 20–28 ms) → G `0x045A` → C `0x3001` (cell emptied) → `0x900C {130}` (every stat point) / `0x900D {49}` (every empower point), no text; the stat reset adds `0x1035` + `0x240E` (MaxHP falls by the free bonus, HP clamped) | Z08 §11, Z23 §4, D03 §9; capture-validation §24.5 |
-| storage | open: 4 × D `0x3444` (D FUN_0040da60; one per Character link, in one ms, 3 ms after `0x201D`) → each `0x3446` (Z FUN_0044c460) → its `0x3C08` as it arrives (no `0x3028`); deposit C→Z `0x301C` (Z FUN_00533dc0) → D `0x345F` (D FUN_00410fa0) → G `0x045E` and `0x3460` (Z FUN_00534010) in one ms → C `0x1033`, `0x301D {balance after}`; withdraw `0x301E` (Z FUN_005342b0) → D `0x3461` (D FUN_00411200) → G `0x045F` and `0x3462` (Z FUN_00534500) → C `0x1033`, `0x301F` | Z04 §7.1, §7.2, Z05 §7, D03 §5.1; capture-validation §20.1 |
+| storage | open: 4 × D `0x3444` (D FUN_0040da60; one per Character link, in one ms, 3 ms after `0x201D`) → each `0x3446` (Z FUN_0044c460) → its `0x3C08` as it arrives (no `0x3028`); deposit C→Z `0x301C` (Z FUN_00533dc0) → D `0x345F` (D FUN_00410fa0) → G `0x045E` and `0x3460` (Z FUN_00534010) in one ms → C `0x1033`, `0x301D {balance after}`; withdraw `0x301E` (Z FUN_005342b0) → D `0x3461` (D FUN_00411200) → G `0x045F` and `0x3462` (Z FUN_00534500) → C `0x1033`, `0x301F` | Z04 §7.1, §7.2, Z05 §7, D03 §5.1; capture-validation §20.1, §26.6 (`s46`: the same flow, `0x301D` / `0x3460` again the balance after) |
 | sell | C→Z `0x3006 NC_ITEM_SELL_REQ` (Z FUN_00539020) → D `0x3425` SELLLOT (D FUN_00409ec0) / `0x3422` SELLALL (D FUN_00409a20) → `0x3426` / `0x3423` (Z FUN_00539510 / FUN_005393e0) with G `0x0449` + `0xC80E` in one ms → C `0x1033`, `0x3001`, `0x305C`, `0x3005 {0x381}` | Z04 §2.4, Z05 §2.2, D03 §2.2; capture-validation §20.2 |
 | buy back | C→Z `0x3059 NC_ITEM_REPURCHASE_REQ` (Z FUN_00538580) → D `0x34BB` (D FUN_0042e380) → G `0x07FD`, `0x34BC` (Z FUN_00538430) and `0xC815` in one ms → C `0x1033`, `0x3001` (first cell of the item with room), `0x305D`, `0x305A {0x3668}`; another NPC's role current → `0x305A {0x3671}` (silent) without a DB request ((original bug) P02-B31) | Z04 §2.5, Z05 §2.2; capture-validation §20.2 |
 | buy back onto an empty cell | C→Z `0x3059` with no stack with room (Z FUN_00538580) → `ItemInventory::ii_RepurchaseAll` FUN_00537ca0: the **first** empty unlocked cell (not the cell sold from), a new item key (`iti_mkregnum`); none → `0x305A {0x366D}` "Inventory is full." without a DB request (8 ms); a null-player check that cannot fail ((original bug) P02-B44) → D `0x34B9 NC_ITEMDB_REPURCHASE_ALL_REQ` (D FUN_0042e060; 77 bytes with the attribute) → 10 ms → `0x34BA NC_ITEMDB_REPURCHASE_ALL_ACK {0x3668}` (Z FUN_005382e0) with G `0x07FD` (`nInt3` = the price, D03 §2.2 as corrected in §5.7) + `0xC815` in the same ms → 5 ms → C `0x1033`, `0x3001`, `0x305D`, `0x305A {0x3668}` *(captured, capture-validation §26.3)* | Z04 §2.5, Z05 §2.2, D03 §2.2; capture-validation §26.3, §26.4 |
@@ -2889,16 +2894,19 @@ gaps that cut across items, §7.3 each document's own list, §7.4 what the X01 s
 
 ### 7.1 Open work items
 
-State from `docs/plan/status/<ID>.md` when X06's sweep ran (part 4, 2026-11-16); every other item is done (X03 too).
+State from `docs/plan/status/<ID>.md` when X08's sweep ran (part 4, 2026-11-21); every other item is done (X03 too).
 
 | Item | State | What it will change |
 |---|---|---|
-| [P04](../plan/items/P04.md) | part 3 of 4 done | brings `docs/protocol/README.md` §1.4 (zone seed on accept), §1.5 (server-initiated heartbeat) and §2 (flows) in line with `capture-validation.md`. Until then read README §5.1 here before trusting the protocol README |
-| [P05](../plan/items/P05.md) | not started | the protocol README's flows against capture batch 4 (back to character select `0x0C18 {1}`, the quit's link traffic, the client's own logout after losing the zone socket, the WM's `0x1002 {0x145}` with a zone down); README §3.12 here already carries them *(captured)* |
+| [P04](../plan/items/P04.md) | done | `docs/protocol/README.md` §1.4 (zone seed on accept), §1.5 (server-initiated heartbeat) and §2 (flows) agree with `capture-validation.md` (batches 1–3); README §5.1 here lists the statements it replaced |
+| [P05](../plan/items/P05.md) | done | the protocol README's flows against capture batch 4 (back to character select `0x0C18 {1}`, the quit's link traffic, the client's own logout after losing the zone socket, the WM's `0x1002 {0x145}` with a zone down); README §3.12 here carries them *(captured)* |
 | [X04](../plan/items/X04.md) | done | done in this file: §5 rows for P02's batches 2–3, §6 evidence and cross notes, §3 captured flows, citations; counts and left-out rows in `docs/knowledge/X04.md`; the fresh-context review's 6 findings are fixed (`docs/plan/status/X04.md`) |
 | [X05](../plan/items/X05.md) | done | X02's re-run after capture batch 3: `docs/plan/capture-scenarios.md` and the ratings in `docs/review/confidence.md` |
 | [X06](../plan/items/X06.md) | done (review: 6 findings fixed) | done in this file: §5 rows for P02's batch 4 (13), P02-B33 … B40 and batch-4 evidence in §6, §3 captured flows (new §3.32) and the quit / Kickout / auto-save corrections; counts and left-out rows in `docs/knowledge/X06.md` |
-| [X07](../plan/items/X07.md) | not started | X02's re-run after capture batch 4: the 4 batch-4 §13 rows owned by X02, scenario results for 24, 37 (`s37b`), 38, the ratings in `docs/review/confidence.md` |
+| [X07](../plan/items/X07.md) | done | X02's re-run after capture batch 4: the 4 batch-4 §13 rows owned by X02, scenario results for 24, 37 (`s37b`), 38, the ratings in `docs/review/confidence.md` |
+| [P06](../plan/items/P06.md) | not started | the protocol README against capture batch 5: §2.6's "the CharDB refuses a taken name *(inferred)*" (contradicted: P02-B42, capture-validation §28.3), the second `0x1001` after a tutorial skip (§28.2), the zone kick `0x0C1A` → `0x0C17 {0x68B}` (§28.4), the SHN refusal `0x1804 {0x147, idx}` + `0x0C1A {0, 0, 0x68E}` (§28.6), the whisper fail `0x200E` (§27.5); README §3.7 / §3.8 / §3.9 / §3.12 / §3.16 here already carry them *(captured)* |
+| [X08](../plan/items/X08.md) | part 4 of 5 done (review open) | done in this file: §5 rows for P02's batch 5 (8), P02-B41 … B44, P02-B33's extension and batch-5 evidence in §6, §3 captured flows (stacking and buy-back, a bystander's view, whisper fail, spam filter, `&kickout`) and the rename / SHN-refusal corrections; counts and left-out rows in `docs/knowledge/X08.md` |
+| [X09](../plan/items/X09.md) | not started | X02's re-run after capture batch 5: the 3 batch-5 §13 rows about scenarios 45 / 46 / 52, their result lines, scenario 39 (notes without a capture), scenarios for the paths batch 5 did not reach, the ratings in `docs/review/confidence.md` |
 
 Done since the X01 sweep: X01 part 9 (review), [X02](../plan/items/X02.md) (`docs/review/confidence.md`,
 `docs/plan/capture-scenarios.md`, corrections in §5) and its follow-ups [Z31](../plan/items/Z31.md),
@@ -2912,11 +2920,13 @@ Done since the X01 sweep: X01 part 9 (review), [X02](../plan/items/X02.md) (`doc
   them). Every gameplay feature (combat, items and ITEMDB, trade and booths, party, raid, guild, academy, tournament,
   quests, KQ, instances, mini-house, wedding, GM commands, the DB answers) is read in code only, and so are the effects
   of almost all bugs in §6 (`code; effect *(inferred)*`). X02 turned them into scenarios 14–44 with predicted packets
-  (`docs/plan/capture-scenarios.md`); X05 re-rated them after batch 3, X07 does so after batch 4. Since X01, P02's
-  batches 2–4 captured some of them too (the server links, items I–III, combat and death, sight and GM visibility,
-  create / rename refusals, session loss and zone kills, skills, stat points, reset items, abnormal states, revive by
-  skill: §3.14, §3.31, §3.32 and the *(captured)* rows of §3.12–§3.13); party, raid, guild, trade, booths, quests, KQ,
-  instances and most failure paths are still read in code only (capture-validation §14, §15).
+  (`docs/plan/capture-scenarios.md`); X05 re-rated them after batch 3, X07 after batch 4, X09 does so after batch 5.
+  Since X01, P02's batches 2–5 captured some of them too (the server links, items I–IV, combat and death, sight and GM
+  visibility with a bystander, create / rename refusals and a rename onto a taken name, session loss and zone kills,
+  skills, stat points, reset items, abnormal states, revive by skill, `&kickout`, the SHN refusal: §3.14, §3.28,
+  §3.31, §3.32 and the *(captured)* rows of §3.7–§3.16); party, raid, guild, trade, booths, quests, KQ, instances,
+  death penalty and PK (scenario 39 has no capture yet) and most failure paths are still read in code only
+  (capture-validation §14, §15).
 - **Lost DB sources.** The procedures listed in D01 §7, D02 §16, D03 §16 and D05 §9 have no body in any backup; D06 §2–§6 gives the
   narrowest contract the binds force, with tables and columns *(ours)* (D06 §11, §9.6). The schema is the 2019 restore
   (D06 §9); the w00 bodies carry 2017–2019 private fixes, and D06 §8 records which version a rebuild should follow.
@@ -3000,8 +3010,8 @@ item's code are counted where they are owned.
 | knowledge C01 §6 | heuristic `fields` in `client-handlers.json`; 108 game-scene handlers with no payload read; `0x7c07`, `0x9010`, `0x103c`, `0x1047`, `0x1049`, `0x10de` by shape only; which send of the WM function carries `0x083a`; which ITasks exist at a given moment (e.g. `0x740a` outside a guild UI) | Z07 (blob layouts), §6.2.2 here (`0x083A` counted as dropped) |
 | knowledge C02 §10 | every `pdb2017` name / layout not confirmed in 2016 code by design; variable-array count fields guessed; `PROTO_ITEMPACKET_TOTAL` element tails; 47 `struct_alias` layouts *(inferred)*; ported 2017 client names keep 2017 semantics; 70 size differences listed only; kept 2016 names of `0xbc0d` / `0x34cf` | S01 (2016 PDB layouts, `pdb2016-layouts.json`), the per-item annotations |
 | knowledge S01 §8 | GamigoZR line order (owner Z10); patch intents Z3 (above, Z04 row), Z4, W8, W11 *(inferred)*; `CSQLP*` struct sizes from the Account build, unconfirmed for the Character build (D02–D04, D06, D07 cite them); "405 opcodes 2017-only are unused" *(inferred)* from absence (GameLog / Character have no PDB); `Flat.full` forward-reference limit; 0x182A struct | D02–D07 (per-handler Character reads), Z10 §10 (GamigoZR still open), §7.4 here (size flags) |
-| capture-validation §14 (P02; §10 when X01 ran) | 0x0849 / 0x080E clock offset; 0x7C07 74 ms delay after 0x7C06 (WM send path); which `World::LoadMap` heartbeats fire; world name "Enid" in the scenario notes; the batch-3 inferences (cause of P02-B22, why the first WM start of `s37` stopped, the S16 cen refund); everything still not captured after batch 3 (party / PvP / guild-war deaths, skill failure, trade, booths, party, guild, KQ joins, most failure paths); the per-minute phase is settled (§7.5.3); batch 4 (§14 "Batch 4" bullets): a second `0x1001` with the stale "RouT" copy, the 2016 `p_Char_Rename`, `0x0C1A` with a real `usrregnum`, empower with two learned steps (Z23-B8), the refusals the client pre-empted (`0x4814`, `0x105F` / `0x1065`, `0x9009` / `0x900A`), a toggle past its icon timer (P02-B39), the skill-save columns against the DB, which WM handler refreshes the `0x1037` copy (P02-B36), Revive [01]'s `0x2452` without a target, a toggle with a lower learned step (Z23-B1), the assist's missing `0x243E`, who sends the `0x240E` after `&sethp`, why B's quit took the kick path (§25.9), whether the zone notices a reset client socket before the WM's `0x0C19`, two consecutive auto-saves, why the 120-s / 64-s restarts were slow | X05 (done: capture scenarios after batch 3); X07 (open: batch-4 rows, capture-validation §15 "paths batch 4 did not reach"); X02 (§7.1) when X01 ran |
-| `confidence.md` §6 (X02) | ratings computed from recorded evidence; "superseded" verdicts not re-verified; latent bugs, scenario predictions and set-up SQL never run | X05 (done: re-run after batch 3); X07 (re-run after batch 4) |
+| capture-validation §14 (P02; §10 when X01 ran) | 0x0849 / 0x080E clock offset; 0x7C07 74 ms delay after 0x7C06 (WM send path); which `World::LoadMap` heartbeats fire; world name "Enid" in the scenario notes; the batch-3 inferences (cause of P02-B22, why the first WM start of `s37` stopped, the S16 cen refund); everything still not captured after batch 3 (party / PvP / guild-war deaths, skill failure, trade, booths, party, guild, KQ joins, most failure paths); the per-minute phase is settled (§7.5.3); batch 4 (§14 "Batch 4" bullets): a second `0x1001` with the stale "RouT" copy, the 2016 `p_Char_Rename`, `0x0C1A` with a real `usrregnum`, empower with two learned steps (Z23-B8), the refusals the client pre-empted (`0x4814`, `0x105F` / `0x1065`, `0x9009` / `0x900A`), a toggle past its icon timer (P02-B39), the skill-save columns against the DB, which WM handler refreshes the `0x1037` copy (P02-B36), Revive [01]'s `0x2452` without a target, a toggle with a lower learned step (Z23-B1), the assist's missing `0x243E`, who sends the `0x240E` after `&sethp`, why B's quit took the kick path (§25.9), whether the zone notices a reset client socket before the WM's `0x0C19`, two consecutive auto-saves, why the 120-s / 64-s restarts were slow; batch 5 (§14 "Batch 5" bullets): the zone's `0x366C` / `0x5005` / `0x3443` refusals the 2016 client pre-empts, `irm_Exchange`'s `0x24a` alternative and the `irm_Move` / `0x20a` branch (§26.2), `0x2022` / `0x2023` (emote stop, key function 0x6F), `0x2020 {6}`, the client's repurchase price offset and soul-stone dialog bits, the Sit slot's row, emotion state 4 and how A saw B stand without a packet, the packet that empties the "%s is banned" name (P02-B41, *(inferred)*), whether the 2016 DB had a unique `tCharacter.sID` index (P02-B42), lookups by a name two characters share, the header values behind P02-B43, the zone-log stamps lagging the wire, the `s46` logout, scenario 39 (not captured) | X05 (done: capture scenarios after batch 3); X07 (done: batch 4); X09 (open: batch-5 rows, capture-validation §15 "paths batch 5 did not reach"); X02 (§7.1) when X01 ran |
+| `confidence.md` §6 (X02) | ratings computed from recorded evidence; "superseded" verdicts not re-verified; latent bugs, scenario predictions and set-up SQL never run | X05 (done: re-run after batch 3); X07 (done: re-run after batch 4); X09 (re-run after batch 5) |
 | knowledge K01 §9 | `MHBasic<n>` string construction *(inferred)*; whether the client sees `MHBasic<n>`; 12-zone ring vs single-digit `MHBasic` suffix for zones 10–11; `WORLD_NAME` third field use | – |
 
 ### 7.4 Settled or added by the X01 sweep
@@ -3064,6 +3074,12 @@ About this file itself (the open points of the specification are §7):
   D04-B13 (X04's reader skips the second-table row "P02-B36 / D04-B13", two IDs in one cell); Z07-B2 qualified (the
   captured `nLockIndex` is unwritten but happened to be 0); the §5.9 mark of W05-B25; cross notes P02-B35 ↔ W05-B25 and
   P02-B37 ↔ D04-B5.
+- **Register since X08.** `docs/plan/status/X08-register.py` runs X06's wrapper and post-processes its rows for P02's
+  batch 5: the Evidence of P02-B41 … B44 (capture-validation §26–§28; P02-B44 stays `code`, found in the batch-5 review
+  of §26.3), the batch-5 §s of P02-B33 (§28.2), P02-B35 (§28.1 / §28.4) and P02-B36 (§27.8) that X06's fixed Evidence
+  hid (X04's reader joins the other ten second-table rows itself), the §5.9 mark of P02-B33 (Extended: the second
+  `0x1001` of the session) and the cross notes P02-B41 ↔ Z11-B6 and P02-B43 → W05-B6 / Z24-B17. Run X08's script, not
+  an older wrapper, to regenerate §6.1.
 - **The X04 update (2026-11-16) copies P02, it does not re-read code.** Its §5 rows restate capture-validation §13
   (status "→ X01" / "→ X04") with the `@ FUN_…` of `docs/knowledge/P02.md` "Corrections"; its §3 rows restate §11; its
   register evidence is §12. Every §13 row of batches 1–3 is either in §5 or listed with its reason in
@@ -3073,6 +3089,12 @@ About this file itself (the open points of the specification are §7):
   and §22–§25; its register evidence is §12. Handler addresses in the new §3 rows come from `handlers.json`, not from
   reading the functions. Where an older row and an X06 row disagree (the quit's four saves, the Kickout timer, the
   auto-save interval), the X06 row (captured) wins; the older rows stay, superseded by §5.
+- **The X08 update (2026-11-21) copies P02 batch 5, it does not re-read code.** Its §5 rows restate the 8 §13 rows
+  "→ X08" with the `@ FUN_…` of `docs/knowledge/P02.md` "Corrections" (batch 5); its §3 marks restate §11's 15
+  batch-5 rows and §26–§28; its register evidence is §12. Handler addresses in the new §3 rows come from P02's rows and
+  `handlers.json`, not from reading the functions. Where an older row and an X08 row disagree (a rename onto a taken
+  name refused by the CharDB, the SHN refusal's log line, `&mb`'s wall text), the X08 row (captured) wins; the older
+  rows stay, superseded by §5.
 - **`docs/plan/progress.md` item marks.** `coverage.py --overview` counts an item as done when any of its status
   file's first eight lines contains the word "done", so an item in progress whose State line reads
   `part <n> of <m> done` shows ✓ (X03 itself while parts 6–7 ran). §7.1 reads the State line instead.
@@ -3084,7 +3106,7 @@ shows no uncovered handler or function in any server (§7). What X01 found and d
 
 | Found | Covered by | Argument |
 |---|---|---|
-| Protocol README statements contradicted by the captures (seed on accept, server heartbeat, captured flows) | P04 (open; plan "README §1.4, §1.5, §2 and the Unknowns list agree with capture-validation §2 / §7"; that §7 is today's §11) | P04 owns `docs/protocol/README.md`, which X01 may not edit; §5.1 here warns readers until then |
+| Protocol README statements contradicted by the captures (seed on accept, server heartbeat, captured flows) | P04 (done since; plan "README §1.4, §1.5, §2 and the Unknowns list agree with capture-validation §2 / §7"; that §7 is today's §11); P05 and P06 for batches 4 and 5 | P04 owns `docs/protocol/README.md`, which X01 may not edit; §5.1 here warns readers until then |
 | Every claim read in code only (gameplay features, bug effects marked *(inferred)*, the client-side points of §7.2) | X02 (done since; X03: its output `docs/review/confidence.md` / `docs/plan/capture-scenarios.md` covers this; plan: "for every claim still medium or low after the re-check, write a scenario … the prediction") | settling them needs captures, DB setups or targeted re-reads with an adversarial reviewer, which is X02's method; X01 indexes them (§7.2, §7.3) |
 | The per-document open points of §7.3 | the owning items' documents (each row's §) and X02 (same plan line) | the owners recorded them as open on purpose; none is an unread handler or function (progress 100 %); points that need evidence go to X02's scenarios |
 | Procedures without source, schema of 2016 (§7.2) | D06 §11 (done; documents the contracts and says what stays open) | no further source exists in the repository; only a 2016 database dump would settle them |
@@ -3102,12 +3124,13 @@ X03 (the update of 2026-11-16, no handler scope either) found and did not settle
 |---|---|---|
 | P02's capture batches 2 and 3: about 70 correction rows (capture-validation §13 "→ X04"), P02-B5 … B32 marks, the stale `capture-validation.md#8-…` links | X04 (done since; plan goal: "Batches 2 and 3 … added P02-B5 … B32, about 70 correction rows for done items … captured evidence") | X03's plan is X02 and its four follow-ups; the P02-B5 … B32 rows are already in §6.1.11 through the generator, their corrections and links are X04's |
 | Ratings of `docs/review/confidence.md` after capture batch 3, scenario texts that did not match the recordings | X05 (done since; plan goal: "re-run X02 to update the ratings"); X07 for batch 4 | `confidence.md` is X02's output; X03 copies its §3 / §5 results only |
-| Protocol README statements contradicted by the captures (§5.1) | P04 (open; X01 row above) | unchanged since X01 |
+| Protocol README statements contradicted by the captures (§5.1) | P04 (done since; X01 row above); P05 (done) for batch 4, P06 (open) for batch 5 | P04 / P05 / P06 own the protocol README; §5.1 keeps the corrections |
 | `AGENTS.md` / `CLAUDE.md` "Facts already established": "the 6-byte `ref` prefix …, which the PROTO struct does not include" | none (project instructions, kept by the maintainer outside the item system) | contradicted by X02 §0 row 1 (the header is a member of 211 2016 `PROTO_NC_*` structs; §5.4 here); reported in `docs/knowledge/X03.md` §0 for the maintainer |
 | `coverage.py` `state()` marks a multi-part item in progress as done (§8) | none needed beyond the note | the tool is shared (not X03's to edit); `docs/knowledge/X03.md` §0 gives the one-line fix; the mark is right again for X03 once its review part closes |
 
 No follow-up item was created: the open work fitted X04, X05 and P04 (X04 and X05 done since), the two remaining points are outside
 the item system and are reported in `docs/knowledge/X03.md` §0.
 
-X04 and X06 (the updates for P02's batches 2–3 and 4) keep their coverage boundaries in `docs/knowledge/X04.md` §5 and
-`docs/knowledge/X06.md` §5; neither created a follow-up item (P02 had already created P05, X06 and X07 for batch 4).
+X04, X06 and X08 (the updates for P02's batches 2–3, 4 and 5) keep their coverage boundaries in `docs/knowledge/X04.md`
+§5, `docs/knowledge/X06.md` §5 and `docs/knowledge/X08.md` §5; none created a follow-up item (P02 had already created
+P05, X06 and X07 for batch 4, and P06, X08 and X09 for batch 5).
