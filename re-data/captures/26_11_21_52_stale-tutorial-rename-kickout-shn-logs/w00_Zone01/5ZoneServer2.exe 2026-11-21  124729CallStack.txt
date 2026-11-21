@@ -1,0 +1,21 @@
+5ZoneServer2.exe caused an: < Microsoft C++ Exception >
+In module: KERNELBASE.dll at: < 0023:76CB9A72 >
+, RaiseException()+0098 byte(s)
+--------------------------------------------------------------------------
+0023:76CB9A72, KERNELBASE.dll,   RaiseException()+0098 byte(s)
+0023:00C471F1, 5ZoneServer2.exe, 
+0023:00C471A8, 5ZoneServer2.exe, 
+0023:00C1A8D2, 5ZoneServer2.exe, 
+0023:00BA7073, 5ZoneServer2.exe, 
+0023:00C02CB4, 5ZoneServer2.exe, 
+0023:00BF0B44, 5ZoneServer2.exe, 
+0023:00BE8D58, 5ZoneServer2.exe, 
+0023:00BF006A, 5ZoneServer2.exe, 
+0023:00BF0699, 5ZoneServer2.exe, 
+0023:00BE8E03, 5ZoneServer2.exe, 
+0023:00BC7C04, 5ZoneServer2.exe, 
+0023:00BA0BB3, 5ZoneServer2.exe, 
+0023:00BA1004, 5ZoneServer2.exe, 
+0023:766F67F9, KERNEL32.DLL,   BaseThreadInitThunk()+0025 byte(s)
+0023:77E17FED, ntdll.dll,   RtlGetFullPathName_UEx()+0173 byte(s)
+0023:77E17FBB, ntdll.dll,   RtlGetFullPathName_UEx()+0123 byte(s)

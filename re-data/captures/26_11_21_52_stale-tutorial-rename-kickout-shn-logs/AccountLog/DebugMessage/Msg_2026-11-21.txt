@@ -1,0 +1,78 @@
+000000 2026-11-21 12:23:37 C:\FiestaServer\2016\AccountLog
+000001 2026-11-21 12:23:37 -------------------------------------------------------
+000002 2026-11-21 12:23:37 Launching the server.....
+000003 2026-11-21 12:23:37 Local  Time      21.11.2026 12:23:37
+000004 2026-11-21 12:23:37 System Time(UTC) 21.11.2026 11:23:37
+000005 2026-11-21 12:23:37 <SUCCESSED SCRIPTOR READ> DataServerInfo_AccountLog.txt
+000006 2026-11-21 12:23:37 <I AM THE _2015_AccountLog, SERVER_ID_DB_ACCOUNTLOG, WorldNo=0, ZoneNo=0>
+000007 2026-11-21 12:23:37 Service start(no parameter)
+000008 2026-11-21 12:23:37 <IOCP WORKTHREAD #0 RUNNING>
+000009 2026-11-21 12:23:37 <IOCP WORKTHREAD #1 RUNNING>
+000010 2026-11-21 12:23:38 <IOCP WORKTHREAD #2 RUNNING>
+000011 2026-11-21 12:23:38 <IOCP WORKTHREAD #3 RUNNING>
+000012 2026-11-21 12:23:38 <IOCP WORKTHREAD #4 RUNNING>
+000013 2026-11-21 12:23:38 <IOCP WORKTHREAD #5 RUNNING>
+000014 2026-11-21 12:23:38 <IOCP WORKTHREAD #6 RUNNING>
+000015 2026-11-21 12:23:38 <IOCP WORKTHREAD #7 RUNNING>
+000016 2026-11-21 12:23:38 <IOCP WORKTHREAD #8 RUNNING>
+000017 2026-11-21 12:23:38 <IOCP WORKTHREAD #9 RUNNING>
+000018 2026-11-21 12:23:38 <IOCP WORKTHREAD #10 RUNNING>
+000019 2026-11-21 12:23:38 <IOCP WORKTHREAD #11 RUNNING>
+000020 2026-11-21 12:23:38 <IOCP WORKTHREAD #12 RUNNING>
+000021 2026-11-21 12:23:38 <IOCP WORKTHREAD #13 RUNNING>
+000022 2026-11-21 12:23:38 <IOCP WORKTHREAD #14 RUNNING>
+000023 2026-11-21 12:23:38 <IOCP WORKTHREAD #15 RUNNING>
+000024 2026-11-21 12:23:38 <IOCP WORKTHREAD #16 RUNNING>
+000025 2026-11-21 12:23:38 <IOCP WORKTHREAD #17 RUNNING>
+000026 2026-11-21 12:23:39 <IOCP WORKTHREAD #18 RUNNING>
+000027 2026-11-21 12:23:39 <IOCP WORKTHREAD #19 RUNNING>
+000028 2026-11-21 12:23:39 <IOCP WORKTHREAD #20 RUNNING>
+000029 2026-11-21 12:23:39 <IOCP WORKTHREAD #21 RUNNING>
+000030 2026-11-21 12:23:39 <IOCP WORKTHREAD #22 RUNNING>
+000031 2026-11-21 12:23:39 <IOCP WORKTHREAD #23 RUNNING>
+000032 2026-11-21 12:23:39 <IOCP WORKTHREAD #24 RUNNING>
+000033 2026-11-21 12:23:39 <IOCP WORKTHREAD #25 RUNNING>
+000034 2026-11-21 12:23:39 <IOCP WORKTHREAD #26 RUNNING>
+000035 2026-11-21 12:23:39 <IOCP WORKTHREAD #27 RUNNING>
+000036 2026-11-21 12:23:39 <IOCP WORKTHREAD #28 RUNNING>
+000037 2026-11-21 12:23:39 <IOCP WORKTHREAD #29 RUNNING>
+000038 2026-11-21 12:23:39 <NUMBER OF 30 IOCP WORKTHREAD STARTED, 6 CPU DETECTED>
+000039 2026-11-21 12:23:56 <NUMBER OF 61 SESSION WORKER STARTED>
+000040 2026-11-21 12:23:56 <SUCCESSED SESSION MANAGER INIT> PG_ALDB
+000041 2026-11-21 12:23:56 <SUCCSSED LISTEN AT IP=172.16.42.214, Port=9311, BacklogCount=100 >
+000042 2026-11-21 12:23:56 <MAIN THREAD START>
+000043 2026-11-21 12:23:56 SERVER WORK START ---------------------------------------------------
+000044 2026-11-21 12:23:56 Connected from 068B6FB0 (SERVER_ID_LOGIN           world=  0 zone=  0,  3344=  172.16.42.214: 49890) (  1/ 100°³)
+000045 2026-11-21 12:23:57 Connected from 068B7C58 (SERVER_ID_WORLDMANAGER    world=  0 zone=  0,  3340=  172.16.42.214: 49891) (  2/ 100°³)
+000046 2026-11-21 12:32:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000047 2026-11-21 12:34:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000048 2026-11-21 12:35:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000049 2026-11-21 12:36:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000050 2026-11-21 12:37:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000051 2026-11-21 12:38:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000052 2026-11-21 12:39:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000053 2026-11-21 12:40:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000054 2026-11-21 12:41:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000055 2026-11-21 12:42:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000056 2026-11-21 12:43:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000057 2026-11-21 12:44:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000058 2026-11-21 12:45:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000059 2026-11-21 12:46:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000060 2026-11-21 12:47:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000061 2026-11-21 12:48:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000062 2026-11-21 12:48:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000063 2026-11-21 12:49:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000064 2026-11-21 12:49:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000065 2026-11-21 12:50:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000066 2026-11-21 12:50:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000067 2026-11-21 12:51:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000068 2026-11-21 12:51:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000069 2026-11-21 12:52:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000070 2026-11-21 12:52:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000071 2026-11-21 12:53:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000072 2026-11-21 12:53:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000073 2026-11-21 12:54:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000074 2026-11-21 12:54:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000075 2026-11-21 12:55:01 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000076 2026-11-21 12:55:01 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.
+000077 2026-11-21 12:56:00 ERROR - CSQLPStatistics::p_SameTimeCharClass_Add, state = 37000 error_num = 2812 error_str = [Microsoft][ODBC SQL Server Driver][SQL Server]Could not find stored procedure 'p_SameTimeCharClass_Add'.

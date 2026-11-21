@@ -1,0 +1,87 @@
+12:23:14 : DB Socket cut - try reconnect 0 : reconnect fail
+12:23:16 : DB Socket cut - try reconnect 1 : reconnect fail
+12:23:18 : DB Socket cut - try reconnect 2 : reconnect fail
+12:23:21 : DB Socket cut - try reconnect 3 : reconnect fail
+12:23:23 : Log Socket cut - try reconnect 0 : reconnect fail
+12:23:25 : Log Socket cut - try reconnect 1 : reconnect success
+12:23:25 : Log Socket cut - try reconnect 2 : reconnect success
+12:23:25 : Log Socket cut - try reconnect 3 : reconnect success
+12:23:25 : WMS Socket cut - try reconnect 0 : reconnect fail
+12:23:27 : WMS Socket cut - try reconnect 1 : reconnect fail
+12:23:29 : WMS Socket cut - try reconnect 2 : reconnect fail
+12:23:32 : WMS Socket cut - try reconnect 3 : reconnect fail
+12:23:35 : DB Socket cut - try reconnect 0 : reconnect success
+12:23:37 : DB Socket cut - try reconnect 1 : reconnect success
+12:23:37 : DB Socket cut - try reconnect 2 : reconnect success
+12:23:37 : DB Socket cut - try reconnect 3 : reconnect success
+12:23:37 : Log Socket cut - try reconnect 0 : reconnect success
+12:23:37 : WMS Socket cut - try reconnect 0 : reconnect fail
+12:23:39 : WMS Socket cut - try reconnect 1 : reconnect fail
+12:23:41 : WMS Socket cut - try reconnect 2 : reconnect fail
+12:23:43 : WMS Socket cut - try reconnect 3 : reconnect fail
+12:23:45 : WMS Socket cut - try reconnect 0 : reconnect fail
+12:23:47 : WMS Socket cut - try reconnect 1 : reconnect fail
+12:23:50 : WMS Socket cut - try reconnect 2 : reconnect fail
+12:23:52 : WMS Socket cut - try reconnect 3 : reconnect fail
+12:23:54 : WMS Socket cut - try reconnect 0 : reconnect fail
+12:23:56 : WMS Socket cut - try reconnect 1 : reconnect success
+12:23:57 : WMS Socket cut - try reconnect 2 : reconnect success
+12:23:57 : WMS Socket cut - try reconnect 3 : reconnect success
+12:23:57 : WMS Close during SESSION_STATUS_CLOSEING 3
+12:23:57 : WMS Socket cut - try reconnect 0 : reconnect success
+12:25:12 : WMS Socket cut - try reconnect 3 : reconnect success
+12:26:52 : WMS Cut by heartbeat 0
+12:27:12 : WMS Socket cut - try reconnect 0 : reconnect success
+12:49:44 : DB Socket cut - try reconnect 0 : reconnect success
+12:49:44 : DB Socket cut - try reconnect 1 : reconnect success
+12:49:44 : DB Socket cut - try reconnect 2 : reconnect success
+12:49:44 : DB Socket cut - try reconnect 3 : reconnect success
+12:49:44 : Log Socket cut - try reconnect 0 : reconnect success
+12:49:44 : Log Socket cut - try reconnect 1 : reconnect success
+12:49:44 : Log Socket cut - try reconnect 2 : reconnect success
+12:49:44 : Log Socket cut - try reconnect 3 : reconnect success
+12:49:44 : WMS Socket cut - try reconnect 0 : reconnect success
+12:49:44 : WMS Socket cut - try reconnect 1 : reconnect success
+12:49:44 : WMS Socket cut - try reconnect 2 : reconnect success
+12:49:44 : WMS Socket cut - try reconnect 3 : reconnect success
+12:49:44 : WMS Close during SESSION_STATUS_CLOSEING 1
+12:49:44 : WMS Close during SESSION_STATUS_CLOSEING 3
+12:50:11 : WMS Socket cut - try reconnect 1 : reconnect success
+12:50:11 : WMS Socket cut - try reconnect 3 : reconnect success
+12:50:11 : WMS Close during SESSION_STATUS_CLOSEING 3
+12:50:30 : WMS Socket cut - try reconnect 3 : reconnect success
+12:55:38 : DB Socket cut - try reconnect 0 : reconnect success
+12:55:38 : DB Socket cut - try reconnect 1 : reconnect success
+12:55:38 : DB Socket cut - try reconnect 2 : reconnect success
+12:55:38 : DB Socket cut - try reconnect 3 : reconnect success
+12:55:38 : Log Socket cut - try reconnect 0 : reconnect success
+12:55:38 : Log Socket cut - try reconnect 1 : reconnect success
+12:55:38 : Log Socket cut - try reconnect 2 : reconnect success
+12:55:38 : Log Socket cut - try reconnect 3 : reconnect success
+12:55:38 : WMS Socket cut - try reconnect 0 : reconnect success
+12:55:38 : WMS Socket cut - try reconnect 1 : reconnect success
+12:55:38 : WMS Socket cut - try reconnect 2 : reconnect success
+12:55:38 : WMS Socket cut - try reconnect 3 : reconnect success
+12:55:38 : WMS Close during SESSION_STATUS_CLOSEING 1
+12:55:38 : WMS Close during SESSION_STATUS_CLOSEING 2
+12:56:05 : WMS Socket cut - try reconnect 1 : reconnect success
+12:56:05 : WMS Socket cut - try reconnect 2 : reconnect success
+12:56:05 : WMS Close during SESSION_STATUS_CLOSEING 2
+12:56:25 : DB Socket cut - try reconnect 0 : reconnect success
+12:56:25 : DB Socket cut - try reconnect 1 : reconnect success
+12:56:25 : DB Socket cut - try reconnect 2 : reconnect success
+12:56:25 : DB Socket cut - try reconnect 3 : reconnect success
+12:56:25 : Log Socket cut - try reconnect 0 : reconnect success
+12:56:25 : Log Socket cut - try reconnect 1 : reconnect success
+12:56:25 : Log Socket cut - try reconnect 2 : reconnect success
+12:56:25 : Log Socket cut - try reconnect 3 : reconnect success
+12:56:25 : WMS Socket cut - try reconnect 0 : reconnect success
+12:56:25 : WMS Socket cut - try reconnect 1 : reconnect success
+12:56:25 : WMS Socket cut - try reconnect 2 : reconnect success
+12:56:25 : WMS Socket cut - try reconnect 3 : reconnect success
+12:56:25 : WMS Close during SESSION_STATUS_CLOSEING 1
+12:56:25 : WMS Close during SESSION_STATUS_CLOSEING 3
+12:56:52 : WMS Socket cut - try reconnect 1 : reconnect success
+12:56:52 : WMS Socket cut - try reconnect 3 : reconnect success
+12:56:52 : WMS Close during SESSION_STATUS_CLOSEING 3
+12:57:11 : WMS Socket cut - try reconnect 3 : reconnect success

@@ -1,0 +1,6 @@
+12:38:30 : [X52Tut] &adminlevel
+12:39:27 : [Test1235] &adminlevel
+12:41:47 : [Test1235] &fullpoint
+12:41:56 : [Test1235] &levelup 1
+12:43:46 : [Test1235] &kickout X52B
+12:45:24 : [Test1235] &kickout X52B
