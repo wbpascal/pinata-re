@@ -1423,7 +1423,7 @@ Code references are Z03 §3 (swing), §5 (skills), §7 (death), §8 (mob death, 
   animations 0…5 and keeps its position across bashes. `hpchangeorder` is per defender and grows by more than one per hit:
   mob 4 2, 4, 6 … with no other packet about it in between, the player 3, 6, 9, … with `0x240E` taking the values in
   between (5 after the hit with 3) and 20 / 21 at death and revive. Every read of the counter advances it (`vt 0x7e8`,
-  Z03 §2.3); which other reads take the missing values was not traced.
+  Z03 §2.3); the missing values are the sight copy `0x2449` (settled with a bystander in `s45`, §27.6).
 - **Stop.** `0x2432 NC_BAT_BASHSTOP_CMD` → 0x243D 20–44 ms later (`bashStopNotify` on the next tick, Z03 §3.4). A
   `0x2019 MOVERUN` from the chasing client stops the bash too (`combat` 77.943 → 0x243D at 78.119): the queued hit
   (due at +400 ms) is dropped, no 0x2448 follows. After a kill the next swing tick finds the target dead and stops:
@@ -3816,6 +3816,197 @@ Old types with new values: `0x3004 {0x366B}` ×7 (Z04-B2, first capture), `0x305
 from a split-and-merge, `0x07FD` from a REPURCHASE_ALL, `0x3C05` at level 20, `0x0410 StoreType 10`. Not sent by the
 2016 client in `s46`: `0x3059` for an entry the purse cannot pay, `0x5001` with 0 cen or at the limit (§26.4, §26.5).
 
+## 27. Second client in sight II, batch 5: walk relay, sit, emote stop, shout out of sight, unknown whisper, a mob beside a bystander, cast abort, leaving sight (`s45`) *(captured)*
+
+`26_11_21_45_walk-sit-emote-stop-shout-whisper-cast-abort` (notes, prep output, two DB snapshots and the server
+`-logs/` folder next to it): A = X45A (charNo 15, Trickster 40, GM 100, account `admin` userNo 103; zone#1 handle 8004,
+wm#1 15001), B = X45B (charNo 16, SharpShooter 40, GM 100, `testaccountB` userNo 104; zone#2 handle 8005, wm#2 22500),
+both on zone 0 (9210), RouN, from one client PC. `MapInfo.Sight` of RouN is 1600. Times are capture seconds; capture
+second 0 = 18:24:24.1 server time (the zone's `AmpersandCommandLog` has A's `&adminlevel` at 18:24:43 = 18.929).
+The logs also show a session of A before the capture (18:23:39–18:23:57, `&adminlevel`, `0x1071`, `0x0C18`), not on
+the wire.
+
+### 27.1 What happened
+
+| Time | Notes step | Client | Server |
+|---|---|---|---|
+| 5.3–18.9 | start | A: login, world, `0x1001 {slot 3}`, `0x1803` at 18.929 | map login as §5.1; no tutorial question |
+| 18.8–27.0 | start | B: the same, `0x1803` at 26.991 | B gets `0x1C07` with A, A gets B's `0x1C06` (27.013): in sight at once (400 apart) |
+| 104.5–151.9 | setup | B: `&fullpoint`, `&makeitem HeavyBow`, shortcut 4500 (`0x7037`), `0x300F {slot 1}` | equip as §8 |
+| 169.4–179.9 | 1 walk / run | B: 3 × `0x2017`, stop, 2 × `0x2019`, stop | A: 3 × `0x2018 {speed 33}`, `0x201A {speed 127}`, `0x2013` (§27.2) |
+| 196.2–215.0 | 2 sit / stand | B: `0x2020 {7}`, `0x2024`, `0x2020 {7}` × 2 | `0x2021` to B and A, `0x2025` to A only (§27.3) |
+| 244.5–275.9 | 3 emote stop | B: `0x2020 {23}` × 3, Esc, a step (`0x2019` + `0x2012`) | `0x2021` × 3 both; nothing for Esc; `0x201A` / `0x2013` for the step (§27.3) |
+| 292.1–313.1 | 4 B runs south | 52 × `0x2019` | `0x1C0E` both ways at 305.6 (§27.2) |
+| 342.8 | — | A: WM `0x0846 {0, 1, 55}` | WM → CharDB `0x0847` (§27.4) |
+| 348.9 | 4 A shouts | `0x201E "x45 shout A"` | `0x201F` to A and to B, out of sight (§27.4) |
+| 378.2–394.9 | 4 B runs back | 48 × `0x2019` | `0x1C06` + `0x1C19` both ways at 385.0 |
+| 421.6 | 5 unknown whisper | A: WM `0x200C {receiver "X45Nobody"}` | WM `0x200E {0x0F69, "X45Nobody"}` 10 ms later (§27.5) |
+| 471.4–484.5 | 6 mob | B: `&mb ArchMageBook`, `0x2401 {6731}` | four swings of Archmage Book 6731 on B, B dies at 484.518 (§27.6) |
+| 521.9–567.2 | 6 revive, back | B: `0x104E`, `0x1803`, runs back, HP stone at 557.3 | town revive at RouN 4700, 5748; A gets `0x1805 {8005}`; back in sight 567.2 |
+| 567.7–569.3 | 6 kill | B: `0x2008 {2}`, `0x2440 {4500, 6731}` | Distant Shot kills the book (841 HP) in one hit (§27.7) |
+| 573.7 | — | B: SP stone `0x5009` | `0x500A` to B, `0x500C {8005}` to A |
+| 601.8–612.4 | 7 setup | B: `&fullpoint`, `&mb Slime`, `0x2401 {6732}` | Slime 6732, StaImmortal 5 s |
+| 630.1–671.5 | 7 abort | B: three casts, each cut by a step | three `0x2438` / `0x2445 {0x20E8}` (§27.7) |
+| 684.8–686.4 | 7 full cast | B: `0x2440 {4500, 6732}` | blast 1.604 s later, the Slime dies |
+| 618.9 | — | — | A's auto-save `StoreType 10`, 599.94 s after A's `0x1803` (§23.5) |
+| 695.8–753.7 | 8 walk out of sight | B: `0x2019`, 15 × `0x2017`, then `0x2019` | A: 11 × `0x2018`, `0x1C0E` both ways at 731.3 (§27.2) |
+| 758.5–770.2 | end | B, then A: `0x1071`, `0x0C18` 10.0 s later | one save each, `StoreType 9` + `0x0C31` (§27.8) |
+
+The notes differ from the wire in three places: the book hit B **four** times (250, 238, 276, 86) before B died (notes:
+"three hits", then "B died"); B stood 970 units from A at step 6 (notes: "~400 away"); step 7 had **three** aborted
+casts (93 ms, 266 ms and 881 ms into the cast) before the full one (notes: one).
+
+### 27.2 Walk relay and leaving sight (steps 1, 4, 8)
+
+- **Walk.** Each `0x2017 NC_ACT_MOVEWALK_CMD {from, to}` of B reached A 16–23 ms later as **`0x2018
+  NC_ACT_SOMEONEMOVEWALK_CMD {handle 8005, from = B's server position, to, speed 33, moveattr}`**, the first player
+  `0x2018` in any capture (batches 1–4 had mobs only). `speed` is B's walk speed (`0x203E {33, 127}` of the login burst); the run
+  relay `0x201A` carries 127. `from` is the server's position, not the client's (`172.503 from 6743` for the client's
+  6742), as Z02 §2.2 says. `moveattr` held stale ASCII bytes for B too (0x7474, 0x6E60, 0x656E, 0x6874, 0x206E …;
+  Z02-B2, so far captured for mobs only). No `0x203E` followed any move (§6.3). **Confirms** Z02 §2.2 for a player.
+- **Leaving sight.** Running south, B left A's sight at 305.6: B got `0x1C0E {8004}` (305.606), A `0x1C0E {8005}` 48 ms
+  later, with B ≈ (6443, 8250), 1607 units from A. Walking (step 8), the pair came at 731.262 / 731.279 with B ≈ (6438,
+  7770), 1611 units from A at (6397, 9381). Both times the server stopped relaying B's moves to A at once: A got 11 of the 15 step-8
+  walks, none after 731.3. Coming back (385.047, 567.216) both got `0x1C06` + `0x1C19` with the other at 1600–1602 units.
+  **Confirms** Z09 §9.6 (`AxialListBriefDeleteAtMove::ali_Work` @ FUN_004bdfe0 / `AxialListBriefExchangerAtMove`
+  @ FUN_004bdde0) for a player leaving and entering, at walk and at run speed, with the 1600 radius of §6.1.
+- **A teleport within the map is not a sight leave.** B's town revive (521.857, same zone, RouN 6467, 8883 → 4700, 5748)
+  reached A as `0x2427 {8005, 728}` + `0x1C18`, then `0x1805 NC_MAP_LOGOUT_CMD {8005}` in the same ms (521.877),
+  not as a `0x1C0E`: the same-zone link (Z01 §7.1) removes the object with the logout broadcast `0x1805` (Z01 §3.2). A got an abstate packet about an object it
+  removed in the same frame (harmless: the client then drops the object).
+
+### 27.3 Sit, stand and the emote stop (steps 2, 3)
+
+- **Sit / stand.** The wire has `0x2020 {7}` at 196.183, a jump `0x2024` at 209.591, and `0x2020 {7}` again at 212.907
+  and 214.960; no `0x2020 {6}` (ActionViewInfo row 6 `sit`, row 7 `stand` with `LinkActionIndex` 6). As in `s14`
+  (§18.3), the client sends **7** for the sit. The client's emote-slot handler (`ActionWin` slot click, client
+  FUN_004ce0d0) sends `0x2020` with the slot's *second* row (`slot +0x18c`) when it has one, and sends nothing when the
+  character is in emotion state 4: it then stands the character up locally (`vt 0x1b0(0)`). The emote sender
+  FUN_0049e520 also drops every `0x2020` in state 4. So a "Stand" from the sitting state produces no packet *(inferred
+  from the two functions; which row the Sit slot holds was not read)*. How A saw B stand without a packet (the one-shot
+  `stand` animation 801100 of row 7, or the jump at 209.6) is not settled (§14). The server relayed every `0x2020` as
+  `0x2021 {8005, id}` to B (3–26 ms) and then to A (11–16 ms after B) and the jump as `0x2025 {8005}` to A only. **Confirms** Z02 §4
+  (`includeSelf` 1) and §2.4 (`includeSelf` 0) again.
+- **Emote stop, three ways.** (1) The same dance again (244.509, 245.892): the second `0x2020 {23}` is relayed like the
+  first; both screens restart the dance (notes). (2) Esc (after 248.090): **nothing** on the wire; the dance went on.
+  (3) A step (275.859): `0x2019` + `0x2012` 43 ms later; A got `0x201A` / `0x2013` and the dance stopped on both screens.
+  So a step ends an emote on every client through the move relay (the server's `ClearEmoticon`, Z02 §2.2, only resets
+  the brief block for newcomers), and **`0x2022` / `0x2023` are still never seen**. The only client sender of `0x2022`
+  (FUN_0049e580 `{u8 id, u16 frame}`) is called from FUN_00490a00, which the key dispatcher FUN_00494890 runs for key
+  function 0x6F; it pauses a playing emote at its frame (frame × the scale `_DAT_0096fd40`) or, when none is paused,
+  sends `0x2020` with the current emote *(inferred: a pause / resume key)*. Neither Esc nor a step reaches it.
+
+### 27.4 Shout out of sight, and a spam-filter setting (step 4)
+
+- **Shout.** A (level 40) shouted at 348.860 while B was out of sight (deleted at 305.6, back at 385.0). 6 ms later
+  `0x201F {speaker "X45A", flag 0x64, len 11, "x45 shout A"}` went to A **and** B. **Confirms** Z02 §3.2: `so_AllInMap1`
+  reaches the whole map, not only the sight, and echoes to the shouter. Level 40 passed `p.level > g_ShoutLevel`, so
+  `g_ShoutLevel` < 40 (with `s14`'s refusal at level 1: 1 ≤ `g_ShoutLevel` ≤ 39; §14). `flag` 0x64: bit 0 GM colour 0,
+  bit 1 0, bits 2, 5, 6 stale (P02-B29 again). The notes' "x45 shoud A" is a typo of the notes; the wire has "shout".
+- **0x0846 / 0x0847.** At 342.842 A's client sent WM **`0x0846 NC_MISC_SET_CHAT_BLOCK_SPAM_FILTER_CMD {bIsSpamSpread 0,
+  bIsSpamBlock 1, nSpamFilterRate 55}`** (3 bytes; the notes do not name the action, probably the chat options), and
+  4 ms later the WM sent CharDB **`0x0847 NC_MISC_SET_CHAT_BLOCK_SPAM_FILTER_DB_CMD {nUserNo 103, nCharNo 15, 0, 1, 55}`**
+  (11 bytes) on W00_CDB#3. No answer to either. **Confirms** W04 §17.2 (`FUN_00417b90`) and D02's 0x0847 handler
+  (`FUN_00423320`, `usp_SpamFilter_set`, no reply). W04-B60 (the session copy not updated) could not show: A had no
+  later map login, and no `0x0845` was sent at any map login of this capture, because neither character got a
+  CharDB `0x0844` at its character login (no `usp_SpamFilter_get` row; batch 2, §7.4).
+
+### 27.5 Whisper to an unknown name: `0x200E` (step 5)
+
+A → WM `0x200C {itemLinkDataCount 0, receiver "X45Nobody", len 11, "x45 whisper"}` (421.597). 10 ms later the WM sent A
+**`0x200E NC_ACT_WHISPERFAIL_ACK {ErrorType 0x0F69 (3945), receiver "X45Nobody"}`** (22 bytes payload, 25 raw), and nothing
+else: no `0x200D`, no `0x200F`, no `0x6006` to the zone, nothing to B. A's client showed "Cannot find the recipient"
+(notes; `On_NC_ACT_WHISPERFAIL_ACK` FUN_004a9ea0, 0x0F69). **Confirms** W04 §2.1 (`Clients_FindByCharName` → `fail(0x0F69)`,
+the request's receiver echoed) and the client text. The first capture of `0x200E` (§18.4 could not reach it).
+
+### 27.6 A mob's hits beside a bystander; B's death and town revive seen by A (step 6)
+
+- **The fight.** `&mb ArchMageBook` (471.362) answered `0x2011 "Mob : 5989"`; the book (MobInfo 34, level 30, 841 HP,
+  handle 6731) appeared with StaImmortal (291, 5 000 ms, reset 4.98 s later) and attacked B by itself 4.9 s later.
+  B's targeting (`0x2401 {6731}`, 473.025) gave B `0x2402 {order 0}` and both `0x243D {8005}` (Z03 §2.2:
+  `smo_BashStop` on a target change). Each of the four swings (2.47–2.52 s apart) reached B as `0x2447` + `0x2448
+  {damage, resthp}` + `0x240E` and A as `0x2447` + **`0x2449 {attacker 6731, defender 8005, flag 0, resthp,
+  hpchangeorder, damageindex, attacksequence}`** (no damage number), in the same ms. The book never turned to A.
+  **Confirms** §18.5 / Z03 §3 with a mob as the attacker.
+- **`hpchangeorder` settled** (§9.1 left open which reads take the missing values): per swing B's `0x2448` carried *n*,
+  A's `0x2449` *n* + 1 and B's `0x240E` *n* + 2 (4 / 5 / 6, 7 / 8 / 9, 10 / 11 / 12, 13 / 14 / 15). The sight copy
+  `0x2449` takes its own value, so the values missing in the single-player captures belong to a `0x2449` built for an empty sight
+  *(inferred for those captures)*.
+- **Death.** At the fourth hit (484.518, HP 86 → 0) B got `0x104D {180, 50, 0}`, `0x2448 {resthp 0}`, `0x2402 {order 1,
+  0xFFFF}`, `0x240E {0}` (§9.5's order); GameLog `0x042B {mobid 34, exp 0}` and `0xC80A {AttackerType 1, AttackerID 34}`
+  10 ms earlier. **A got only the `0x2449 {resthp 0}`**: no packet announces another player's death (Z03 §7.1).
+- **Town revive (521.857, 37.3 s later).** `0x104E` → `0x1C18` / `0x242A` 728 {105100} → `0x104F {150, 4700, 5748}`, WM
+  `0x180B`, the CharDB burst with `0x0410 StoreType 2`, the client's `0x1803` 127 ms later, GameLog `0x040F StoreType
+  99`, `0x240E {254}` = 850 × 0x133 / 1024 (30 %): all as §9.5 / §25.8. A got `0x2427` + `0x1C18` for 728 and
+  `0x1805 {8005}` (§27.2). B's handle stayed 8005.
+- **`&mb`'s "Mob : 5989"** is not the mob id. Both `&mb` (0x41b858) and `&mobbreed` (0x41b709) push
+  `movzx [0x132828b8] + 0x14`: `shineobjmanager` is at 0x132826b8 *(pdb2016)*, so this is `som_ListContainer[5]` (the
+  mob list, Z11 §8) `→ l_ListNum` (`List<ShineObject>` +0x14), the number of mobs in the zone process before the new
+  one is added. It read 5989 for the book and for the Slime (the book's corpse was gone by then). Z11 §4.2 has "(mobId)" for
+  `&mobbreed` (§13 row).
+
+### 27.7 Cast abort and full casts: Distant Shot (steps 6, 7)
+
+- **Abort by a step.** Each of the three aborted casts (630.053, 634.680, 669.487: `0x2440 {4500, 6732}` → `0x244E {index
+  2…4}` + `0x2435` to B, `0x244F` to A) ended when B stepped. The client sent `0x2012`, `0x2444` and `0x2019` in the
+  same ms (93, 266 and 881 ms after `0x2440`). The server answered `0x2438 {8005}` + `0x2445 {err 0x20E8}` to B
+  (4–11 ms), then A's `0x2013`, `0x2438`, `0x201A` in one frame 11–14 ms after B, and `0x243D` to B 51–58 ms and to A
+  66–71 ms after the `0x2444`.
+  No SP change, no `0x2457`. B's own screen showed no message (notes). **Confirms** §25.2 / Z03 §5.4 for a cut
+  triggered by movement. The client cuts its cast itself and reports it, the server never cuts it for the move.
+- **Full casts.** The kill of the book (`0x2440` at 567.720 → `0x2457` 1.530 s after `0x244E`) and of the Slime (684.775 →
+  1.604 s). `CastTime` 1399 ms becomes `1399 × 10 / 1000` = 13 tenths of `g_Now`, plus the 0.3-s arming of a
+  non-moving skill (Z03 §5.4): 1.6 s in tenth-steps, 1.5–1.6 s measured from a mid-tenth start. The blast went to B,
+  then A 14–17 ms later. **A's `0x2452` came 32 ms before B's** (569.276 / 569.308, 686.396 / 686.428), and B's came in
+  one frame with `0x2402 {hp 0}`, `0x240B {expgain 1}`, `0x240F {sp 280}` (cost 520 = `SP`) and `0x244A`. `0x2452`
+  `hpchange` is the HP actually lost: 841 and 27, each the mob's whole HP. `flag` 0x2901 / 0x2903: `isdamage`, `iscritical` for the Slime,
+  `isDead`, and the stale 0x28 of P02-B19 again. `0x240B {expgain 1}` per kill matches the DB (`nExp` 1 389 279 → 1 389 281)
+  and the logout's `0x042D {mobid 0 / 34, number 1, exp 1}` and `0x081F CharGetExp 2`. `0xC80B NC_SYSLOG_CHAR_VICTORY
+  {TargetType 1, TargetID 34 / 0}`; corpses left after 9.98 s and 9.95 s (`0x1805`). **Confirms** Z03 §5.4 / §5.6 / §8.1.
+
+### 27.8 Soul stones, regeneration, quits, DB readings and the server logs
+
+- **Soul stones beside a bystander.** B's HP stone (557.340, A out of sight) gave `0x5008` and `0x240E {849}` (+595);
+  the SP stone (573.684, A in sight) gave `0x500A` to B and **`0x500C NC_SOULSTONE_SP_SOMEONEUSE_CMD {player 8005}`** to A
+  27 ms later, then `0x240F {800}`. **Confirms** Z04 §13.2 / Z30 §3 (the `SOMEONEUSE` form to the sight without the user).
+- **No regeneration outside rest mode.** A's HP / SP stayed 48 / 46 for the whole 751 s (`0x1038` at login, the
+  `0x4001` saves at 618.871 and 770.156, the DB before cleanup; A never got a `0x240E` after the login burst). B stayed at
+  46 HP for 83 s before `&fullpoint` and at 254 for 35 s after the revive. **Confirms** Z12 §3.2's reading (`sp_RecoverPoint_HPAfterItemEquip` resets the hook to the no-op) that the
+  default `sp_RecoverPoint` hook (called every tick from `so_Routine`) is the folded empty function; only the rest mode
+  (`sp_RecoverPoint_House`, Z13) and stones heal.
+- **Quits.** B: `0x1071` (758.477), client `0x0C18 {0}` to zone and WM 9.999 s later; the zone saved once (`0x4001`,
+  `0x0410 StoreType 9`, `0x0C31` within 14 ms) and the WM broadcast `0x0C19 {104}` twice (768.488, 768.504) on all four zone
+  links. A the same 1.67 s later. `NormalLogOutLog` has `sp_NC_CHAR_LOGOUTREADY_CMD`, then
+  `sp_NC_USER_NORMALLOGOUT_CMD` and `sp_Schedule_Logout` in the same second for each. This is §25.9's "own `0x0C18`"
+  quit with one save. Both `0x1037` carried the **login** position (6843, 9850 / 6397, 9849) while the `0x0410` and the DB
+  have the last one (6423, 6959 / 6396, 9381): P02-B36 again.
+- **DB snapshots.** After prep: A 40 / HP 48 / SP 46 at 6443, 9850; B 40 class 14 / 46 / 24 at 6843, 9850, skill 4500.
+  Before cleanup: A unchanged but position 6396, 9381; B `nExp` +2, HP 850, SP 280, position 6423, 6959 = the last
+  `0x4001` of each (768.490 / 770.156). Both `p_Char_Delete` returned 0.
+- **Server logs** *(captured: server log)*. Zone 0 `Assert`: "Socket cut not for player[0]" at 18:23:58, 18:37:13,
+  18:37:15, about 1 s after each `sp_Schedule_Logout`: `ZoneServer::zs_disconnect` @ FUN_005abb60 asserts when the
+  closing session's object is already gone (`som_GetObject` null), which is the normal order after a logout. Zone 1
+  `Assert`: 46 `MobBreeder::mb_regen : Invalid locate` pairs for `ForZoneMush02` at its start (18:08:44, before the
+  capture). Character: `usp_LinkScroll_SetDestMap` missing (error 2812) at every map login (`fc_NC_ITEMDB_MAPLINK_ITEM_COMPARE_MAP_REQ`,
+  the `0x34CF` of the map login; D06 §5.2); AccountLog: `p_SameTimeCharClass_Add` missing every minute with the
+  `0x080A` CCU (D06 §3.1). WM: KQ joiner lines only. No log line for the whisper, the shout, the death or the casts.
+
+### 27.9 Opcodes
+
+The three new `s45` types; `s45` decodes with 0 issue packets. The two old empty types without a layout (zone C→S
+`0x2024`, S→C `0x500A`) got empty P02.json layouts in this part.
+
+| Dir | Opcode | Name | Seen | Size | Status | Notes |
+|---|---|---|---|---|---|---|
+| C→WM | 0x0846 | NC_MISC_SET_CHAT_BLOCK_SPAM_FILTER_CMD | 1 | 3 | confirmed | `{bIsSpamSpread 0, bIsSpamBlock 1, nSpamFilterRate 55}` (W04 §17.2) |
+| WM→CDB | 0x0847 | NC_MISC_SET_CHAT_BLOCK_SPAM_FILTER_DB_CMD | 1 | 11 | confirmed | `{nUserNo 103, nCharNo 15, 0, 1, 55}`, no reply (D02) |
+| WM→C | 0x200E | NC_ACT_WHISPERFAIL_ACK | 1 | 22 | confirmed | `{ErrorType 0x0F69, receiver}`; client "Cannot find the recipient" |
+
+Old types with new evidence: `0x2018` from a player (speed 33, server `from`), `0x201F` to a player out of sight,
+`0x2449` of a mob's swing to a bystander, `0x1C0E` / `0x1C06` for a player at walk speed, `0x1805` for a player's
+same-zone revive, `0x2438` to a bystander after a step, `0x500C` to a bystander, `0x2452` `hpchange` clamped to the rest HP.
+Still never seen: `0x2022` / `0x2023` (§27.3), `0x2020 {6}`.
+
 ## 11. Message order against README §2 and the pseudocode
 
 README §2 is a sketch of the login → WM → zone chain. Against the sixteen captures (details in the sections cited;
@@ -4113,6 +4304,9 @@ P02, batch-4 sweep: `docs/plan/items/X06.md`, the README) and, when X02 owns the
 | Z04 | `Z04-items.md` §4.1 (`ItemReloc_Do` branch list: merge / split-and-merge / exchange) | the list misses `b ≥ MaxLot` (target stack already full) → `irm_Exchange` when `iba_CanInvenReloc` allows the way back, else `0x300C {0x24a}`; captured as a swap (`0x342B`, `s46` 192.1; §26.2) | extended → batch-5 follow-up |
 | D03 | `D03-character-items.md` §3.3 (`0x3431`: "Log 0x0456 { …, MoveLot, fromLot, toLot }") | on the wire `itemlot` = MoveLot 10, `itemlotadd` = the target's result 50, `itemlotsub` = the source's result 20 (`s46` 175.913; §26.2) | corrected → batch-5 follow-up |
 | X05 | `docs/plan/capture-scenarios.md` scenario 46 (expected `0x305A {0x366C}` "Not enough money to buy the item.", the buy-back "onto an empty cell, e.g. 2", soul-stone refusals by the zone) | the 2016 client refuses the unaffordable buy-back itself (text 810 500 413 "Cannot make the purchase due to insufficient money.", no `0x3059`) and both soul-stone refusals (978 272 565 "You have insufficient money.", 1 677 983 971 "Cannot purchase more."; no `0x5001`); `ii_RepurchaseAll` takes the first empty cell (0); `0x366C`, `0x5005`, `0x3443` stay uncaptured (§26.3–§26.5) | corrected → batch-5 follow-up |
+| Z11 | `Z11-gm-commands.md` §4.2 (`&mobbreed` wall "Mob : %d" (mobId); `&mb` the same) | both push `shineobjmanager.som_ListContainer[5]->l_ListNum` (`[0x132828b8] + 0x14`, pdb2016): the zone's mob count before the new mob is added; captured "Mob : 5989" for MobInfo 34 and 0 (`s45` 471.370, 604.509; §27.6) | corrected → batch-5 follow-up |
+| Z02 | `Z02-actions.md` §4 (emotes) | client side of the relay: the Sit action sends `0x2020 {7}` (row `stand`), Stand from the sitting state sends nothing (client FUN_004ce0d0 / FUN_0049e520, emotion state 4), Esc sends nothing, a step ends an emote through the move relay; `0x2022` comes only from the key function 0x6F (client FUN_00490a00, pause / resume) (§27.3) | extended → batch-5 follow-up |
+| X05 | `docs/plan/capture-scenarios.md` scenario 45 (step 6 "three hits", B "~400" from A; step 7 one abort; step 3 "emote stop" expected as `0x2022`) | four hits before B died, 970 units apart, three aborts (each by a step) before the full cast; no way of the three sends `0x2022` (§27.1, §27.3) | corrected → batch-5 follow-up |
 
 In batch 1 (§3–§6) no discrepancy for Z03, Z07, Z09, Z11, Z12, Z13, Z16, Z17, Z18, Z22, W03: every statement of theirs that §3–§6 test held (batch 2's rows for Z03, Z09, Z12, Z13 and W03 are above). Part 12 (§9) confirms Z03 §3.1–§3.4 (swing
 timing with the 0.1-s `g_Now` step, stop paths), §5.4 (cast, `IsMovingSkill` blast), §7.2 (death order, 0x104D, no exp
@@ -4129,7 +4323,7 @@ conditions), D02 §6 (12-byte save headers, ACKs only for 0x4001 / 0x4007, 0x401
 §3.1 / §6.2 / §6.3, Z15 §3.3 / §3.4 (SAY with the clicked NPC), Z12 §5.2 (0xBC05 cap), Z13 §8.2 / §8.3 / §8.6 / §8.7 /
 §8.10 (summon order, hunger, speed formula, 0x1C1A), Z09 §5.4 (10-s corpse) and D05's GameLog layouts (0x040A, 0x040F,
 0x0410, 0xC806, 0xC809). The sweep (part 14) confirms Z02 §6.4 (the client's `0x200B` in the tick of `0x304D` runs `sp_EndOfTrade`,
-which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_LevelUp` re-marks type 9 on every level). Part 20 (§20) confirms Z04 §2.4 / §7.1 / §13.1, Z05 §2.2 / §2.4 (answer orders, `0x305D` before `0x305A`), D03 §2.2 / §2.4 / §5.1 layouts (with the ref), Z02 §6.5 (`0x3C05`), Z11 §7.3 (`CT_LevelUp`, the level-20 announcement), Z18 §6.2 (titles 46 / 0 and 1), W01 §7.6 (0x6401 relay), W04 §2.4 (0x2079 relay) and §6.2 / §6.4 (KQ skip: 0x5811, 0x5825, one 0x581E per client per second). Part 21 (§21) confirms D03 §1.2 / §2.1 (`ItemBuy_Create`'s attribute branch: item deleted, cen refunded, `0x340C {0x206}`), Z05 §2.1 (`0x340C` → `0x3004 {error}`) and §6.4 (`0x345A` → `0x3001` emptied), Z09 §1.2 / §2.4 (the per-minute block on the WM's `0x0821`), Z24 §6.7 / Z13 §2.7 (`sp_ChargedItemLimitCheck` → `sp_ItemDelete` → `sp_DestroyItem`, not at login), D03 §1.3 (boot option rows 800–803 / 820–822, `deletetime` at attribute +7) and the capture-scenarios predictions §8.14 (S13) and §8.17 (S16, its cen half). Part 24 (§22) confirms W01 §4.1 (0x1401 → 0x1403 → 0x1404 `0x181`, 0x140F → 0x1411 → 0x1412 → 0x1410 with the name stored on 0xD0, 0xB409 → 0xB40A), §4.2 (0x145 without a CharDB round trip when no zone serves the map), §5.4 (`CharacterLogout` order 0x1037, 0x081F, 0xC807), §6.2 (0xB40B 0x20C0 → `CharIDChange`), §7.2 (0x104B name check, state 3, `{−1, −1}`), Z01 §5.3 (`so_SetRegistNumber` → 0x689) and §8.1 (reason-9 save with 0x0C31), D02 §3.2 (`CharIDChangeData` default `{0, 0x64, 0}`), §3.5 and §14 (layouts; −3039 → 0x20D1), Z30 §1.2 (0xB40F) and D04 §5.1 (option saves). Part 25 (§23) confirms W01 §4.2 (`0x145` while the map's zone is down, six times), §5.4 and §7.3 (`0x0C31` checked by `charNo`), Z01 §8.1 (`0x0C18 {1}` ≥ 8 s after `0x1071` → logout at once), Z07 §3.3 (the 13-s `0x1071` timer: 12.97 / 12.99 s), Z11 §7.4 and Z05 (money committed in 15–22 ms, kept through zone kills), D02 §5 (`p_Char_Logout` takes only `charNo`, `playmin`), §17.4 at four zone restarts (P02-B25) and §19.2 (Z11-B32: the tester saw "[Leather Boots] has been obtained"). Part 26 (§24) confirms Z02 §6.5 (`0x3C0A` table form), Z03 §9.1 / §9.3 (`0x4811` → `0x4812` → `0x4814`, item release only with `bUseItem`; `0x4802` → `0x4804` + `0x1035`), Z04 §12.5 (`0x304B {0x30A8}` before the work, moves through `sp_ItemReloc`, a swap as `0x342B`), Z05 §4 / §6.1 / §9.8 (`0x342C` → `0x3001` + `0x300C`; book effect on `0x3440`; vault `0x349E` → `0x349F` → `0x3001` only), Z07 §2.2–§2.4 (INC / DEC sizes 15 / 27, full target array), Z08 §11 / Z23 §4 (`0x9005` / `0x9006` 21 bytes, `0x3016 {0x700}` first, `0x900C {130}`, `0x900D {49}`), Z12 §4.2 (`0x1035` free-stat flags, no STR total) and §7.1 (`0x4027` with the vault), Z23 §7.1 / §7.2 (incremental skill save: cooling skill, then once with 0), D02 §6 / §7.2, D03 §3 / §7.4 / §9 and D04 §2 (Character-server answers and logs) and Z01 §8.4 as corrected in §23.5 (auto-saves 599.99 / 599.97 s after `0x1803`). Part 27 (§25) confirms Z03 §5.4 (cast abort: `0x2438` to the sight including the caster, `0x2445 {0x20E8}`, `0x243D`, no cooldown; 0.3-s arming of a non-moving skill), §5.5 (`0x2441` → `0x2450` / `0x2451`), §6.2 / §6.3 (inform and broadcast order), §7.2 (death order; no exp loss on a map with `ExpLostAtDeadByMob` 0) and §7.3 (`0x4829` → `0x482A` → `0x481E` / `0x481F`, full HP, StaImmortal for `immortalsec`), Z09 §9.3 (`smo_WarpTo`: x + 5, a second `0x2450` with its own index, `0x4828`) and §28.3 (the `AbStateReset` rows of StaNeglect / StaHide / StaBuckler), Z22 §1.3 (`ase_Routine` → vt 0x650 + `0x2428`), §3.3 (BurnPainMe 20 ‰ of MaxHP; the flat DoT never kills: no tick at 1 HP), §4.2 (`0x245A` with `num 0`) and §7.3 (the newbie chain), Z23 §2.1–§2.5 (toggle on / off by cast, the three automatic switch-offs, `csl_Toggle_AllOff` on a link without removing the states, no state after the link), Z25 §6.3, Z01 §8.1 (`0x0C18` acts whatever its `LogoutType`, ≥ 8 s after `0x1071`) and Z07 §3.1 / §9.5's town revive (`0x104F` = the map's `RegenCity` point). Part 30 (§26) confirms Z04 §2.5 (repurchase: the level check before the money check, Z04-B2's `0x3004 {0x366B}` silent in the client, `ii_RepurchaseAll` onto an empty cell with a new key, `0x366D` with none) and §4.1 (`a + b > MaxLot` → `irm_Split_N_Merge(MaxLot − b)`), Z05 §2.2 / §4 (`0x34BA` / `0x3432` → `0x3001` + `0x305D` / `0x300C`), D03 §2.2 / §3.3 (`0x34B9` / `0x3431` layouts and logs, the sold key only in `0x07FD`), Z11-B12 (`&makeitem` silent with a full inventory, again), Z02 §6.5 (`0x3C05` at level 20) and Z01 §8.4 as corrected in §23.5 (auto-save 600.01 s after `0x1803`).
+which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_LevelUp` re-marks type 9 on every level). Part 20 (§20) confirms Z04 §2.4 / §7.1 / §13.1, Z05 §2.2 / §2.4 (answer orders, `0x305D` before `0x305A`), D03 §2.2 / §2.4 / §5.1 layouts (with the ref), Z02 §6.5 (`0x3C05`), Z11 §7.3 (`CT_LevelUp`, the level-20 announcement), Z18 §6.2 (titles 46 / 0 and 1), W01 §7.6 (0x6401 relay), W04 §2.4 (0x2079 relay) and §6.2 / §6.4 (KQ skip: 0x5811, 0x5825, one 0x581E per client per second). Part 21 (§21) confirms D03 §1.2 / §2.1 (`ItemBuy_Create`'s attribute branch: item deleted, cen refunded, `0x340C {0x206}`), Z05 §2.1 (`0x340C` → `0x3004 {error}`) and §6.4 (`0x345A` → `0x3001` emptied), Z09 §1.2 / §2.4 (the per-minute block on the WM's `0x0821`), Z24 §6.7 / Z13 §2.7 (`sp_ChargedItemLimitCheck` → `sp_ItemDelete` → `sp_DestroyItem`, not at login), D03 §1.3 (boot option rows 800–803 / 820–822, `deletetime` at attribute +7) and the capture-scenarios predictions §8.14 (S13) and §8.17 (S16, its cen half). Part 24 (§22) confirms W01 §4.1 (0x1401 → 0x1403 → 0x1404 `0x181`, 0x140F → 0x1411 → 0x1412 → 0x1410 with the name stored on 0xD0, 0xB409 → 0xB40A), §4.2 (0x145 without a CharDB round trip when no zone serves the map), §5.4 (`CharacterLogout` order 0x1037, 0x081F, 0xC807), §6.2 (0xB40B 0x20C0 → `CharIDChange`), §7.2 (0x104B name check, state 3, `{−1, −1}`), Z01 §5.3 (`so_SetRegistNumber` → 0x689) and §8.1 (reason-9 save with 0x0C31), D02 §3.2 (`CharIDChangeData` default `{0, 0x64, 0}`), §3.5 and §14 (layouts; −3039 → 0x20D1), Z30 §1.2 (0xB40F) and D04 §5.1 (option saves). Part 25 (§23) confirms W01 §4.2 (`0x145` while the map's zone is down, six times), §5.4 and §7.3 (`0x0C31` checked by `charNo`), Z01 §8.1 (`0x0C18 {1}` ≥ 8 s after `0x1071` → logout at once), Z07 §3.3 (the 13-s `0x1071` timer: 12.97 / 12.99 s), Z11 §7.4 and Z05 (money committed in 15–22 ms, kept through zone kills), D02 §5 (`p_Char_Logout` takes only `charNo`, `playmin`), §17.4 at four zone restarts (P02-B25) and §19.2 (Z11-B32: the tester saw "[Leather Boots] has been obtained"). Part 26 (§24) confirms Z02 §6.5 (`0x3C0A` table form), Z03 §9.1 / §9.3 (`0x4811` → `0x4812` → `0x4814`, item release only with `bUseItem`; `0x4802` → `0x4804` + `0x1035`), Z04 §12.5 (`0x304B {0x30A8}` before the work, moves through `sp_ItemReloc`, a swap as `0x342B`), Z05 §4 / §6.1 / §9.8 (`0x342C` → `0x3001` + `0x300C`; book effect on `0x3440`; vault `0x349E` → `0x349F` → `0x3001` only), Z07 §2.2–§2.4 (INC / DEC sizes 15 / 27, full target array), Z08 §11 / Z23 §4 (`0x9005` / `0x9006` 21 bytes, `0x3016 {0x700}` first, `0x900C {130}`, `0x900D {49}`), Z12 §4.2 (`0x1035` free-stat flags, no STR total) and §7.1 (`0x4027` with the vault), Z23 §7.1 / §7.2 (incremental skill save: cooling skill, then once with 0), D02 §6 / §7.2, D03 §3 / §7.4 / §9 and D04 §2 (Character-server answers and logs) and Z01 §8.4 as corrected in §23.5 (auto-saves 599.99 / 599.97 s after `0x1803`). Part 27 (§25) confirms Z03 §5.4 (cast abort: `0x2438` to the sight including the caster, `0x2445 {0x20E8}`, `0x243D`, no cooldown; 0.3-s arming of a non-moving skill), §5.5 (`0x2441` → `0x2450` / `0x2451`), §6.2 / §6.3 (inform and broadcast order), §7.2 (death order; no exp loss on a map with `ExpLostAtDeadByMob` 0) and §7.3 (`0x4829` → `0x482A` → `0x481E` / `0x481F`, full HP, StaImmortal for `immortalsec`), Z09 §9.3 (`smo_WarpTo`: x + 5, a second `0x2450` with its own index, `0x4828`) and §28.3 (the `AbStateReset` rows of StaNeglect / StaHide / StaBuckler), Z22 §1.3 (`ase_Routine` → vt 0x650 + `0x2428`), §3.3 (BurnPainMe 20 ‰ of MaxHP; the flat DoT never kills: no tick at 1 HP), §4.2 (`0x245A` with `num 0`) and §7.3 (the newbie chain), Z23 §2.1–§2.5 (toggle on / off by cast, the three automatic switch-offs, `csl_Toggle_AllOff` on a link without removing the states, no state after the link), Z25 §6.3, Z01 §8.1 (`0x0C18` acts whatever its `LogoutType`, ≥ 8 s after `0x1071`) and Z07 §3.1 / §9.5's town revive (`0x104F` = the map's `RegenCity` point). Part 30 (§26) confirms Z04 §2.5 (repurchase: the level check before the money check, Z04-B2's `0x3004 {0x366B}` silent in the client, `ii_RepurchaseAll` onto an empty cell with a new key, `0x366D` with none) and §4.1 (`a + b > MaxLot` → `irm_Split_N_Merge(MaxLot − b)`), Z05 §2.2 / §4 (`0x34BA` / `0x3432` → `0x3001` + `0x305D` / `0x300C`), D03 §2.2 / §3.3 (`0x34B9` / `0x3431` layouts and logs, the sold key only in `0x07FD`), Z11-B12 (`&makeitem` silent with a full inventory, again), Z02 §6.5 (`0x3C05` at level 20) and Z01 §8.4 as corrected in §23.5 (auto-save 600.01 s after `0x1803`). Part 31 (§27) confirms Z02 §2.2 (player `0x2018`, server `from`, stale `moveattr`), §2.4 / §3.2 (shout to the whole map and to the shouter, out of sight) / §4 (`0x2021` incl. the sender), Z09 §9.6 (player sight leave / enter at 1600, at walk and run speed), W04 §2.1 (`0x200E {0x0F69}` and the client text) and §17.2, D02's 0x0847 (no reply), Z03 §2.2 (`0x243D` on a target change), §3 (`0x2449` to a bystander), §5.4 (abort by the client's step; `CastTime` in tenths + 0.3 s), §5.6 (`hpchange` = HP lost, P02-B19), §7.2 / Z07 §3.1 (death, town revive, 30 %), Z04 §13.2 / Z30 §3 (`0x500C`), Z12 §3.2 (no regeneration outside rest mode), §25.9's one-save quit and P02-B29 / P02-B36 again.
 
 ## 14. Not reconstructed / uncertain
 
@@ -4223,7 +4417,7 @@ which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_Leve
   each step yields exactly three appear / delete pairs (`mm_Step` sub-steps per tick) is *inferred*. Which field
   makes `vt 0xef4` (zone GM colour) and the WM's `bIsGM` 0 for an admin-level-100 character (an account flag, not
   `nAdminLevel`, *inferred*) was not traced. The mushroom house's attribute `ffecbb76` (0x3449 at the first
-  per-minute block) was not decoded. `g_ShoutLevel` is bounded only (1 ≤ value < 120).
+  per-minute block) was not decoded. `g_ShoutLevel` is bounded only (1 ≤ value < 120; batch 5 narrows it to 1 ≤ value ≤ 39, §27.4).
 - Batch 3, items I (§19): B's refused pick-up attempt sent no 0x3009, so the client checks the pick right itself;
   its drop object (`FUN_00610fc0`, built by the 0x1C0A handler FUN_00499900) was not read. The 0x3014 text condition
   (picker in the client's expedition list, FUN_006f7e30) is read from the call only. Which of drop, pick-merge, drop
@@ -4278,6 +4472,12 @@ which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_Leve
   option bits of the soul-stone number dialog (`DAT_00a81464` +0x24 bit 5, +0x26 bit 2) are not traced; the zone's
   `0x366C` (repurchase money), `0x5005` / `0x3443` (soul-stone refusals) and `irm_Exchange`'s `0x24a` alternative stay
   uncaptured; the logout of `s46` is not on the wire (the capture stops first).
+- **Batch 5, `s45` (§27)**: why the client sends row 7 (`stand`) for the Sit action, which row the Sit slot holds
+  (`ActionWin` slot +0x188 / +0x18c), what emotion state 4 is, and how A saw B stand with no packet (the one-shot animation
+  of row 7 or the jump 13 s later) were not read in the client (FUN_004ce0d0, FUN_0049e520, the 0x2021 handler); the
+  key function 0x6F that sends `0x2022` is named from the dispatcher only; that the missing `hpchangeorder` values of the
+  single-player captures are empty-sight `0x2449` builds is *(inferred)*; the action behind A's `0x0846` is not in the
+  notes; the meaning of `0x2452`'s second flag byte bits 3 / 5 stays P02-B19's stale stack.
 
 ## 15. Coverage boundary
 

@@ -3827,7 +3827,7 @@ Sent from `ShineObjectClass::ShineMobileObject::so_mobile_StopHere` (`FUN_0045a0
 | 18 | u16 | speed | GetWalkSpeed / GetRunSpeed |
 | 20 | u16 | moveattr.direct | bit 0 cleared, rest stale |
 
-**Captured** (P02, `capture-validation.md`; idle_in_world, walk-run-portals): `handle`: mob handles only (single player); `speed`: MobInfo.WalkSpeed of the mob; `moveattr`: low byte always even, ASCII stale bytes (Z02-B2)
+**Captured** (P02, `capture-validation.md`; idle_in_world, walk-run-portals, s45): `handle`: mob handles; s45: also a player (8005), relayed 16–23 ms after its 0x2017; `speed`: MobInfo.WalkSpeed of the mob; the player's walk speed 33 (0x203E); `moveattr`: low byte always even, ASCII stale bytes (Z02-B2); `from`: the server's position, not the client's
 
 Sent from `ShineObjectClass::ShineMobileObject::so_mobile_SpeedChange` (`FUN_00435ec0`) · payload 22 bytes
 
@@ -3923,7 +3923,7 @@ Sent from `ShineObjectClass::ShinePlayer::InteractWithNPC` (`FUN_004c4660`) · p
 | 22 | u8 | len |  |
 | 23 | u8[len] | content | variable length |
 
-**Captured** (P02, `capture-validation.md`; s14): `speaker`: Test1235; `flag`: 0x78 / 0x74: bit 0 GMColor 0, bit 1 isMob 0, bits 2–7 stale gpp byte (P02-B29); `content`: echo of 0x201E, also to the shouter
+**Captured** (P02, `capture-validation.md`; s14, s45): `speaker`: Test1235; `flag`: 0x78 / 0x74 (s14), 0x64 (s45): bit 0 GMColor 0, bit 1 isMob 0, bits 2–7 stale gpp byte (P02-B29); `content`: echo of 0x201E, also to the shouter; `receivers`: the shouter and every player of the map, also out of sight (s45 348.866)
 
 Sent from `ShineObjectClass::ShineMobileObject::smo_Shout` (`FUN_00459080`) · payload variable (iVar1)
 
@@ -3970,7 +3970,7 @@ Sent from `FUN_005e5150` (`FUN_005e5150`) · payload variable (byte)
 | 0 | u16 | handle |  |
 | 2 | u8 | emoticonid |  |
 
-**Captured** (P02, `capture-validation.md`; s14): `handle`: sender (8001); `emoticonid`: 7, 9, 10, 23–26 (ActionViewInfo stand, laugh, cry, dances); also sent to the sender itself (includeSelf 1)
+**Captured** (P02, `capture-validation.md`; s14, s45): `handle`: sender (8001); `emoticonid`: 7, 9, 10, 23–26 (ActionViewInfo stand, laugh, cry, dances); s45: 7 for the Sit action, 23 twice in a row (restart); also sent to the sender itself (includeSelf 1)
 
 Sent from `ShineObjectClass::ShinePlayer::sp_DoEmotion` (`FUN_00458860`) · payload 3 bytes
 
@@ -5120,7 +5120,7 @@ Sent from `ShineObjectClass::ShineMobileObject::so_Bash` (`FUN_0042e950`) · pay
 |---|---|---|---|
 | 0 | u16 | caster |  |
 
-**Captured** (P02, `capture-validation.md`; s24): `caster`: 8002, sent to the caster and to the other client
+**Captured** (P02, `capture-validation.md`; s24, s45): `caster`: s45: also after an abort caused by the client's step (0x2012 + 0x2444 + 0x2019 in one ms); the bystander gets it with the 0x2013 / 0x201A in one frame
 
 Sent from `ShineObjectClass::ShineMobileObject::sp_castabort` (`FUN_00579d50`) · payload 2 bytes
 
@@ -5315,7 +5315,7 @@ Sent from `ShineObjectClass::ShineMobileObject::smo_SwingDamage` (`FUN_00432f30`
 
 broadcast to sight except attacker and defender; carries no damage number
 
-**Captured** (P02, `capture-validation.md`; s14): `attacker / defender`: B (8001) ↔ Slime 5375, both directions; `resthp`: defender HP after the hit; `damageindex`: = the 0x2447 of the same swing
+**Captured** (P02, `capture-validation.md`; s14, s45): `attacker / defender`: B (8001) ↔ Slime 5375 (s14); mob 6731 → B 8005 to the bystander A (s45); `resthp`: defender HP after the hit; `damageindex`: = the 0x2447 of the same swing; `hpchangeorder`: s45: the value between the defender's 0x2448 (n) and 0x240E (n + 2)
 
 Sent from `ShineObjectClass::ShineMobileObject::smo_SwingDamage` (`FUN_00432f30`) · payload 13 bytes
 
@@ -5486,7 +5486,7 @@ Sent from `ShineObjectClass::ShineMobileObject::smo_SkillBash_Casting` (`FUN_005
 
 flag: bit0 isdamage, 1 iscritical, 2 ismissed, 3 isshieldblock, 4 isheal, 5 isenchant, 6 isresist, 7 IsCostumWeapon, 8 isDead, 9 isImmune, 10 IsCostumShield. 2016 header is 5 bytes; the 2017 struct adds kSkillID and pTarget before the array.
 
-**Captured** (P02, `capture-validation.md`; shop, combat): `(layout)`: pdb2016: 5-byte header + 14 n (Z03 annotation type not decodable); `target.flag`: 0x2801 hit / 0x2901 kill; bits 11 and 13 stack garbage (P02-B19)
+**Captured** (P02, `capture-validation.md`; shop, combat, s45): `(layout)`: pdb2016: 5-byte header + 14 n (Z03 annotation type not decodable); `target.flag`: 0x2801 hit / 0x2901 kill; s45 also 0x2903 (iscritical); bits 11 and 13 stack garbage (P02-B19); `target.hpchange`: s45: HP actually lost (841 and 27 = the mobs' whole HP)
 
 Sent from `SkillEffectApply::SkillDamageSender::sds_Finish` (`FUN_00437110`) · payload variable ((byte)
 
@@ -7297,7 +7297,7 @@ Sent from `ShineObjectClass::ShinePlayer::sp_HPStoneUse` (`FUN_00589180`) · pay
 |---|---|---|---|
 | 0 | u16 | player |  |
 
-**Captured** (P02, `capture-validation.md`; s21): `player`: 8003 to the other player only
+**Captured** (P02, `capture-validation.md`; s21, s45): `player`: s45: 8005 to the bystander A, 27 ms after the user's 0x500A
 
 Sent from `ShineObjectClass::ShinePlayer::sp_SPStoneUse` (`FUN_00588a40`) · payload 2 bytes
 
@@ -10776,6 +10776,14 @@ P02: empty body. evidence: capture size 0
 
 PDB struct name not checked; fields = STOPEMOTICON_DESCRIPT as echoed in 0x2023
 
+### `0x2024` NC_ACT_JUMP_CMD (C→S)
+
+**Verified layout** (basis: zone sp_NC_ACT_JUMP_CMD FUN_0045a250 reads no payload (Z02 §2.4); client sender FUN_0049e430 writes only the opcode)
+
+Empty payload.
+
+P02 batch 5: empty body. evidence: capture size 0 (s14 151.4–193.4, s45 209.591)
+
 ### `0x205e` NC_ACT_WEDDING_DIVORCE_REFUSE_CMD (C→S)
 
 **Verified layout** (basis: client WeddingTask::DirectMessage FUN_006dcba0 (SendNetMsgZoneMgr(8, 0x5e, null, 0), answer to the 0x205D 0x1384 dialog); zone FUN_005a0440 reads no payload)
@@ -12452,6 +12460,16 @@ Empty payload.
 empty payload
 
 **Captured** (P02, `capture-validation.md`; shop): `(payload)`: empty, 11 ms after 0x5007; 0x240E heal next tick; no 0x500B to self
+
+### `0x500A` NC_SOULSTONE_SP_USESUC_ACK (hand-named) (S→C)
+
+**Verified layout** (basis: zone so_SendProtocol(20, 10) without payload (Z30 §3))
+
+Empty payload.
+
+P02 batch 5: empty body. evidence: capture size 0 (shop, s45 573.684)
+
+**Captured** (P02, `capture-validation.md`; shop): `(payload)`: empty, 1 ms after 0x5009; 0x240F next tick
 
 ### `0x5812` NC_KQ_COMPLETE_CMD (S→C)
 
@@ -16168,10 +16186,6 @@ Z01 name was 'map login done (ours)'
 ### `0x5004` NC_SOULSTONE_SP_BUY_ACK (S→C)
 
 **Captured** (P02, `capture-validation.md`; s21): `totalnumber`: 51 = 9 held + 42
-
-### `0x500a` NC_SOULSTONE_SP_USESUC_ACK (S→C)
-
-**Captured** (P02, `capture-validation.md`; shop): `(payload)`: empty, 1 ms after 0x5009; 0x240F next tick
 
 ### `0x6005` NC_CT_DB_SET_CMD (Zone→CharDB)
 

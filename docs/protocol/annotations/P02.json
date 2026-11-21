@@ -2624,6 +2624,20 @@
     "basis": "zone handler FUN_00452980 reads no payload (Z07 §3.1); no PROTO struct in the 2017 PDB",
     "fields": [],
     "notes": "P02 batch 4: empty body. evidence: capture size 0 (combat 102.372, s24 1914.392)"
+   },
+   "0x2024": {
+    "dir": "C→S",
+    "name": "NC_ACT_JUMP_CMD",
+    "basis": "zone sp_NC_ACT_JUMP_CMD FUN_0045a250 reads no payload (Z02 §2.4); client sender FUN_0049e430 writes only the opcode",
+    "fields": [],
+    "notes": "P02 batch 5: empty body. evidence: capture size 0 (s14 151.4–193.4, s45 209.591)"
+   },
+   "0x500A": {
+    "dir": "S→C",
+    "name": "NC_SOULSTONE_SP_USESUC_ACK",
+    "basis": "zone so_SendProtocol(20, 10) without payload (Z30 §3)",
+    "fields": [],
+    "notes": "P02 batch 5: empty body. evidence: capture size 0 (shop, s45 573.684)"
    }
   },
   "accountlog": {
@@ -6109,6 +6123,41 @@
      "nError": "0x2118",
      "nCharNo": "270, 2791060741, 2791060740: never written (D04-B13)"
     }
+   },
+   "0x0846": {
+    "dir": "C→S",
+    "captures": [
+     "s45"
+    ],
+    "fields": {
+     "bIsSpamSpread": "0",
+     "bIsSpamBlock": "1",
+     "nSpamFilterRate": "55 (3 bytes, no answer)"
+    },
+    "note": "capture-validation §27.4"
+   },
+   "0x0847": {
+    "dir": "WM→CharDB",
+    "captures": [
+     "s45"
+    ],
+    "fields": {
+     "nUserNo": "103 (session user)",
+     "nCharNo": "15",
+     "bIsSpamSpread / bIsSpamBlock / nSpamFilterRate": "the 0x0846 values, 4 ms later; no reply"
+    },
+    "note": "capture-validation §27.4"
+   },
+   "0x200e": {
+    "dir": "S→C",
+    "captures": [
+     "s45"
+    ],
+    "fields": {
+     "ErrorType": "0x0F69 (3945) for a name not online; client 'Cannot find the recipient'",
+     "receiver": "the request's receiver echoed ('X45Nobody')"
+    },
+    "note": "22 bytes payload, 10 ms after 0x200C; nothing else sent (capture-validation §27.5)"
    }
   },
   "zone": {
@@ -6505,14 +6554,16 @@
     "dir": "S→C",
     "captures": [
      "idle_in_world",
-     "walk-run-portals"
+     "walk-run-portals",
+     "s45"
     ],
     "fields": {
-     "handle": "mob handles only (single player)",
-     "speed": "MobInfo.WalkSpeed of the mob",
-     "moveattr": "low byte always even, ASCII stale bytes (Z02-B2)"
+     "handle": "mob handles; s45: also a player (8005), relayed 16–23 ms after its 0x2017",
+     "speed": "MobInfo.WalkSpeed of the mob; the player's walk speed 33 (0x203E)",
+     "moveattr": "low byte always even, ASCII stale bytes (Z02-B2)",
+     "from": "the server's position, not the client's"
     },
-    "note": "capture-validation §6"
+    "note": "capture-validation §6; s45: capture-validation §27.2"
    },
    "0x201A": {
     "dir": "S→C",
@@ -7532,11 +7583,13 @@
     "dir": "S→C",
     "captures": [
      "shop",
-     "combat"
+     "combat",
+     "s45"
     ],
     "fields": {
      "(layout)": "pdb2016: 5-byte header + 14 n (Z03 annotation type not decodable)",
-     "target.flag": "0x2801 hit / 0x2901 kill; bits 11 and 13 stack garbage (P02-B19)"
+     "target.flag": "0x2801 hit / 0x2901 kill; s45 also 0x2903 (iscritical); bits 11 and 13 stack garbage (P02-B19)",
+     "target.hpchange": "s45: HP actually lost (841 and 27 = the mobs' whole HP)"
     }
    },
    "0x4821": {
@@ -8077,11 +8130,12 @@
    "0x2021": {
     "dir": "S→C",
     "captures": [
-     "s14"
+     "s14",
+     "s45"
     ],
     "fields": {
      "handle": "sender (8001)",
-     "emoticonid": "7, 9, 10, 23–26 (ActionViewInfo stand, laugh, cry, dances); also sent to the sender itself (includeSelf 1)"
+     "emoticonid": "7, 9, 10, 23–26 (ActionViewInfo stand, laugh, cry, dances); s45: 7 for the Sit action, 23 twice in a row (restart); also sent to the sender itself (includeSelf 1)"
     }
    },
    "0x2025": {
@@ -8106,12 +8160,14 @@
    "0x201f": {
     "dir": "S→C",
     "captures": [
-     "s14"
+     "s14",
+     "s45"
     ],
     "fields": {
      "speaker": "Test1235",
-     "flag": "0x78 / 0x74: bit 0 GMColor 0, bit 1 isMob 0, bits 2–7 stale gpp byte (P02-B29)",
-     "content": "echo of 0x201E, also to the shouter"
+     "flag": "0x78 / 0x74 (s14), 0x64 (s45): bit 0 GMColor 0, bit 1 isMob 0, bits 2–7 stale gpp byte (P02-B29)",
+     "content": "echo of 0x201E, also to the shouter",
+     "receivers": "the shouter and every player of the map, also out of sight (s45 348.866)"
     }
    },
    "0x201e": {
@@ -8135,12 +8191,14 @@
    "0x2449": {
     "dir": "S→C",
     "captures": [
-     "s14"
+     "s14",
+     "s45"
     ],
     "fields": {
-     "attacker / defender": "B (8001) ↔ Slime 5375, both directions",
+     "attacker / defender": "B (8001) ↔ Slime 5375 (s14); mob 6731 → B 8005 to the bystander A (s45)",
      "resthp": "defender HP after the hit",
-     "damageindex": "= the 0x2447 of the same swing"
+     "damageindex": "= the 0x2447 of the same swing",
+     "hpchangeorder": "s45: the value between the defender's 0x2448 (n) and 0x240E (n + 2)"
     }
    },
    "0x244f": {
@@ -8720,10 +8778,11 @@
    "0x500c": {
     "dir": "S→C",
     "captures": [
-     "s21"
+     "s21",
+     "s45"
     ],
     "fields": {
-     "player": "8003 to the other player only"
+     "player": "s45: 8005 to the bystander A, 27 ms after the user's 0x500A"
     }
    },
    "0x340c": {
@@ -9018,10 +9077,11 @@
    "0x2438": {
     "dir": "S→C",
     "captures": [
-     "s24"
+     "s24",
+     "s45"
     ],
     "fields": {
-     "caster": "8002, sent to the caster and to the other client"
+     "caster": "s45: also after an abort caused by the client's step (0x2012 + 0x2444 + 0x2019 in one ms); the bystander gets it with the 0x2013 / 0x201A in one frame"
     }
    },
    "0x2434": {

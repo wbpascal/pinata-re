@@ -353,6 +353,8 @@ Handler `FUN_00417140`
 | 1 | u8 | bIsSpamBlock |  |
 | 2 | u8 | nSpamFilterRate |  |
 
+**Captured** (P02, `capture-validation.md`; s45): `bIsSpamSpread`: 0; `bIsSpamBlock`: 1; `nSpamFilterRate`: 55 (3 bytes, no answer)
+
 Handler `FUN_00417b90`
 
 | Off | Type | Checks in handler | Notes |
@@ -3328,6 +3330,8 @@ Sent from `FUN_00432bb0` (`FUN_00432bb0`) · payload variable ((uint)(pcVar4 + (
 |---|---|---|---|
 | 0 | u16 | ErrorType |  |
 | 2 | char[20] | receiver | Name5 |
+
+**Captured** (P02, `capture-validation.md`; s45): `ErrorType`: 0x0F69 (3945) for a name not online; client 'Cannot find the recipient'; `receiver`: the request's receiver echoed ('X45Nobody')
 
 Sent in reply to `0x200c` NC_ACT_WHISPER_REQ on CParserClient (`FUN_0041c610`) · payload 22 bytes · raw header
 
@@ -11138,6 +11142,8 @@ size 0x48 + 6·n
 | 8 | u8 | bIsSpamSpread |  |
 | 9 | u8 | bIsSpamBlock |  |
 | 10 | u8 | nSpamFilterRate |  |
+
+**Captured** (P02, `capture-validation.md`; s45): `nUserNo`: 103 (session user); `nCharNo`: 15; `bIsSpamSpread / bIsSpamBlock / nSpamFilterRate`: the 0x0846 values, 4 ms later; no reply
 
 ### `0x0863` NC_MISC_SPAMMER_SET_DB_CHAT_BAN_REQ (WM→CharDB)
 
