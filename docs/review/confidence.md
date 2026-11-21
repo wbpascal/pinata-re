@@ -147,14 +147,14 @@ absence means "not re-read by anyone", not "confirmed": P02 lists what the captu
 
 ## 2. Ratings per document
 
-State: re-run after capture batch 4 (X07 part 3; review fix of part 5: Z23 §2.5 and §4 back to medium). 49 pseudocode documents (2 249 headings: 150 high, 1 561 medium,
-212 low, 326 not rated) and 62 knowledge files (324 headings: 13 high, 241 medium, 28 low, 42 not rated; the 6 new
-ones are `X07.md` §1–§6); 125 hand rows (123 + the 2 rows of the X07 review). Hand passes: Login, WM, the shared library and the DB servers (X02 part 2),
-the zone documents and the knowledge files (part 3), 4 rows set by the re-check of §3.2 (part 4: `Z01.md` §3 → high,
-§4 and §6 low → medium, `Z03.md` §2 stays medium), the pass after batch 3 (X05) and the pass after batch 4 (X07),
-both at the end of §2.2. Before the batch-4 re-run: 130 high, 1 570 medium, 223 low, 326 not rated over the same 49
-documents; knowledge 13 / 237 / 28 / 40 over 61 files; 102 hand rows. The ratings are the input of §3; §3 and new
-captures change them (re-run the generator).
+State: re-run after capture batch 5 (X09 part 3). 49 pseudocode documents (2 249 headings: 149 high, 1 565 medium,
+209 low, 326 not rated) and 65 knowledge files (338 headings: 13 high, 251 medium, 28 low, 46 not rated; rated for
+the first time: `P05.md`, `X06.md` and `X09.md` §1–§3); 130 hand rows (125 + 5 of X09). Hand passes: Login, WM, the
+shared library and the DB servers (X02 part 2), the zone documents and the knowledge files (part 3), 4 rows set by
+the re-check of §3.2 (part 4: `Z01.md` §3 → high, §4 and §6 low → medium, `Z03.md` §2 stays medium), the passes
+after batch 3 (X05), batch 4 (X07) and batch 5 (X09), all at the end of §2.2. Before the batch-5 re-run: 150 high,
+1 561 medium, 212 low, 326 not rated over the same 49 documents; knowledge 13 / 241 / 28 / 42 over 62 files; 125
+hand rows. The ratings are the input of §3; §3 and new captures change them (re-run the generator).
 
 ### 2.1 Method
 
@@ -169,7 +169,7 @@ What the generator reads:
 
 | Signal | Source | Use |
 |---|---|---|
-| `cap n/m` | the opcodes written in the section (`0x…`, known to `opcodes.json`) that have an evidence entry in `annotations/P02.json` or a row with "Seen" > 0 in an "Opcodes" table of `capture-validation.md` (`n`), of all its opcodes (`m`). The second source was added by X05: 102 captured opcodes have a table row and no evidence entry (73 of batches 1–2, 29 of batch 3, e.g. `0x0804`, `0x1802`, `0x240E`, `0x3441` / `0x3442`); the batch-4 tables (§22.6, §23.8, §24.9, §25.10) are read the same way. X07 widened the row form to cells with several opcodes (`0x9007 / 0x9008`, "Seen" `1 / 2`, `2 + 2`, `5 each`): 78 more opcodes, most of them the WM / zone login lists of batch 2 | capture evidence |
+| `cap n/m` | the opcodes written in the section (`0x…`, known to `opcodes.json`) that have an evidence entry in `annotations/P02.json` or a row with "Seen" > 0 in an "Opcodes" table of `capture-validation.md` (`n`), of all its opcodes (`m`). The second source was added by X05: 102 captured opcodes have a table row and no evidence entry (73 of batches 1–2, 29 of batch 3, e.g. `0x0804`, `0x1802`, `0x240E`, `0x3441` / `0x3442`); the batch-4 tables (§22.6, §23.8, §24.9, §25.10) and the batch-5 tables (§26.7, §27.9, §28.8) are read the same way. X07 widened the row form to cells with several opcodes (`0x9007 / 0x9008`, "Seen" `1 / 2`, `2 + 2`, `5 each`): 78 more opcodes, most of them the WM / zone login lists of batch 2 | capture evidence |
 | `cv ok` | the § is named in a **confirmed** row of `capture-validation.md` (§11) or in its list of orders confirmed in full (end of §11) | capture evidence |
 | `cv corr` | the § is named in `capture-validation.md` §13 (corrected / contradicted / extended by a capture); the correct statement is in `docs/knowledge/P02.md` "Corrections" | class applies |
 | `sup×n (README §5.x)` | `n` rows of README §5 name this item and § as "Older place" (a § that is no heading counts for its nearest parent) | class applies |
@@ -397,6 +397,53 @@ codes 0xAC2 – 0xAC7 of `0x1061` / `0x1067`: test-client cases T10, T24; of Z08
 capture-scenarios 51; of Z23 §4 / Z03 §9.1 the refusals of `0x4814` 0x882 – 0x889: T23; of Z03 §9.3 the teach failures `0x4803`
 / `0x4805` are open).
 
+**Hand pass after capture batch 5 (X09 part 3).** The batch-3 and batch-4 blocks above are kept as written. The
+re-run reads the batch-5 evidence (captures `s45`, `s46`, `s52`: the "Opcodes" tables §26.7, §27.9, §28.8 of
+`capture-validation.md` and the batch-5 entries of `annotations/P02.json`) and the batch-5 rows of §11 (from
+"Split-and-merge, onto a full stack" on) and §13 (the rows "→ X08"; the three "→ X09" rows correct scenario texts,
+which have no rating). Batch 5 adds to the capture set: split-and-merge onto a fuller stack and the exchange onto a
+stack at `MaxLot`, a buy-back onto the first empty cell, the level and full-inventory buy-back refusals; a second
+player in sight seen by a bystander (walk relay, leaving and entering sight at both speeds, sit and the step that
+ends it, jump, a shout out of sight, a mob's swings and B's death, three cast aborts by a step and a full cast, a town
+revive on the same zone), the spam-filter set `0x0846` → `0x0847`, a whisper to an unknown name (`0x200E`),
+`&mobbreed` / `&mb`; the second `0x1001` with the stale tutorial copy, a rename onto a taken name with the 2016
+procedure (P02-B42), `&kickout` on one zone (`0x0C1A` with a real user number → `0x0C17`) and across zones (Z11-B6),
+the SHN refusal `0x1804 {0x147, idx}` and the start-up crash on a table with one byte appended (P02-B43). Still in
+no capture: party, raid, guild, pet, silver wing, quest step, KQ play, scripted map, booth, mini-house, mob skills,
+`0x243E`, the zone refusals the 2016 client pre-empts (`0x366C`, `0x5005`; the money and soul-stone refusals of `s46`
+were the client's), `0x3443`, `irm_Exchange`'s `0x24A` and the `irm_Move` / `0x20A` branch, `0x2022` / `0x2023`,
+`0x2020 {6}`, lookups by a name two characters share (capture-scenarios 47, 53, 54, T18, T26–T28).
+
+Of the sections that existed before, 6 changed their rating (`P05.md`, `X06.md`, `X09.md` are rated for the first
+time; the generator alone changed 8, two of which the hand rows below set back):
+
+| Change | Rows | Why |
+|---|---|---|
+| medium → high | 1 | Z01 §11 (client cross-check summary): `0x1804` (§28.6) makes 9 of its 18 opcodes captured, as X07 raised W01 §10 / Z03 §10 |
+| low → medium | 3 | a section with a class (README §5 rows, `cv corr`) that batch 5 now covers: Z02 §4 (emotes: Sit `0x2020 {7}` → `0x2021`, the step that ends it, §27.3; hand row with the open sends), Z03 §5.6 (effect application of a full cast beside a bystander, §27.7), Z03 §7.1 (the death of B beside A, §27.6) |
+| high → medium | 2 | captured and corrected by batch 5 (§13 → X08): Z04 §4.1 (the `b ≥ MaxLot` exchange branch; hand row: `0x24A` and `irm_Move` / `0x20A` are scenario 53) and D03 §3.3 (the `0x0456` log tail order) |
+
+Hand rows of this pass (`X02-rate-hand.py`, block "X09 part 3": 5 new rows, 1 reworded):
+
+| Row(s) | Hand rating | Reason |
+|---|---|---|
+| W04 §17.2 | medium (baseline: high) | only the set path `0x0846` → `0x0847` is captured (§27.4); the load `0x0844` and the push `0x0845` appeared in no capture (no `usp_SpamFilter_get` row, §7.4), so W04-B60 could not show. Raise by: set the filter, then a new character login and map login of the same account |
+| Z11 §4.2 | medium (baseline: low) | the baseline saw only `cv corr` (no opcode in the section), but `&mobbreed` / `&mb` are captured in `s45` ("Mob : 5989", §27.6): a captured section in which a class applies |
+| Z04 §4.1, Z02 §4 | medium (as the baseline) | the reason names the batch-5 paths and the "raise by" the scenario of the open branches: 53 (`0x24A`, `irm_Move` / `0x20A`), 54 and T27 (`0x2022` / `0x2023`, `0x2020 {6}`) |
+| Z01 §3.2 | medium (as the baseline) | sight delivery to a bystander is captured, but the section gives every `so_AllInMap0..5` the sight cells and `ali_Work` a sight check, while the shout of `s45` (`so_AllInMap1`, "receivers filtered as in Z01 §3.2" per Z02 §3.2) reached a player out of sight (§27.4): one of the two statements is too general *(inferred; not in §13)*. Raise by: re-read the rest (§3) |
+| Z05 §2.4 (reworded, stays medium) | medium | in `s46` the 2016 client refused both soul-stone cases itself (no `0x5001`, §26.5): `0x5005` needs test-client case T18, `0x3443` scenario 47 step 3 (S17) |
+
+Kept as the baseline rates them after the check: Z05 §2.2 (sell and repurchase: the first empty cell, §26.3), Z04
+§13.1 (soul-stone purchase; its refusals are the client's), Z02 §2.4 (jump), Z03 §3.4 / §7.2, Z23 §3.1, W04 §2.1
+(whisper, now with `0x200E`), W01 §5.2 (kicks) stay high: the captures walk their own path, and their open branches
+are the uncaptured list above. The other sections batch 5 names stay medium because a class applies (Z04 §2.5 / §4.2,
+Z05 §4, D03 §2.2 (class D), Z02 §2.2 / §3.2, Z09 §9.6, Z01 §5.2 / §7.1 / §8.3, Z03 §3.2 / §5.4 / §7.3 / §9.1, W01
+§4.1 / §4.2 / §6.2, Z11 §4.5: README §5 rows or §13 corrections) or the capture contradicts them in part: D02 §3.5
+(no duplicate check anywhere, P02-B42: "contradicted" in §13, kept medium as a captured section in which a class
+applies; its open point, the lookups by a shared name, is scenario 54). As in the earlier passes, the check used the
+section titles, their opcode lists (`X02-rate.py sig`) and the capture-validation text; no section body was re-read
+except W04 §17.2 and Z01 §3.2, so "high" is the path the captures took, not "re-verified".
+
 <!-- X02-RATINGS:BEGIN (generated by docs/plan/status/X02-rate.py write; do not edit) -->
 
 ### 2.3 Summary per file (generated)
@@ -410,20 +457,20 @@ Pseudocode documents (`docs/pseudocode/`):
 | `wm/W01-core.md` | W01 | 33 | 4 | 22 | 2 | 5 | 0 |
 | `wm/W02-party-raid.md` | W02 | 45 | 1 | 29 | 8 | 7 | 0 |
 | `wm/W03-guild.md` | W03 | 63 | 1 | 42 | 12 | 8 | 1 |
-| `wm/W04-social-misc.md` | W04 | 70 | 11 | 38 | 9 | 12 | 3 |
+| `wm/W04-social-misc.md` | W04 | 70 | 11 | 38 | 9 | 12 | 4 |
 | `wm/W05-process.md` | W05 | 42 | 11 | 22 | 1 | 8 | 0 |
 | `wm/W06-leftovers.md` | W06 | 21 | 0 | 16 | 0 | 5 | 0 |
-| `zone/Z01-core.md` | Z01 | 33 | 1 | 17 | 12 | 3 | 0 |
-| `zone/Z02-actions.md` | Z02 | 36 | 5 | 19 | 8 | 4 | 3 |
-| `zone/Z03-combat.md` | Z03 | 52 | 10 | 17 | 19 | 6 | 2 |
-| `zone/Z04-items.md` | Z04 | 72 | 6 | 43 | 10 | 13 | 5 |
+| `zone/Z01-core.md` | Z01 | 33 | 2 | 16 | 12 | 3 | 1 |
+| `zone/Z02-actions.md` | Z02 | 36 | 5 | 20 | 7 | 4 | 4 |
+| `zone/Z03-combat.md` | Z03 | 52 | 10 | 19 | 17 | 6 | 2 |
+| `zone/Z04-items.md` | Z04 | 72 | 5 | 44 | 10 | 13 | 6 |
 | `zone/Z05-itemdb.md` | Z05 | 61 | 8 | 38 | 7 | 8 | 3 |
 | `zone/Z06-economy.md` | Z06 | 29 | 1 | 16 | 7 | 5 | 0 |
 | `zone/Z07-character.md` | Z07 | 52 | 6 | 25 | 14 | 7 | 1 |
 | `zone/Z08-content.md` | Z08 | 30 | 2 | 14 | 9 | 5 | 0 |
 | `zone/Z09-world.md` | Z09 | 268 | 11 | 207 | 10 | 40 | 23 |
 | `zone/Z10-certification.md` | Z10 | 38 | 0 | 28 | 3 | 7 | 1 |
-| `zone/Z11-gm-commands.md` | Z11 | 62 | 3 | 52 | 3 | 4 | 4 |
+| `zone/Z11-gm-commands.md` | Z11 | 62 | 3 | 52 | 3 | 4 | 5 |
 | `zone/Z12-stats.md` | Z12 | 46 | 7 | 28 | 4 | 7 | 2 |
 | `zone/Z13-objects.md` | Z13 | 87 | 10 | 67 | 1 | 9 | 5 |
 | `zone/Z14-instances.md` | Z14 | 28 | 0 | 24 | 0 | 4 | 0 |
@@ -447,14 +494,14 @@ Pseudocode documents (`docs/pseudocode/`):
 | `zone/Z32-gamble-internals.md` | Z32 | 48 | 1 | 40 | 0 | 7 | 1 |
 | `db/D01-account.md` | D01 | 18 | 0 | 8 | 9 | 1 | 0 |
 | `db/D02-character.md` | D02 | 27 | 1 | 11 | 13 | 2 | 0 |
-| `db/D03-character-items.md` | D03 | 50 | 3 | 29 | 14 | 4 | 0 |
+| `db/D03-character-items.md` | D03 | 50 | 2 | 30 | 14 | 4 | 0 |
 | `db/D04-character-social.md` | D04 | 29 | 0 | 11 | 14 | 4 | 0 |
 | `db/D05-gamelog.md` | D05 | 31 | 0 | 12 | 13 | 6 | 0 |
 | `db/D06-db-inferred.md` | D06 | 59 | 0 | 47 | 2 | 10 | 0 |
 | `db/D07-character-reward-items.md` | D07 | 18 | 0 | 15 | 0 | 3 | 0 |
 | `db/D08-db-process.md` | D08 | 54 | 0 | 47 | 0 | 7 | 0 |
 | `shared/S02-library.md` | S02 | 44 | 2 | 32 | 0 | 10 | 3 |
-| **total** | | 2249 | 150 | 1561 | 212 | 326 | 115 |
+| **total** | | 2249 | 149 | 1565 | 209 | 326 | 120 |
 
 Knowledge files (`docs/knowledge/`):
 
@@ -515,14 +562,17 @@ Knowledge files (`docs/knowledge/`):
 | `P02.md` | P02 | 2 | 2 | 0 | 0 | 0 | 2 |
 | `P03.md` | P03 | 5 | 0 | 5 | 0 | 0 | 0 |
 | `P04.md` | P04 | 4 | 0 | 2 | 0 | 2 | 0 |
+| `P05.md` | P05 | 5 | 0 | 3 | 0 | 2 | 0 |
 | `X01.md` | X01 | 4 | 0 | 4 | 0 | 0 | 0 |
 | `X02.md` | X02 | 6 | 0 | 3 | 1 | 2 | 0 |
 | `X03.md` | X03 | 2 | 0 | 2 | 0 | 0 | 0 |
 | `X04.md` | X04 | 6 | 0 | 4 | 0 | 2 | 0 |
 | `X05.md` | X05 | 7 | 0 | 7 | 0 | 0 | 0 |
+| `X06.md` | X06 | 6 | 0 | 4 | 0 | 2 | 0 |
 | `X07.md` | X07 | 6 | 0 | 4 | 0 | 2 | 0 |
+| `X09.md` | X09 | 3 | 0 | 3 | 0 | 0 | 0 |
 | `K01.md` | K01 | 19 | 0 | 15 | 0 | 4 | 0 |
-| **total** | | 324 | 13 | 241 | 28 | 42 | 10 |
+| **total** | | 338 | 13 | 251 | 28 | 46 | 10 |
 
 ### 2.4 L00: `login-server.md`
 
@@ -587,20 +637,20 @@ Knowledge files (`docs/knowledge/`):
 | · 2.1 Server-to-server handshake (all outgoing links) | **high** | cap 4/4; cv ok |  |
 | 3. World login (client → WM) | – | container (see its subsections) |  |
 | · 3.1 Pending world logins (Login → WM) | medium | cap 3/3; sup×2 (README §5.3) | re-read the rest (§3) |
-| · 3.2 Client connects to the WM | medium | cap 8/9; cv ok; sup×1 (README §5.3); cv corr; N: `AcceptTick` | re-read the rest (§3); read with P02 "Corrections"; README §4.8; capture 0x0C15 |
-| · 3.3 Newbie / comeback classification, then the avatar list | medium | cap 6/10; cv ok; client×1; cv corr; weak inf1 p171 | read with P02 "Corrections"; capture 0x0C15 |
+| · 3.2 Client connects to the WM | medium | cap 8/9; cv ok; sup×2 (README §5.3); cv corr; N: `AcceptTick` | re-read the rest (§3); read with P02 "Corrections"; README §4.8; capture 0x0C15 |
+| · 3.3 Newbie / comeback classification, then the avatar list | medium | cap 6/10; cv ok; client×1; sup×1 (README §5.3); cv corr; weak inf1 p171 | re-read the rest (§3); read with P02 "Corrections"; capture 0x0C15 |
 | 4. Character select (client → WM) | – | container (see its subsections) |  |
 | · 4.1 Create / delete / rename | medium | cap 24/26; cv ok; sup×2 (README §5.3); cv corr; weak inf4 | re-read the rest (§3); read with P02 "Corrections"; code or capture for the marked statements; capture 0x140A |
 | · 4.2 Character login (enter the game) | medium | cap 16/17; cv ok; client×1; sup×4 (README §5.3); cv corr; weak inf1 | re-read the rest (§3); read with P02 "Corrections"; capture 0x111D |
 | · 4.3 Beauty shop at character select (CHairShopFrameWork) | medium | cap 0/8 | capture 0x1079, 0x107D |
 | 5. In-game client requests (core) | – | container (see its subsections) |  |
-| · 5.1 Logout and return to character select | medium | cap 7/7; cv ok; client×1; sup×2 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections" |
+| · 5.1 Logout and return to character select | medium | cap 7/7; cv ok; client×1; sup×3 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 5.2 Kicks | **high** | cap 3/3; cv ok |  |
 | · 5.3 Small client requests | medium | cap 4/20 | capture 0x0813, 0x0819, 0x086F, 0x3041 |
-| · 5.4 CharacterLogout (shared by logout, disconnect, return to se… | medium | cap 6/7; cv ok; sup×1 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections" |
+| · 5.4 CharacterLogout (shared by logout, disconnect, return to se… | medium | cap 6/7; cv ok; sup×2 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | 6. Character DB link (CParserCharDB) | medium | read in code | second reading / client check |
 | · 6.1 AVATAR (0x82 bytes; char-select list entry) | medium | cap 5/5; sup×2 (README §5.3); cv corr; weak inf6 p172; ours×1 | re-read the rest (§3); read with P02 "Corrections"; code or capture for the marked statements |
-| · 6.2 Avatar and character replies | medium | cap 6/17; cv ok; sup×2 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x086F, 0x1079, 0x107D |
+| · 6.2 Avatar and character replies | medium | cap 6/17; cv ok; sup×4 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x086F, 0x1079, 0x107D |
 | · 6.3 Character blob cache (CharDB → WM → zone) | medium | cap 73/96; sup×2 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x1010, 0x1011, 0x102A |
 | 7. Zone links (CParserZone) | – | container (see its subsections) |  |
 | · 7.1 Zone registration and map table | medium | cap 4/5; sup×2 (README §5.3); cv corr | re-read the rest (§3); read with P02 "Corrections" |
@@ -741,7 +791,7 @@ Knowledge files (`docs/knowledge/`):
 | · 1.1 Client-session fields used by this item (see W01-core §1.1 … | medium | cap 2/7; weak p171 | capture (class U) |
 | · 1.2 Helpers (named here) | medium | cap 0/1; ours×1 | capture 0x2004 |
 | 2. Chat routing (dept 8 ACT) | – | container (see its subsections) |  |
-| · 2.1 Whisper: client 0x200C NC_ACT_WHISPER_REQ (CParserClient) | **high** | cap 4/5; cv ok; client×2 |  |
+| · 2.1 Whisper: client 0x200C NC_ACT_WHISPER_REQ (CParserClient) | **high** | cap 5/5; cv ok; client×2 |  |
 | · 2.2 Notice: 0x2010 NC_ACT_NOTICE_REQ (three parsers) | **high** | cap 1/2; client×1 |  |
 | · 2.3 Party chat: client 0x2014 NC_ACT_PARTYCHAT_REQ | medium | cap 1/4; client×1 | capture 0x2015, 0x2016 |
 | · 2.4 Zone 0x207D NC_ACT_SCRIPT_MSG_WORLD_CMD (CParserZone) | **high** | cap 2/2; cv ok; client×1 |  |
@@ -799,12 +849,12 @@ Knowledge files (`docs/knowledge/`):
 | · 16.2 Handlers | medium | cap 0/12 | capture (class U) |
 | 17. Dept-2 MISC relays, attendance event, NPC schedule (W01 han… | – | container (see its subsections) |  |
 | · 17.1 Account-server event relay 0x083A (C01 open item) | medium | cap 1/5; weak p171 | capture (class U) |
-| · 17.2 Chat spam filter settings (0x0844 / 0x0845 / 0x0846) | medium | cap 1/6; client×1 | capture 0x0845 |
+| · 17.2 Chat spam filter settings (0x0844 / 0x0845 / 0x0846) | medium | only the set path is captured (0x0846 -> CDB 0x0847, no reply; capture-validation §27.4); the load 0x0844 and the push 0x0845 appeared in no capture (no usp_SpamFilter_get row for any captured character, §7.4), so W04-B60 (the session copy not updated) could not show (hand; baseline: high) | set the filter, then a new character login and map login of the same account (0x0844 -> 0x0845 with the set values or the old ones: W04-B60) |
 | · 17.3 Client loading-failure report (0x0840 → CharDB 0x0841) | medium | cap 0/2 | capture (class U) |
 | · 17.4 Gold-spammer report and GM chat ban (0x085F … 0x0869) | medium | cap 2/13 | capture 0x0860, 0x0862, 0x0867 |
 | · 17.5 Attendance event (`cEvent_Attendance`, `g_Attendance` DAT_… | medium | cap 4/14; cv ok; ours×2 | capture 0x10ED, 0x10F0, 0x10F2, 0x10F5 … |
 | · 17.6 NPC schedule (`CNpcScheduleServer`, DAT_006c536c = WM +0x2… | medium | cap 0/4 | capture 0x086C, 0x086D |
-| 18. Original-server bugs | medium | cap 15/106; weak inf1; bug table (class X: effects are deductions) | capture 0x0845, 0x10ED, 0x10F0, 0x10F2 … |
+| 18. Original-server bugs | medium | cap 17/106; weak inf1; bug table (class X: effects are deductions) | capture 0x0845, 0x10ED, 0x10F0, 0x10F2 … |
 | 19. Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
 | 20. Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
@@ -844,7 +894,7 @@ Knowledge files (`docs/knowledge/`):
 | · 5.5 Zone state saves (W01 §7.4 per handler) | **high** | cap 17/21 |  |
 | · 5.6 Ping-test relay (OPTool ↔ WM ↔ client / CharDB / zone) | medium | cap 0/8; client×2 | capture 0x0813 |
 | · 5.7 Small helpers and the log systems | **high** | cap 7/9 |  |
-| · 5.8 Triage of the W01 handlers `coverage.py` lists as undocumen… | medium | cap 24/63; client×1 | capture 0x0813, 0x1010 |
+| · 5.8 Triage of the W01 handlers `coverage.py` lists as undocumen… | medium | cap 25/63; client×1 | capture 0x0813, 0x1010 |
 | · 5.9 Uncertain (part 4) | – | open points / boundary list, no claim to rate |  |
 | 6. Construction, service shell and small helpers (sweep) | – | container (see its subsections) |  |
 | · 6.1 Parser handler tables (`PROTOCOLFUNCTIONTEMPLETE<T>`) | medium | cap 1/1 | capture (class U) |
@@ -892,16 +942,16 @@ Knowledge files (`docs/knowledge/`):
 | · 2.3 Data tables and their loaders | **low** | sup×1 (README §5.4) | re-read the rest (§3) |
 | 3. Network layer | **low** | no function cited; sup×2 (README §5.4) | re-read the rest (§3) |
 | · 3.1 Packet buffer and send primitives | medium | weak inf1 | second reading / client check |
-| · 3.2 Broadcast (who receives a packet) | medium | cap 1/1; client×1 | capture (class U) |
+| · 3.2 Broadcast (who receives a packet) | medium | sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; capture-validation §27.2, §27.6, §27.7), but the section gives every so_AllInMap0..5 the sight cells and ali_Work a sight check, while the shout of s45 (so_AllInMap1, "filtered as in Z01 §3.2" per Z02 §3.2) reached a player out of sight (§27.4): one of the two statements is too general (inferred; not in §13) (hand; baseline: medium) | re-read the rest (§3): which iterator and visitor so_AllInMap1 uses |
 | · 3.3 Server-to-server handshake and heartbeat | medium | cap 7/9; cv ok; sup×1 (README §5.4); cv corr; B×3 | re-read the rest (§3); read with P02 "Corrections"; follow the return value to the parser |
 | 4. Objects | **low** | no function cited; sup×7 (README §5.4) | re-read the rest (§3) |
 | · 4.1 Class hierarchy (RTTI) | **low** | no function cited; pre-S01 prose without a function | cite and re-read the function |
 | · 4.2 ShineObjectManager and handles | medium | cap 0/1; ours×1 | capture 0x202C |
 | · 4.3 Player mode | **low** | cap 4/11; sup×1 (README §5.4) | re-read the rest (§3); capture 0x181F |
-| 5. Map login | **high** | cap 11/13 |  |
+| 5. Map login | **high** | cap 12/13 |  |
 | · 5.1 Seed | **low** | cap 1/2; sup×1 (README §5.4) | re-read the rest (§3) |
-| · 5.2 0x1801 NC_MAP_LOGIN_REQ | medium | cap 2/3; cv ok; client×2; sup×1 (README §5.4) | re-read the rest (§3); capture 0x1804 |
-| · 5.3 WM answers | medium | cap 10/12; cv ok; sup×1 (README §5.4) | re-read the rest (§3); capture 0x1804 |
+| · 5.2 0x1801 NC_MAP_LOGIN_REQ | medium | cap 3/3; cv ok; client×2; sup×1 (README §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
+| · 5.3 WM answers | medium | cap 11/12; cv ok; sup×1 (README §5.4) | re-read the rest (§3) |
 | 6. 0x1803 NC_MAP_LOGINCOMPLETE_CMD (login burst) | medium | cap 9/15; cv ok; client×2; sup×7 (README §5.4); cv corr; weak inf1 | re-read the rest (§3); read with P02 "Corrections"; capture 0x0810, 0x182C, 0x7C05 |
 | 7. Moving between maps | – | container (see its subsections) |  |
 | · 7.1 so_LinkTo (gate, NPC, script, skill teleport) | medium | cap 9/10; cv ok; client×2; sup×1 (README §5.4); weak inf2 | re-read the rest (§3) |
@@ -909,14 +959,14 @@ Knowledge files (`docs/knowledge/`):
 | · 7.3 Town portal and multi-link NPC | medium | cap 2/9; client×1 | capture 0x181F, 0x1820, 0x2028, 0x2029 … |
 | · 7.4 0x181C NC_MAP_TONORMALCOORD_CMD and so_ply_ToNormalLoc | medium | cap 1/4; weak inf1 | capture (class U) |
 | 8. Logout, kick and character save | **low** | no function cited; sup×1 (README §5.4) | re-read the rest (§3) |
-| · 8.1 Normal logout | medium | cap 2/2; cv ok; sup×2 (README §5.4); cv corr; weak inf1 | re-read the rest (§3); read with P02 "Corrections" |
+| · 8.1 Normal logout | medium | cap 2/2; cv ok; sup×4 (README §5.3, §5.4); cv corr; weak inf1 | re-read the rest (§3); read with P02 "Corrections" |
 | · 8.2 sp_RefreshWMSSocket | **low** | cap 1/1; sup×1 (README §5.4) | re-read the rest (§3) |
-| · 8.3 Disconnect and kick | medium | cap 5/5; sup×1 (README §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
-| · 8.4 Character save (WholeSaver) | medium | cap 23/27; cv ok; sup×3 (README §5.4); cv corr; B×2; weak inf1 | re-read the rest (§3); read with P02 "Corrections"; follow the return value to the parser |
+| · 8.3 Disconnect and kick | medium | cap 5/5; cv ok; sup×3 (README §5.3, §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
+| · 8.4 Character save (WholeSaver) | medium | cap 23/27; cv ok; sup×4 (README §5.4); cv corr; B×2; weak inf1 | re-read the rest (§3); read with P02 "Corrections"; follow the return value to the parser |
 | 9. Other client and WM messages in scope | **low** | cap 1/22; sup×3 (README §5.4); B×1; weak p171 | re-read the rest (§3); follow the return value to the parser; capture 0x0812, 0x0813, 0xB413 |
-| 10. Zone ring (ZoneListenSession / ZoneConnectSession) | medium | cap 2/25 | capture (class U) |
-| 11. Client cross-check (summary) | medium | cap 8/18 | capture 0x0810, 0x1804, 0x1815, 0x1817 … |
-| Original-server bugs | **low** | cap 4/19; sup×4 (README §5.4); B×1; weak inf1; bug table (class X: effects are deductions) | re-read the rest (§3); follow the return value to the parser; capture 0x0812, 0x1804, 0x181F, 0x1820 … |
+| 10. Zone ring (ZoneListenSession / ZoneConnectSession) | medium | cap 3/25 | capture (class U) |
+| 11. Client cross-check (summary) | **high** | cap 9/18 |  |
+| Original-server bugs | **low** | cap 5/19; sup×4 (README §5.4); B×1; weak inf1; bug table (class X: effects are deductions) | re-read the rest (§3); follow the return value to the parser; capture 0x0812, 0x181F, 0x1820, 0x2028 … |
 | 12. Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
 
 ### 2.13 Z02: `zone/Z02-actions.md`
@@ -926,16 +976,16 @@ Knowledge files (`docs/knowledge/`):
 | 1. Conventions used in this file | medium | cap 6/9; sup×2 (README §5.4); ours×5 | re-read the rest (§3); capture 0x2004, 0x2075, 0x74CC |
 | 2. Movement | medium | weak inf1 | second reading / client check |
 | · 2.1 0x2003 NC_ACT_WALK_REQ / 0x2005 NC_ACT_RUN_REQ `{ u32 from.… | medium | cap 2/6; weak inf1 | capture 0x2004, 0x2006 |
-| · 2.2 0x2017 NC_ACT_MOVEWALK_CMD / 0x2019 NC_ACT_MOVERUN_CMD `{ u… | medium | cap 6/6; client×1; sup×1 (README §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
+| · 2.2 0x2017 NC_ACT_MOVEWALK_CMD / 0x2019 NC_ACT_MOVERUN_CMD `{ u… | medium | cap 6/6; cv ok; client×1; sup×1 (README §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 2.3 0x2012 NC_ACT_STOP_REQ `{ u32 loc.x, loc.y }` | **high** | cap 3/3 |  |
-| · 2.4 0x2024 NC_ACT_JUMP_CMD (no payload) | **high** | cap 2/2 |  |
+| · 2.4 0x2024 NC_ACT_JUMP_CMD (no payload) | **high** | cap 2/2; cv ok |  |
 | · 2.5 0x2008 NC_ACT_CHANGEMODE_REQ `{ u8 mode }` | **high** | cap 2/2; client×1; weak inf1 |  |
 | 3. Chat | – | container (see its subsections) |  |
 | · 3.1 0x2001 NC_ACT_CHAT_REQ `{ u8 itemLinkDataCount, u8 len, u8 … | medium | cap 2/3; sup×2 (README §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 3.2 0x201E NC_ACT_SHOUT_CMD `{ u8 itemLinkDataCount, u8 len, u8… | medium | cap 2/3; cv ok; sup×2 (README §5.4); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 3.3 Admin ("&") commands | medium | read in code | second reading / client check |
 | · 3.4 Spam filter | **low** | cap 1/3; client×1; sup×1 (README §5.4) | re-read the rest (§3); capture 0x0848 |
-| 4. Emotes | **low** | cap 2/5; sup×4 (README §5.4); weak inf1 | re-read the rest (§3); capture 0x2023 |
+| 4. Emotes | medium | captured: Sit 0x2020 {7} -> 0x2021, the step that ends an emote, jump (capture-validation §27.3), and the client side was extended (Stand and Esc send nothing; §13 -> X08); 0x2022 / 0x2023 and 0x2020 {6} are in no capture (hand; baseline: medium) | capture-scenarios 54 (key function 0x6F; /stand), test-client case T27 (0x2020 {6}) |
 | 5. Sight and brief info (what other players see) | medium | cap 1/2; cv ok; sup×1 (README §5.4) | re-read the rest (§3); capture 0x748D |
 | · 5.1 0x1C01 NC_BRIEFINFO_INFORM_CMD `{ u16 nMyHnd, u16 ReceiveNe… | **high** | cap 2/2; cv ok |  |
 | · 5.2 Brief-info exchange (login, regen, teleport) | medium | cap 3/4; cv ok; sup×3 (README §5.4); cv corr; weak inf1 | re-read the rest (§3); read with P02 "Corrections"; capture 0x1C07 |
@@ -991,7 +1041,7 @@ Knowledge files (`docs/knowledge/`):
 | · 5.3 Cost | medium | read in code | second reading / client check |
 | · 5.4 Casting, abort, blast | medium | cap 9/9; cv ok; client×1; sup×2 (README §5.5) | re-read the rest (§3) |
 | · 5.5 NC_BAT_SKILLBASH_FLD_CAST_REQ `0x2441` (C→Z) @ FUN_0057f400 | **high** | cap 1/1; cv ok |  |
-| · 5.6 Effect application | **low** | cap 1/2; sup×5 (README §5.5); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x2453 |
+| · 5.6 Effect application | medium | cap 1/2; cv ok; sup×5 (README §5.5); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x2453 |
 | 6. Abnormal states | – | container (see its subsections) |  |
 | · 6.1 Tables and structures | **low** | cap 1/1; sup×4 (README §5.5) | re-read the rest (§3) |
 | · 6.2 Setting a state | **low** | cap 1/1; sup×1 (README §5.5) | re-read the rest (§3) |
@@ -1000,15 +1050,15 @@ Knowledge files (`docs/knowledge/`):
 | · 6.5 NC_BAT_ABSTATE_ERASE_REQ `0x2454` (C→Z) @ FUN_0042b900 | medium | cap 0/2; client×1 | capture 0x2455 |
 | · 6.6 The status flag byte `obj + 0x1e78` (open question from Z02) | **low** | sup×2 (README §5.5); weak inf1 | re-read the rest (§3) |
 | 7. Damage, death | **high** | cap 2/2 |  |
-| · 7.1 Common part | **low** | sup×2 (README §5.5); cv corr | re-read the rest (§3); read with P02 "Corrections" |
+| · 7.1 Common part | medium | cv ok; sup×2 (README §5.5); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 7.2 Player death | **high** | cap 6/10; cv ok; weak inf1 |  |
-| · 7.3 Revive by skill: NC_SKILL_REPLYREVIVE_CMD `0x482A` (C→Z) @ … | medium | cap 5/6; cv ok; cv corr | read with P02 "Corrections"; capture 0x482B |
+| · 7.3 Revive by skill: NC_SKILL_REPLYREVIVE_CMD `0x482A` (C→Z) @ … | medium | cap 5/6; cv ok; sup×1 (README §5.5); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x482B |
 | 8. Mob death, experience, level-up | – | container (see its subsections) |  |
 | · 8.1 Mob death | medium | cap 1/3; cv ok; sup×1 (README §5.5) | re-read the rest (§3) |
 | · 8.2 Experience | **low** | sup×2 (README §5.5) | re-read the rest (§3) |
 | · 8.3 `ShinePlayer::sp_GainExp` @ FUN_0042d830 | medium | cap 8/10; cv ok; client×1; sup×1 (README §5.5) | re-read the rest (§3); capture 0x5C0D |
 | 9. Skill learning, empowering, unlearning | – | container (see its subsections) |  |
-| · 9.1 NC_SKILL_EMPOWALLOC_REQ `0x4811` (C→Z) @ FUN_0044f150 | medium | cap 4/4; cv ok; client×1; cv corr | read with P02 "Corrections" |
+| · 9.1 NC_SKILL_EMPOWALLOC_REQ `0x4811` (C→Z) @ FUN_0044f150 | medium | cap 4/4; cv ok; client×1; sup×1 (README §5.5); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 9.2 Empower reset answers (DB→Z) | medium | cap 0/5 | capture 0x480E, 0x480F |
 | · 9.3 Skill teach answers (DB→Z) | **high** | cap 3/6; cv ok |  |
 | · 9.4 NC_SKILL_PRODUCTFIELD_REQ `0x4822` (C→Z) @ FUN_0046c820 | medium | the captured opcodes are only mentioned here (0x4801 / 0x4802 / 0x4804 of the skill-book learn, capture-validation §24.2); the subject of the section (0x4822 production field) is in no capture (hand; baseline: high) | capture 0x4822 |
@@ -1032,13 +1082,13 @@ Knowledge files (`docs/knowledge/`):
 | · 2.2 Buying with items ("item money") @ FUN_00526ac0 `so_ply_Ite… | medium | cap 0/2 | capture (class U) |
 | · 2.3 Buying with guild tokens @ FUN_00526ef0 `so_ply_ItemBuyGuil… | medium | cap 1/3; client×1 | capture (class U) |
 | · 2.4 NC_ITEM_SELL_REQ `0x3006` (C→Z) @ FUN_00539020 | medium | cap 6/6; cv ok; client×1; sup×1 (README §5.6); N: `NPCRangeCheck_Check` | re-read the rest (§3); README §4.8 |
-| · 2.5 NC_ITEM_REPURCHASE_REQ `0x3059` (C→Z) @ FUN_00538580 | medium | cap 6/8; cv ok; client×1; sup×1 (README §5.6); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x305B |
+| · 2.5 NC_ITEM_REPURCHASE_REQ `0x3059` (C→Z) @ FUN_00538580 | medium | cap 7/8; cv ok; client×1; sup×1 (README §5.6); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x305B |
 | 3. Dropping, destroying, picking up | – | container (see its subsections) |  |
 | · 3.1 NC_ITEM_DROP_REQ `0x3007` (C→Z) @ FUN_00529f50 | medium | cap 3/5; cv ok; client×1; sup×1 (README §5.6); N: `ItemMenu_Open` | re-read the rest (§3); README §4.8; capture 0x1829 |
 | · 3.2 Destroying an item (ItemBreaker) | **low** | cap 1/4; sup×1 (README §5.6); S: p+0xaad8; N: `ItemMenu_Open` | re-read the rest (§3); PDB member (`pdb.py` ShinePlayer); README §4.8; capture 0x1829, 0xD411 |
 | · 3.3 NC_ITEM_PICK_REQ `0x3009` (C→Z) @ FUN_00530a50 | medium | cap 6/7; cv ok; client×1; sup×3 (README §5.6); cv corr; weak inf1 | re-read the rest (§3); read with P02 "Corrections" |
 | 4. Moving items | – | container (see its subsections) |  |
-| · 4.1 NC_ITEM_RELOC_REQ `0x300B` (C→Z) @ FUN_00537170 → FUN_00536… | **high** | cap 2/2; cv ok; client×1 |  |
+| · 4.1 NC_ITEM_RELOC_REQ `0x300B` (C→Z) @ FUN_00537170 → FUN_00536… | medium | captured: split-and-merge and the exchange onto a stack at MaxLot (capture-validation §26.2), and the capture extended the branch list (b >= MaxLot -> irm_Exchange; §13 -> X08); the 0x24A refusal and the irm_Move / 0x20A branch are in no capture (hand; baseline: medium) | capture-scenarios 53 (S22: a character-bound stack in the account storage) |
 | · 4.2 NC_ITEM_SPLIT_REQ `0x300D` (C→Z) @ FUN_00539a40 | medium | cap 3/3; cv ok; client×1; sup×2 (README §5.6); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | 5. Equipment | – | container (see its subsections) |  |
 | · 5.1 NC_ITEM_EQUIP_REQ `0x300F` (C→Z) @ FUN_0052b8d0 | medium | cap 3/3; client×1; sup×2 (README §5.6); cv corr | re-read the rest (§3); read with P02 "Corrections" |
@@ -1105,19 +1155,19 @@ Knowledge files (`docs/knowledge/`):
 | · 1.4 Releasers (what "apply" does), `InventoryLocking::InvenCell… | **low** | cap 5/13; sup×3 (README §5.6); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x8C20, 0x8C21, 0x8C24, 0x8C27 … |
 | · 1.5 Client packets produced by an apply | **high** | cap 2/2; client×1 |  |
 | · 1.6 Handler skeleton and the error helpers | medium | read in code | second reading / client check |
-| · 1.7 Requests and answers | medium | cap 50/181 | capture (class U) |
+| · 1.7 Requests and answers | medium | cap 53/181 | capture (class U) |
 | 2. Shop | – | container (see its subsections) |  |
 | · 2.1 Buy: `0x340B`/`0x340E` BUYALLSUC/BUYLOTSUC, `0x340C`/`0x340… | **high** | cap 5/10; cv ok; client×1; ours×1 |  |
-| · 2.2 Sell and repurchase | **high** | cap 7/10; cv ok |  |
+| · 2.2 Sell and repurchase | **high** | cap 8/10; cv ok |  |
 | · 2.3 Guild-token buy: `0x3491`/`0x3494` and fails | **low** | cap 1/6; B×1 | follow the return value to the parser |
-| · 2.4 Soul stones: `0x3442` / `0x3443` | medium | captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture (hand; baseline: high) | capture-scenarios 46 / 47 (0x5005, 0x3443) |
+| · 2.4 Soul stones: `0x3442` / `0x3443` | medium | captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture: in batch 5 the 2016 client refused both soul-stone cases itself (0 cen, at the limit; no 0x5001 sent, capture-validation §26.5) (hand; baseline: high) | test-client case T18 (0x5005); capture-scenarios 47 step 3 with S17 (0x3443, the DB-side refusal) |
 | · 2.5 Capsule buy: `0x34A1` | medium | the captured opcodes are only mentioned here (the shared buy answer 0x3004); the subject of the section (0x34A1 capsule buy) is in no capture (hand; baseline: high) | capture 0x34A1 |
 | · 2.6 Item-money buy: `0x34B2` | medium | the captured opcodes are only mentioned here (the shared buy answer 0x3004); the subject of the section (0x34B2 item-money buy) is in no capture (hand; baseline: high) | capture 0x34B2 |
 | 3. Drop, pick-up, money (style 2: applied before the DB answer) | – | container (see its subsections) |  |
 | · 3.1 Drop: `0x3417`, `0x3418`, `0x341A`, `0x341B` | medium | cap 3/6; cv ok; sup×2 (README §5.6); cv corr; R×1 | re-read the rest (§3); read with P02 "Corrections"; callers incl. vtable slots; senders in every `handlers.json` |
 | · 3.2 Pick-up: `0x341D`…`0x3421`, `0x3439`, `0x343A` | **high** | cap 4/7; client×1 |  |
 | · 3.3 Money: `0x347B` / `0x347C` | medium | cap 0/3 | capture (class U) |
-| 4. Moving and stacking | medium | cap 6/12; cv ok; sup×1 (README §5.6) | re-read the rest (§3) |
+| 4. Moving and stacking | medium | cap 7/12; cv ok; sup×1 (README §5.6) | re-read the rest (§3) |
 | 5. Equipment | – | container (see its subsections) |  |
 | · 5.1 Equip / unequip: `0x3411`, `0x3412`, `0x3414`, `0x3415` | medium | cap 6/8; sup×1 (README §5.6) | re-read the rest (§3) |
 | · 5.2 Reinforce unequip: `0x3480` / `0x3481` | medium | cap 0/4 | capture (class U) |
@@ -1132,7 +1182,7 @@ Knowledge files (`docs/knowledge/`):
 | · 6.6 Card opening (collection cards): `0x34A9` → `0x34AA` → `0x3… | medium | cap 1/6 | capture 0xC407 |
 | 7. Storage | – | container (see its subsections) |  |
 | · 7.1 Account storage: `0x3446`, `0x3445`, `0x3460`, `0x3462` | medium | cap 6/8; sup×1 (README §5.6); cv corr | re-read the rest (§3); read with P02 "Corrections"; capture 0x3C07 |
-| · 7.2 Guild storage: `0x3473`, `0x3472`, `0x3475` | medium | cap 0/6 | capture 0x3027 |
+| · 7.2 Guild storage: `0x3473`, `0x3472`, `0x3475` | medium | cap 1/6 | capture 0x3027 |
 | · 7.3 Guild-academy reward storage: `0x3484`, `0x3483`, `0x3486`,… | medium | cap 0/8 | capture 0x3030 |
 | · 7.4 Premium ("charged") inventory: `0x3464`, `0x3466` | medium | cap 1/4 | capture 0x3023 |
 | 8. Upgrades, enchanting and item services | – | container (see its subsections) |  |
@@ -1202,7 +1252,7 @@ Knowledge files (`docs/knowledge/`):
 | · 1.1 The character block inside ShinePlayer | **low** | no function cited; R×1 | callers incl. vtable slots; senders in every `handlers.json` |
 | · 1.2 Blob handlers | medium | cap 28/30; sup×3 (README §5.6); weak inf2 | re-read the rest (§3) |
 | · 1.3 NC_CHAR_ZONE_CHARTITLE_CMD `0x1031` (WM → zone) @ FUN_005a3… | medium | cap 2/2; sup×1 (README §5.6) | re-read the rest (§3) |
-| · 1.4 NC_CHAR_ZONE_CHARDATA_ACK `0x101D` / CHARDATAFAIL_ACK `0x10… | **high** | cap 2/4 |  |
+| · 1.4 NC_CHAR_ZONE_CHARDATA_ACK `0x101D` / CHARDATAFAIL_ACK `0x10… | **high** | cap 3/4 |  |
 | · 1.5 CHAR_PARAMETER_DATA (in 0x1802 and the parameter refresh) @… | medium | cap 1/1; sup×1 (README §5.5) | re-read the rest (§3) |
 | 2. Stat points (free stats) | – | container (see its subsections) |  |
 | · 2.1 Data | **low** | R×1; ours×2 | callers incl. vtable slots; senders in every `handlers.json` |
@@ -1248,7 +1298,7 @@ Knowledge files (`docs/knowledge/`):
 | · 10.1 NC_CHAR_GET_ITEMLIST_BY_TYPE_ACK `0x1077` / _NUM_ACK `0x10… | medium | cap 1/3 | capture 0x302E |
 | · 10.2 NC_CHAR_REGNUM_VARIFICATION_ACK `0x10B4` (DB→Z) @ FUN_0055… | medium | cap 1/1; sup×1 (README §5.6) | re-read the rest (§3) |
 | 11. Production (answers Z02 §8) | **low** | cap 0/7; client×1; R×1 | callers incl. vtable slots; senders in every `handlers.json`; capture 0x481D |
-| Original-server bugs | **low** | cap 7/25; sup×1 (README §5.6); B×1; bug table (class X: effects are deductions) | re-read the rest (§3); follow the return value to the parser; capture 0x1125, 0x1804, 0xCC07 |
+| Original-server bugs | **low** | cap 8/25; sup×1 (README §5.6); B×1; bug table (class X: effects are deductions) | re-read the rest (§3); follow the return value to the parser; capture 0x1125, 0xCC07 |
 | 12. Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
 
 ### 2.19 Z08: `zone/Z08-content.md`
@@ -1275,7 +1325,7 @@ Knowledge files (`docs/knowledge/`):
 | 7. Weapon titles / licences (dept 23) and character titles (dep… | – | container (see its subsections) |  |
 | · 7.1 Weapon licence | **low** | cap 0/11; client×1; sup×1 (README §5.6) | re-read the rest (§3); capture 0x5C02, 0x5C03 |
 | · 7.2 Character titles | medium | cap 1/5 | capture 0x6002 |
-| 8. Guild, guild war and guild tournament: zone side (dept 29) | medium | cap 0/1 | capture (class U) |
+| 8. Guild, guild war and guild tournament: zone side (dept 29) | medium | cap 1/1 | capture (class U) |
 | · 8.1 Client requests | **low** | cap 1/24; sup×1 (README §5.6) | re-read the rest (§3); capture 0x7492, 0x749D, 0x74AD, 0x74B5 … |
 | · 8.2 WM / DB messages | **low** | cap 2/24; sup×2 (README §5.3, §5.6) | re-read the rest (§3); capture 0x74D8 |
 | 9. Holy promise (master / trainee, dept 37) | medium | cap 0/11 | capture 0x943D, 0x9441 |
@@ -1613,7 +1663,7 @@ Knowledge files (`docs/knowledge/`):
 | · 1.4 Admin levels | medium | cap 2/2; sup×1 (README §5.7); weak fh1 | re-read the rest (§3) |
 | · 1.5 Replies and the command log | medium | cap 1/1 | capture (class U) |
 | · 1.6 Helpers | medium | read in code | second reading / client check |
-| 2. All commands | medium | cap 31/81; B×3 | capture 0x0810, 0x0867, 0x1812, 0x1813 … |
+| 2. All commands | medium | cap 32/81; B×3 | capture 0x0810, 0x0867, 0x1812, 0x1813 … |
 | 3. Commands, part 1 (handlers FUN_004194f0 … FUN_0041b030) | medium | read in code | second reading / client check |
 | · 3.1 Visibility, layers and teleports | **low** | cap 1/1; sup×3 (README §5.6); cv corr; weak inf2 fh1 | re-read the rest (§3); read with P02 "Corrections"; code or capture for the marked statements |
 | · 3.2 Information | medium | read in code | second reading / client check |
@@ -1623,13 +1673,13 @@ Knowledge files (`docs/knowledge/`):
 | · 3.6 Words that do nothing | medium | weak inf1 fh1 | second reading / client check |
 | 4. Commands, part 2 (handlers FUN_0041b1f0 … FUN_0041cec0) | medium | read in code | second reading / client check |
 | · 4.1 Gates and doors: `&oxblock`, `&templink` | medium | cap 0/1; weak inf1 fh1 | capture 0x6C09 |
-| · 4.2 Mobs: `&mobbreed`, `&mb` | medium | read in code | second reading / client check |
+| · 4.2 Mobs: `&mobbreed`, `&mb` | medium | captured: `&mobbreed` and `&mb` in s45 (the wall "Mob : 5989", capture-validation §27.6), and the capture corrected the section (the value is the zone's mob count, not the mob ID; §13 -> X08): a captured section in which a class applies (hand; baseline: low) | re-read the rest (§3); read with P02 "Corrections" |
 | · 4.3 Items: `&makeitem`, `&cleariv` | **high** | cap 4/4; weak inf3 |  |
-| · 4.4 Character state: `&fullpoint`, `&sethp`, `&setsp`, `&learns… | medium | cap 6/8; cv corr; weak inf2 | read with P02 "Corrections"; capture 0x4805 |
-| · 4.5 Players and information | medium | cap 0/3; weak inf1 | capture (class U) |
+| · 4.4 Character state: `&fullpoint`, `&sethp`, `&setsp`, `&learns… | medium | cap 6/8; sup×2 (README §5.6); cv corr; weak inf2 | re-read the rest (§3); read with P02 "Corrections"; capture 0x4805 |
+| · 4.5 Players and information | medium | cap 1/3; cv ok; cv corr; weak inf1 | read with P02 "Corrections" |
 | · 4.6 Empty quest and cool-time words | medium | read in code | second reading / client check |
 | 5. Commands, part 3 (handlers FUN_0041cf90 … FUN_0041e880) | medium | read in code | second reading / client check |
-| · 5.1 Finding and summoning: `&mfind`, `&pfind`, `&psummon` | medium | cap 0/3; weak fh1 | capture (class U) |
+| · 5.1 Finding and summoning: `&mfind`, `&pfind`, `&psummon` | medium | cap 1/3; weak fh1 | capture (class U) |
 | · 5.2 Mob tools: `&mobdist`, `&killallmob`, `&suicideallmob`, `&s… | **low** | weak markers (inferred 1, fh-doc 2); 0x2011 is the answer to the invalid `&resetabstated` and 0x243C the poison damage of batch 4 (capture-validation §25.6, §25.7); no mob tool was used (hand; baseline: medium) | capture `&mobdist`, `&killallmob`, `&suicideallmob` |
 | · 5.3 Combat debug: `&deathaura`, `&immortal`, `&staticdamage`, `… | medium | read in code | second reading / client check |
 | · 5.4 Bonus events: `&expbonus`, `&itembonus`, `&fieldbonus` | medium | cap 0/2 | capture (class U) |
@@ -1665,7 +1715,7 @@ Knowledge files (`docs/knowledge/`):
 | · 9.2 Object, map and quest lookups | medium | read in code | second reading / client check |
 | · 9.3 Skills, inventory and items | medium | weak inf1 | second reading / client check |
 | · 9.4 Raid, party and save helpers | medium | cap 1/1 | capture (class U) |
-| Original-server bugs | medium | cap 5/17; client×1; weak inf3; R×1; bug table (class X: effects are deductions) | capture 0x181F, 0x2052, 0x6C14 |
+| Original-server bugs | medium | cap 6/17; client×1; weak inf3; R×1; bug table (class X: effects are deductions) | capture 0x181F, 0x2052, 0x6C14 |
 | Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
 | Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
@@ -1831,7 +1881,7 @@ Knowledge files (`docs/knowledge/`):
 | · 2.1 0xA404 NC_INSTANCE_DUNGEON_FIND_RNG (IDGate, party / raid i… | medium | cap 0/1 | capture (class U) |
 | · 2.2 0x10B1 NC_CHAR_EMPTY_INSTANCE_DUNGEON_RNG (delete an instan… | medium | cap 0/1 | capture (class U) |
 | · 2.3 0x441F NC_QUEST_JOBDUNGEON_FIND_RNG (job-change dungeon on … | medium | cap 0/2 | capture 0x4420 |
-| 3. Guild storage across zones: 0x7493 | medium | cap 1/11; client×1 | capture 0x7492, 0x7494 |
+| 3. Guild storage across zones: 0x7493 | medium | cap 2/11; client×1 | capture 0x7492, 0x7494 |
 | 4. Guild academy reward storage across zones: 0x9872, 0x9874, 0… | medium | cap 0/9 | capture 0x9873, 0x9875 |
 | · 4.1 Withdraw / deposit (money and lots) | medium | cap 0/5; R×1 | capture 0x9873, 0x9875 |
 | · 4.2 0x9884 NC_GUILD_ACADEMY_REWARDSTORAGE_ITEM_INFO_ZONE_RNG (i… | medium | cap 0/3 | capture 0x9873, 0x9875 |
@@ -2678,23 +2728,23 @@ Knowledge files (`docs/knowledge/`):
 | · 3.2 GetAvatarInfo (the 130-byte AVATAR record) | **low** | cap 1/1; sup×2 (README §5.7); cv corr; D: `p_Char_GetLoginData` differ between the backups; weak inf1 | re-read the rest (§3); read with P02 "Corrections"; D06 §8.5 version |
 | · 3.3 Create | medium | cap 6/6; cv ok; client×1; D: `p_Char_Create`, `p_Quest_Set` differ between the backups; weak dbb2 | D06 §8.5 version |
 | · 3.4 Delete | **high** | cap 3/4; cv ok; client×1; weak dbb2 |  |
-| · 3.5 Rename (char select) and guild data | medium | cap 5/7; cv ok; D: `p_Char_Rename` differ between the backups | D06 §8.5 version |
+| · 3.5 Rename (char select) and guild data | medium | cap 5/7; cv ok; cv corr; D: `p_Char_Rename` differ between the backups | read with P02 "Corrections"; D06 §8.5 version |
 | · 3.6 Item list helper (shared with D03) | medium | no PDB | second reading / client check |
 | 4. Character load: 0x1004 NC_CHAR_CHARDATA_REQ (CParserCharacte… | medium | cap 38/54; cv ok; client×2; sup×7 (README §5.7); cv corr; D: `p_Char_GetStateAllWithSetItemAndRestTime`, `p_Quest_GetAllDoing`, `usp_Character_getSingleOption` differ between the backups | re-read the rest (§3); read with P02 "Corrections"; D06 §8.5 version; capture 0x1010, 0x1011, 0x1C13 |
 | · 4.1 GetCharBaseData: `p_Char_GetAllData` → `PROTO_NC_CHAR_BASE_… | **low** | cap 1/1; sup×2 (README §5.7); weak dbb1; capture shows the link packets, not the SQL | re-read the rest (§3) |
-| 5. Login, logout, loading report | **low** | cap 5/6; sup×1 (README §5.7); cv corr; weak inf1 dbb2; D: `p_Char_Login`, `p_Char_Logout` differ between the backups; capture shows the link packets, not the SQL | re-read the rest (§3); read with P02 "Corrections"; code or capture for the marked statements; D06 §8.5 version |
+| 5. Login, logout, loading report | **low** | cap 5/6; sup×2 (README §5.3, §5.7); cv corr; weak inf1 dbb2; D: `p_Char_Login`, `p_Char_Logout` differ between the backups; capture shows the link packets, not the SQL | re-read the rest (§3); read with P02 "Corrections"; code or capture for the marked statements; D06 §8.5 version |
 | 6. Character saves from the zone (dept 16 CHARSAVE) | medium | cap 13/24; cv ok; sup×2 (README §5.7); cv corr; D: `p_Quest_Set` differ between the backups; weak dbb1 | re-read the rest (§3); read with P02 "Corrections"; D06 §8.5 version |
 | 7. Class, stats, fame, name check | – | container (see its subsections) |  |
 | · 7.1 Class change, legacy stat points, fame, registration check | medium | cap 10/23; cv ok; R×1 | callers incl. vtable slots; senders in every `handlers.json`; capture 0x1096 |
 | · 7.2 Free-stat save: 0x10D1 NC_CHAR_FREESTAT_SET_DB_REQ (answers… | medium | cap 5/9; cv ok; sup×1 (README §5.7); weak inf2 dbb1 | re-read the rest (§3); code or capture for the marked statements; capture 0x1096 |
 | 8. Tutorial | medium | cap 2/4; capture shows the link packets, not the SQL | capture (class U) |
-| 9. Misc (chat bans, spam filter, guide, item shop URL, ping tes… | **low** | cap 1/15; sup×2 (README §5.7); D: `usp_Character_setChatBan` differ between the backups | re-read the rest (§3); D06 §8.5 version; capture 0x0812, 0x0813, 0x3043 |
+| 9. Misc (chat bans, spam filter, guide, item shop URL, ping tes… | **low** | cap 2/15; sup×2 (README §5.7); D: `usp_Character_setChatBan` differ between the backups | re-read the rest (§3); D06 §8.5 version; capture 0x0812, 0x0813, 0x3043 |
 | 10. Item lists by storage type, beauty shop | medium | cap 4/11; weak inf1 | capture 0x1079 |
 | 11. Wedding (tMarriage) — answers the Z07 §5 questions | **low** | cap 2/27; cv ok; sup×1 (README §5.7); weak dbb4; D: `p_Char_Wedding_Divorce_by_Agree`, `p_Char_Wedding_Divorce_by_Force`, `p_Char_Wedding_Do` differ between the backups | re-read the rest (§3); code or capture for the marked statements; D06 §8.5 version |
 | 12. Attendance event | **low** | cap 3/7; sup×2 (README §5.7); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | 13. Promotion (event) user and reward | **low** | cap 1/6; sup×1 (README §5.7) | re-read the rest (§3) |
 | 14. Character rename with a rename item (dept 45) | medium | cap 5/7; cv ok; D: `usp_Character_setChangeID` differ between the backups; weak dbb1 | D06 §8.5 version |
-| 15. Procedures called by these handlers | **low** | cap 17/37; sup×2 (README §5.7); D: `p_Char_Create`, `p_Char_GetLoginData`, `p_Char_GetStateAllWithSetItemAndRestTime` … differ between the backups | re-read the rest (§3); D06 §8.5 version |
+| 15. Procedures called by these handlers | **low** | cap 18/37; sup×2 (README §5.7); D: `p_Char_Create`, `p_Char_GetLoginData`, `p_Char_GetStateAllWithSetItemAndRestTime` … differ between the backups | re-read the rest (§3); D06 §8.5 version |
 | Original-server bugs | **low** | cap 9/23; sup×2 (README §5.7); weak inf2 dbb1; D: `p_Char_Create`, `usp_Character_setChatBan` differ between the backups; R×1; bug table (class X: effects are deductions) | re-read the rest (§3); code or capture for the marked statements; D06 §8.5 version; callers incl. vtable slots; senders in every `handlers.json` |
 | 16. Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
 
@@ -2710,7 +2760,7 @@ Knowledge files (`docs/knowledge/`):
 | · 1.5 Holy-promise cen reward | medium | no PDB | second reading / client check |
 | 2. Shop (CParserCharacter, registered @ FUN_0043b040) | **high** | cap 2/2; cv ok |  |
 | · 2.1 NPC purchase | medium | cap 5/8; cv ok; D: `p_Item_BuyLot` differ between the backups; weak dbb1 | D06 §8.5 version |
-| · 2.2 Sell and repurchase | medium | cap 10/14; cv ok; D: `p_Item_BuyLot` differ between the backups; weak dbb2 | D06 §8.5 version |
+| · 2.2 Sell and repurchase | medium | cap 12/14; cv ok; cv corr; D: `p_Item_BuyLot` differ between the backups; weak dbb2 | read with P02 "Corrections"; D06 §8.5 version |
 | · 2.3 Guild-token purchase (into guild storage) | medium | cap 1/8; weak dbb1 | capture (class U) |
 | · 2.4 Soul stones | medium | cap 2/4; cv ok; sup×1 (README §5.7); cv corr | re-read the rest (§3); read with P02 "Corrections" |
 | · 2.5 Capsule purchase | medium | cap 2/4; capture shows the link packets, not the SQL | capture (class U) |
@@ -2718,7 +2768,7 @@ Knowledge files (`docs/knowledge/`):
 | 3. Inventory: equip, move, stack, drop, pick, money | medium | weak dbb1; no PDB | second reading / client check |
 | · 3.1 Equip / unequip | **low** | cap 5/8; weak dbb3; capture shows the link packets, not the SQL | code or capture for the marked statements |
 | · 3.2 Relocation and exchange (inventory ↔ storage ↔ other owner) | medium | cap 5/7; weak dbb2; capture shows the link packets, not the SQL | capture (class U) |
-| · 3.3 Merge and split | **high** | cap 6/11; cv ok; weak dbb1 |  |
+| · 3.3 Merge and split | medium | cap 8/11; cv ok; cv corr; weak dbb1 | read with P02 "Corrections" |
 | · 3.4 Drop and pick-up | **low** | cap 9/18; sup×1 (README §5.7); cv corr; capture shows the link packets, not the SQL | re-read the rest (§3); read with P02 "Corrections" |
 | · 3.5 Money | medium | cap 3/8; weak dbb1 | capture (class U) |
 | 4. Using and changing items | **high** | cap 7/7; cv ok |  |
@@ -2749,7 +2799,7 @@ Knowledge files (`docs/knowledge/`):
 | 13. Pets (dept 53) | **low** | cap 3/17; sup×1 (README §5.7) | re-read the rest (§3) |
 | 14. Trade and booths (Z06 owns the windows) | medium | cap 0/12; weak dbb2; no PDB | capture (class U) |
 | 15. Procedures called by these handlers | **low** | cap 1/2; sup×1 (README §5.7); D: `p_Item_BuyAll`, `p_Item_BuyLot`, `usp_Dice_setDicePay` … differ between the backups | re-read the rest (§3); D06 §8.5 version |
-| Original-server bugs | **low** | cap 16/55; D: `p_Item_BuyAll` differ between the backups; bug table (class X: effects are deductions) | D06 §8.5 version |
+| Original-server bugs | **low** | cap 17/55; D: `p_Item_BuyAll` differ between the backups; bug table (class X: effects are deductions) | D06 §8.5 version |
 | 16. Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
 | 17. Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
@@ -3174,7 +3224,7 @@ Knowledge files (`docs/knowledge/`):
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
 | 1. Command system | medium | cap 1/1; pdb 0/1; 1 PDB member(s) at another offset (nested or wrong: `X02-rate.py pdbmiss`) | check the offsets with `pdb.py` |
-| 2. Commands that change persistent state or reach other servers | medium | cap 8/20 | capture (class U) |
+| 2. Commands that change persistent state or reach other servers | medium | cap 9/20 | capture (class U) |
 | 3. Shared facts found on the way | medium | cap 1/1 | capture (class U) |
 | 4. vtable slot method (used throughout Z11) | medium | no function cited | cite and re-read the function |
 
@@ -3463,7 +3513,7 @@ Knowledge files (`docs/knowledge/`):
 | 2. Packet layouts and opcode names from the 2016 server PDBs | – | container (see its subsections) |  |
 | · 2.1 `docs/protocol/pdb2016-layouts.json` and where it is used | medium | cap 5/11 | capture 0xB413 |
 | · 2.2 Opcode names: `pdb2016` in `catalog.py` | medium | cap 1/3 | capture (class U) |
-| · 2.3 Differences 2016 server PDBs vs 2017 client PDB | **low** | cap 21/46; weak inf2 p171 | code or capture for the marked statements; capture 0x0812, 0x0813, 0x3034, 0x3065 … |
+| · 2.3 Differences 2016 server PDBs vs 2017 client PDB | **low** | cap 22/46; weak inf2 p171 | code or capture for the marked statements; capture 0x0812, 0x0813, 0x3034, 0x3065 … |
 | · 2.4 Several definitions of one type in a 2016 PDB; base-class m… | medium | cap 2/9; pdb 2/2 | capture (class U) |
 | 3. Follow-ups per item | **low** | no function cited; weak p173 | code or capture for the marked statements |
 | · 3.1 Summary table | **low** | cap 13/25; pdb 0/2; weak inf1 p172 fh1; 2 PDB member(s) at another offset (nested or wrong: `X02-rate.py pdbmiss`) | code or capture for the marked statements; check the offsets with `pdb.py`; capture 0x3034, 0x8C4C, 0x9407 |
@@ -3517,12 +3567,12 @@ Knowledge files (`docs/knowledge/`):
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
-| 1. Tools and generated files | medium | cap 0/1 | capture 0x1804 |
+| 1. Tools and generated files | medium | cap 1/1 | capture (class U) |
 | 2. Opcode names | medium | cap 3/10; pdb 0/1; weak p171; 1 PDB member(s) at another offset (nested or wrong: `X02-rate.py pdbmiss`) | check the offsets with `pdb.py`; capture 0x181F, 0xAC2C |
 | · Handler-name conflicts (51), verdicts in `pdb-name-verdicts.jso… | medium | cap 21/82 | capture 0xBCDA |
 | · Weak 2016 names replaced by the PDB name (59, by rank) | medium | cap 14/59 | capture 0x10ED, 0x10F0, 0x2004, 0x2006 … |
 | 3. Packet layouts (`pdb-layouts.json`) | medium | cap 1/1; weak inf1 p171 | capture (class U) |
-| 4. Struct sizes vs the 2016 code | medium | cap 17/47 | capture 0x0812, 0x0813, 0x3034, 0x3036 … |
+| 4. Struct sizes vs the 2016 code | medium | cap 18/47 | capture 0x0812, 0x0813, 0x3034, 0x3036 … |
 | 5. Hand annotations vs the PDB (per owner) | medium | no function cited | cite and re-read the function |
 | 6. Types catalogue (which PDB types matter to whom) | medium | no function cited | cite and re-read the function |
 | 7. Ghidra project `client2017` | medium | no function cited | cite and re-read the function |
@@ -3562,12 +3612,22 @@ Knowledge files (`docs/knowledge/`):
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
-| Changed statements | medium | cap 76/79; client×4; pdb 0/1; weak inf3; 1 PDB member(s) at another offset (nested or wrong: `X02-rate.py pdbmiss`); R×1 | check the offsets with `pdb.py`; capture 0x140A |
+| Changed statements | medium | cap 87/90; client×4; pdb 0/1; weak inf3; 1 PDB member(s) at another offset (nested or wrong: `X02-rate.py pdbmiss`); R×1 | check the offsets with `pdb.py`; capture 0x140A |
 | Uncertain / not reconstructed | – | open points / boundary list, no claim to rate |  |
 | Original-server bugs | medium | no function cited; bug table (class X: effects are deductions) | cite and re-read the function |
 | Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
-### 2.108 X01 knowledge: `docs/knowledge/X01.md`
+### 2.108 P05 knowledge: `docs/knowledge/P05.md`
+
+| § | Rating | Reason | Raise by |
+|---|---|---|---|
+| Changes to `docs/protocol/README.md` | medium | cap 54/55; client×2; weak p171 | capture 0x111D |
+| Sweep: README §2 against every batch-4 row of capture-validatio… | medium | cap 2/2 | capture (class U) |
+| Original-server bugs | medium | cap 2/2; bug table (class X: effects are deductions) | capture (class U) |
+| Not reconstructed / uncertain | – | open points / boundary list, no claim to rate |  |
+| Coverage boundary | – | open points / boundary list, no claim to rate |  |
+
+### 2.109 X01 knowledge: `docs/knowledge/X01.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
@@ -3576,25 +3636,25 @@ Knowledge files (`docs/knowledge/`):
 | Facts X01 established by re-reading code | medium | cap 2/8 | capture 0x9407, 0x940B |
 | Bugs X01 owns | medium | cap 1/5; weak inf1; bug table (class X: effects are deductions) | capture (class U) |
 
-### 2.109 X02 knowledge: `docs/knowledge/X02.md`
+### 2.110 X02 knowledge: `docs/knowledge/X02.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
-| 0. Corrections to earlier items (read these before trusting the… | **low** | cap 47/104; client×3; pdb 12/15; weak inf10 p176 fh1; B×5; R×7 | code or capture for the marked statements; capture 0x0812, 0x1804, 0x1815, 0x1817 … |
+| 0. Corrections to earlier items (read these before trusting the… | **low** | cap 48/104; client×3; pdb 12/15; weak inf10 p176 fh1; B×5; R×7 | code or capture for the marked statements; capture 0x0812, 0x1815, 0x1817, 0x2004 … |
 | 1. How to use the review (for X01, P02 and the owners) | medium | no function cited; weak inf1 p171 | cite and re-read the function |
 | 2. Facts found on the way that no other file holds | medium | read in code | second reading / client check |
 | 3. Original-server bugs | medium | no function cited; bug table (class X: effects are deductions) | cite and re-read the function |
 | 4. Follow-up items created by X02 | – | open points / boundary list, no claim to rate |  |
 | 5. Open questions | – | open points / boundary list, no claim to rate |  |
 
-### 2.110 X03 knowledge: `docs/knowledge/X03.md`
+### 2.111 X03 knowledge: `docs/knowledge/X03.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
 | 0. Rows and statements that look wrong (reported, not changed) | medium | no function cited | cite and re-read the function |
 | 1. Where things are in the README after X03 | medium | no function cited | cite and re-read the function |
 
-### 2.111 X04 knowledge: `docs/knowledge/X04.md`
+### 2.112 X04 knowledge: `docs/knowledge/X04.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
@@ -3605,30 +3665,49 @@ Knowledge files (`docs/knowledge/`):
 | 4. Uncertain / not reconstructed | – | open points / boundary list, no claim to rate |  |
 | 5. Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
-### 2.112 X05 knowledge: `docs/knowledge/X05.md`
+### 2.113 X05 knowledge: `docs/knowledge/X05.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
-| 1. Batch-2 leftovers (capture-validation §15 rows naming X05, §… | medium | cap 15/44; R×1 | capture 0x0C15, 0x0C66, 0x1011, 0x102A … |
+| 1. Batch-2 leftovers (capture-validation §15 rows naming X05, §… | medium | cap 16/44; R×1 | capture 0x0C15, 0x0C66, 0x1011, 0x102A … |
 | 2. Facts found on the way | medium | cap 2/3; weak dbb1 | capture 0x1050 |
-| 3. Batch 3: what the recorded scenarios confirmed (one line eac… | medium | cap 34/47 | capture 0x200E, 0x2023, 0x242E, 0x301B … |
-| 4. Open after batch 3: where each thing went | medium | cap 6/20 | capture 0x200E, 0x2023, 0x242E, 0x5005 … |
-| 5. Predictions of X02 that were wrong as written (for the owner… | medium | cap 14/22 | capture 0x2006, 0x301B, 0x3029, 0x305B |
+| 3. Batch 3: what the recorded scenarios confirmed (one line eac… | medium | cap 39/47 | capture 0x2023, 0x242E, 0x301B, 0x3029 … |
+| 4. Open after batch 3: where each thing went | medium | cap 11/20 | capture 0x2023, 0x242E, 0x5005, 0x5006 |
+| 5. Predictions of X02 that were wrong as written (for the owner… | medium | cap 16/22 | capture 0x2006, 0x301B, 0x3029, 0x305B |
 | 6. Left open on purpose | medium | cap 5/9; weak inf1 | capture 0x106E, 0x203D, 0x242E |
 | 7. Ratings and the generator scripts | medium | no function cited | cite and re-read the function |
 
-### 2.113 X07 knowledge: `docs/knowledge/X07.md`
+### 2.114 X06 knowledge: `docs/knowledge/X06.md`
+
+| § | Rating | Reason | Raise by |
+|---|---|---|---|
+| 0. Facts for other items | medium | cap 3/3 | capture (class U) |
+| 1. Rows per README table | medium | cap 11/12; weak inf1 | capture (class U) |
+| 2. capture-validation §13 batch-4 rows left out of README §5, w… | medium | cap 1/1 | capture (class U) |
+| 3. Original-server bugs | medium | no function cited; bug table (class X: effects are deductions) | cite and re-read the function |
+| 4. Uncertain / not reconstructed | – | open points / boundary list, no claim to rate |  |
+| 5. Coverage boundary | – | open points / boundary list, no claim to rate |  |
+
+### 2.115 X07 knowledge: `docs/knowledge/X07.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
 | 1. Batch 4: result lines, corrected notes, run kits | medium | cap 10/13; R×1 | capture 0x1061, 0x482B |
 | 2. Open after batch 4: where each thing went | medium | cap 20/31; client×1; pdb 1/1; weak p171 | capture 0x1061, 0x1067, 0x900E, 0x900F |
 | 3. Ratings after batch 4 (`docs/review/confidence.md` §2) | medium | cap 2/3; R×1 | capture (class U) |
-| 4. Order of work and reach after batch 4 (`capture-scenarios.md… | medium | cap 27/33 | capture 0x1067, 0x1804, 0x243F, 0x900F |
+| 4. Order of work and reach after batch 4 (`capture-scenarios.md… | medium | cap 29/33 | capture 0x1067, 0x243F, 0x900F |
 | 5. Left open, uncertain | – | open points / boundary list, no claim to rate |  |
 | 6. Coverage boundary | – | open points / boundary list, no claim to rate |  |
 
-### 2.114 K01 knowledge: `docs/knowledge/K01.md`
+### 2.116 X09 knowledge: `docs/knowledge/X09.md`
+
+| § | Rating | Reason | Raise by |
+|---|---|---|---|
+| 1. Batch 5: result lines, corrected notes, run kits | medium | cap 11/14 | capture 0x5005 |
+| 2. What batch 5 left open → scenario | medium | cap 8/13; client×1 | capture 0x2023, 0x3807, 0x5005 |
+| 3. Ratings after batch 5 | medium | cap 2/6; weak inf1 | capture 0x0845, 0x5005 |
+
+### 2.117 K01 knowledge: `docs/knowledge/K01.md`
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
