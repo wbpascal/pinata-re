@@ -3543,6 +3543,8 @@ Fill: +0: ShineObjectClass::ShinePlayer::vfunc[0x664] = FUN_005a3140 (assumed cl
 
 Z01 name was 'map login failed (ours)'
 
+**Captured** (P02, `capture-validation.md`; s52): `code`: 0x147 (SHN checksum mismatch; client: 'The client has been illegally manipulated. Please reinstall the client.'); `index`: 32 = MapViewInfo.shn in the CShnDataFileCheckSum table (FUN_00631450), §28.6
+
 Sent in reply to `0x101e` NC_CHAR_ZONE_CHARDATAFAIL_ACK on WorldManagerSession (`FUN_005a3440`, WorldManagerSession::wms_NC_CHAR_ZONE_CHARDATAFAIL_ACK) · payload 3 bytes
 
 | Off | Type | Value / source |

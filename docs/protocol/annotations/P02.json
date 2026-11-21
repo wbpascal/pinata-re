@@ -2638,6 +2638,43 @@
     "basis": "zone so_SendProtocol(20, 10) without payload (Z30 §3)",
     "fields": [],
     "notes": "P02 batch 5: empty body. evidence: capture size 0 (shop, s45 573.684)"
+   },
+   "0x1068": {
+    "dir": "Z→Z (ring, &kickout first hop)",
+    "name": "NC_CHAR_PLAYERSEARCH_RNG",
+    "basis": "zone ZoneRingPacketKickPlayerOut::zrpb_Request FUN_005a76f0 (player not on this zone): builds the kick layout of ac_KickOutPlayer FUN_0041cec0 (PROTO_NC_CHAR_KICKPLAYEROUT_RNG: start 7, u8 tmp, Name5 charid) under opcode 0x1068 and sends 0x1E bytes (zcs_Send); the next zones forward it as the 27-byte search layout (Z11 §4.5, Z11-B6). Captured s52 739.440 (28 bytes, zone 0 → zone 1); hops 2-4 are 27 bytes",
+    "fields": [
+     [
+      0,
+      "u8",
+      "start.machine",
+      "origin zone number (0)"
+     ],
+     [
+      1,
+      "u16",
+      "start.handle",
+      "GM object handle at the origin (8001)"
+     ],
+     [
+      3,
+      "u32",
+      "start.regnum",
+      "GM charNo (7)"
+     ],
+     [
+      7,
+      "u8",
+      "tmp",
+      "never written: a stale send-buffer byte (0x0C in s52); the receiving zones read it as charid[0] (Z11-B6)"
+     ],
+     [
+      8,
+      "Name5",
+      "charid",
+      "name typed after &kickout (\"X52B\")"
+     ]
+    ]
    }
   },
   "accountlog": {
@@ -4745,10 +4782,11 @@
    "0x0c17": {
     "dir": "S→C",
     "captures": [
-     "login-errors"
+     "login-errors",
+     "s52"
     ],
     "fields": {
-     "reason": "0x683 (Login-initiated duplicate-login kick)"
+     "reason": "0x683 (Login-initiated duplicate-login kick); s52: 0x68B after a zone 0x0C1A with the real user number (&kickout, §28.4)"
     }
    },
    "0x0c0d": {
@@ -5917,12 +5955,13 @@
    "0x1410": {
     "dir": "S→C",
     "captures": [
-     "s37b"
+     "s37b",
+     "s52"
     ],
     "fields": {
      "slot": "2",
      "new_name": "the requested name",
-     "result": "0xD0 (stored in the WM avatar copy)"
+     "result": "0xD0 (stored in the WM avatar copy); s52: 0xD0 for a name already in use with the 2016 p_Char_Rename (P02-B42, §28.3)"
     }
    },
    "0xb409": {
@@ -5959,10 +5998,11 @@
     "dir": "S→C",
     "captures": [
      "s37b",
-     "s38"
+     "s38",
+     "s52"
     ],
     "fields": {
-     "error": "0x145 after a tutorial skip of a listed character (P02-B33) and with all zones stopped (s38: six, §23.6)"
+     "error": "0x145 after a tutorial skip of a listed character (P02-B33) and with all zones stopped (s38: six, §23.6); s52: also the second 0x1001 of the same WM session, 4 ms, no CharDB round trip (§28.2)"
     }
    },
    "0x1403": {
@@ -9237,6 +9277,16 @@
      "nError": "0x3668 success"
     },
     "note": "capture-validation §26.3"
+   },
+   "0x1804": {
+    "dir": "S→C",
+    "captures": [
+     "s52"
+    ],
+    "fields": {
+     "code": "0x147 (SHN checksum mismatch; client: 'The client has been illegally manipulated. Please reinstall the client.')",
+     "index": "32 = MapViewInfo.shn in the CShnDataFileCheckSum table (FUN_00631450), §28.6"
+    }
    }
   },
   "account": {
