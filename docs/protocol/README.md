@@ -247,7 +247,10 @@ Town portal: `C 0x2401` → `0x2402`, `C 0x200A` → `0x243D`, `0x201C`; the cli
 `0x3C01` server menu → `C 0x3C02` → `0x180A` (no `0x181B`). The client opens a new zone connection (seed on accept,
 `0x1801`, with `0x080D` to the WM in the same tick) and runs §2.2's zone steps again; after the new `0x1803` the WM
 repeats only `0x5826` and `0x182A`. A destination on the same zone gets `0x1809 NC_MAP_LINKSAME_CMD {mapIndex, x, y}` instead (no
-new connection; *(captured)* with `&linkto`, capture-validation §18.6). Detail: capture-validation §6.1, §4.1, §7.5.4; X01 §3.11; Z01 §7.
+new connection; *(captured)* with `&linkto`, capture-validation §18.6). The players in sight see a same-zone link as
+`0x1805 NC_MAP_LOGOUT_CMD {handle}` (the logout broadcast, Z01 §3.2), not as a sight leave `0x1C0E`, and the handle
+stays *(captured: `&linkto`, capture-validation §18.6; a town revive onto the same zone, where the mover gets `0x104F
+NC_CHAR_REVIVESAME_CMD` instead of `0x1809`, §27.2)*. Detail: capture-validation §6.1, §4.1, §7.5.4; X01 §3.11; Z01 §7.
 
 ### 2.4 Leaving the game: world list, character select, quit
 
