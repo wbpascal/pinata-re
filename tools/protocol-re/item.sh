@@ -61,7 +61,7 @@ fi
 
 # Inside Orca: same, one tab per part in this worktree. A part is finished once the TUI is idle and HEAD has moved;
 # an exited session or 2 h without a commit leaves the tab open and stops the loop.
-if [ -n "${ORCA_CLI_COMMAND:-}" ] && command -v orca >/dev/null; then
+if [ -n "${ORCA_TERMINAL_HANDLE:-}${ORCA_CLI_COMMAND:-}" ] && command -v orca >/dev/null; then
   cmd="exec $(jq -rn --args '$ARGS.positional | @sh' -- "$agent" "$prompt" "$@")"
   n=0
   until grep -q '^\*\*State:\*\* done' "$st" 2>/dev/null; do
