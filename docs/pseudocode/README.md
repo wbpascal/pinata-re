@@ -2900,7 +2900,7 @@ gaps that cut across items, §7.3 each document's own list, §7.4 what the X01 s
 
 ### 7.1 Open work items
 
-State from `docs/plan/status/<ID>.md` when X08's sweep ran (part 4, 2026-11-21; X08's row updated at its review, part 5); every other item is done (X03 too).
+State from `docs/plan/status/<ID>.md` when X08's sweep ran (part 4, 2026-11-21; X08's row updated at its review, part 5; the P06, X09 and X10 rows by X10's sweep, part 2, 2026-11-21); every other item is done (X03 too).
 
 | Item | State | What it will change |
 |---|---|---|
@@ -2910,9 +2910,10 @@ State from `docs/plan/status/<ID>.md` when X08's sweep ran (part 4, 2026-11-21; 
 | [X05](../plan/items/X05.md) | done | X02's re-run after capture batch 3: `docs/plan/capture-scenarios.md` and the ratings in `docs/review/confidence.md` |
 | [X06](../plan/items/X06.md) | done (review: 6 findings fixed) | done in this file: §5 rows for P02's batch 4 (13), P02-B33 … B40 and batch-4 evidence in §6, §3 captured flows (new §3.32) and the quit / Kickout / auto-save corrections; counts and left-out rows in `docs/knowledge/X06.md` |
 | [X07](../plan/items/X07.md) | done | X02's re-run after capture batch 4: the 4 batch-4 §13 rows owned by X02, scenario results for 24, 37 (`s37b`), 38, the ratings in `docs/review/confidence.md` |
-| [P06](../plan/items/P06.md) | not started | the protocol README against capture batch 5: §2.6's "the CharDB refuses a taken name *(inferred)*" (contradicted: P02-B42, capture-validation §28.3), the second `0x1001` after a tutorial skip (§28.2), the zone kick `0x0C1A` → `0x0C17 {0x68B}` (§28.4), the SHN refusal `0x1804 {0x147, idx}` + `0x0C1A {0, 0, 0x68E}` (§28.6), the whisper fail `0x200E` (§27.5); README §3.7 / §3.8 / §3.9 / §3.12 / §3.16 here already carry them *(captured)* |
+| [P06](../plan/items/P06.md) | done | the protocol README against capture batch 5: §2.6's "the CharDB refuses a taken name *(inferred)*" (contradicted: P02-B42, capture-validation §28.3), the second `0x1001` after a tutorial skip (§28.2), the zone kick `0x0C1A` → `0x0C17 {0x68B}` (§28.4), the SHN refusal `0x1804 {0x147, idx}` + `0x0C1A {0, 0, 0x68E}` (§28.6), the whisper fail `0x200E` (§27.5); README §3.7 / §3.8 / §3.9 / §3.12 / §3.16 here already carry them *(captured)* |
 | [X08](../plan/items/X08.md) | done (review: 9 findings fixed) | done in this file: §5 rows for P02's batch 5 (8 + a §5.1 row for the protocol README's §2.6), P02-B41 … B44, P02-B33's extension and batch-5 evidence in §6, §3 captured flows (stacking and buy-back, a bystander's view, whisper fail, spam filter, `&kickout`) and the rename / SHN-refusal corrections; counts and left-out rows in `docs/knowledge/X08.md` |
-| [X09](../plan/items/X09.md) | not started | X02's re-run after capture batch 5: the 3 batch-5 §13 rows about scenarios 45 / 46 / 52, their result lines, scenario 39 (notes without a capture), scenarios for the paths batch 5 did not reach, the ratings in `docs/review/confidence.md` |
+| [X09](../plan/items/X09.md) | done | X02's re-run after capture batch 5: the 3 batch-5 §13 rows about scenarios 45 / 46 / 52, their result lines, scenario 39 (notes without a capture), scenarios for the paths batch 5 did not reach, the ratings in `docs/review/confidence.md` |
+| [X10](../plan/items/X10.md) | in progress (review open) | done in this file: the Z01 §3.2 broadcast-reach row at the end of §5.4 (only `so_AllOfRange` applies `MapInfo.Sight`; `so_AllInMap` reaches the whole map instance on the layer) and the §5 "Added by X10" note; the list of changes in `docs/knowledge/X10.md` |
 
 Done since the X01 sweep: X01 part 9 (review), [X02](../plan/items/X02.md) (`docs/review/confidence.md`,
 `docs/plan/capture-scenarios.md`, corrections in §5) and its follow-ups [Z31](../plan/items/Z31.md),
