@@ -36,6 +36,9 @@ the code; where they disagree, the code was re-read and the finding is listed in
 | `26_11_16_37b_char-select-rename-refusals` (**s37b**, batch 4) | notes file + prep / DB readings: create refused (name taken), free rename of `X37-Ren` twice (with the 2018 `p_Char_Rename` of the test DB), rename right of Test2 (refused, then `X37Id`), character login with all zones stopped (§22) | login×3, wm×3, zone×5 (9210) + 112 links (zone restart; 123 streams) | 3 886 |
 | `26_11_16_38_session-loss-kicks-char-select` (**s38**, batch 4) | notes file: back to character select, quit, zone connection closed by the server, client killed, zone killed four times, three of them 0.6–7.3 s after `&getmoney` (§23) | login×15, wm×12, zone×10 (9210) + 115 links (zone kills) | 11 976 |
 | `26_11_16_24_skills-abstates-stat-points` (**s24**, batch 4) | notes file + prep / DB readings: X24A (Gladiator 100) and X24B (HighCleric 20): learn, empower, stat points, reset items, cast abort, ground target, toggle skill, abstate reset conditions, damage over time, death and revive by skill (§24–§25, parts 26–27) | login×2, wm×2, zone×4 (9210 ×3, 9212) + 56 links | 14 722 |
+| `26_11_16_46_items-merge-buyback-refusals` (**s46**, batch 5) | notes file + prep / DB readings: X46A (Trickster 20) stacks onto a fuller and a full stack, buys back onto an empty cell, is refused a buy-back for money, level and a full inventory, buys soul stones with 0 cen and up to the limit (§26) | login, wm, zone (9210) + 56 links | 4 408 |
+| `26_11_21_45_walk-sit-emote-stop-shout-whisper-cast-abort` (**s45**, batch 5) | notes file + prep / DB readings + server logs: X45A and X45B in sight: walk relay, sit, emote stop, shout out of sight, whisper to an unknown name, a mob hitting B beside A, cast abort, leaving sight (§27) | login×2, wm×2, zone×2 (9210) + 58 links | 5 646 |
+| `26_11_21_52_stale-tutorial-rename-kickout-shn` (**s52**, batch 5) | notes file + prep / DB readings + server logs: the stale "RouT" tutorial copy (P02-B33), the 2016 `p_Char_Rename` onto a taken name, `&kickout` with a real user number on two zones, the SHN checksum refusal (§28) | login×8, wm×8, zone×6 (9210, 9212) + 103 links | 8 115 |
 
 Batch 2 (`shop`, `combat`) was recorded on the server host with the LAN and the loopback interface: it adds the
 server↔server links (§7). The character is Test2 (`chrregnum` 5, slot 1, level 5, shape 0x19), not Test1235.
@@ -53,6 +56,12 @@ before §11 so that the sweep sections §11–§15, which other documents cite b
 Batch 4 (commits a8e2527, 40b338d and the scenario-38 capture added after them: X02 scenarios 37 (second run "37b"), 38 and
 24) was recorded the same way. Against batches 1–3 (534 types) it adds 69 opcode types (33 on links, 7 WM, 29 zone),
 all in `s37b` and `s24`; `s38` adds none. They are covered in §22 onwards, again placed before §11.
+
+Batch 5 (commits 872da7e, 236a5e5 / 312279e and 82ce793: X05 scenarios 46, 52 and 45; 52 and 45 come with the server
+log folders `…-logs/` copied after the run) was recorded the same way. `26_11_16_39_death-pk-revive-knockback-guildwar.md`
+(commit caf8817) has no pcapng and its blanks are not filled: scenario 39 is not captured. Against batches 1–4 (603
+types) batch 5 adds 9 opcode types (6 on links, 2 WM, 1 zone): 4 in `s46`, 3 in `s45`, 2 in `s52`. They are covered in
+§26 onwards, before §11 as before.
 
 ## 2. Transport
 
@@ -3654,6 +3663,159 @@ Old types with new values: `0x104D` (twice `{180, 50, 0}`), `0x104F {150, 4700, 
 (first `0xFD5`), `0x0842` (cause in §25.6). With part 26's 29 types (§24.9), part 24's shared 10 and these 16, all
 55 `s24` types have a status.
 
+## 26. Items IV, batch 5: stacking onto a fuller stack, buy-back onto an empty cell, buy-back and soul-stone refusals (`s46`) *(captured)*
+
+`26_11_16_46_items-merge-buyback-refusals` (notes, prep output and three DB snapshots next to it): X46A (charNo 11,
+Trickster level 20, GM 100, 1 000 cen, account `admin` userNo 103), one client, zone#1 (9210, handle 8004), wm#1 (handle
+7501). Times are capture seconds. Inventory cell *n* = location `0x2400 + n` (9216 + *n*); account storage cell 3 = `0x1803`.
+The capture stops at 751.3 s with X46A still in the world: the logout and the notes' "after logout" save are not on the
+wire.
+
+### 26.1 What happened
+
+| Time | Notes step | Client | Server |
+|---|---|---|---|
+| 9.0–31.0 | start | login, world, X46A, `0x1803` at 31.010 | map login as §5.1; no tutorial question (notes) |
+| 82.4–101.5 | setup | `&cleariv`, `&makeitem BestLowHpPotion -l40` / `-l30`, `LeatherBoots`, `NormalEar117`, `BroadSword` | cells 0–4 = HP Potion 40 / 30, Leather Boots, Frozen Earrings, Broad Sword (§19.2 pattern) |
+| 175.9 | 1 the x30 onto the x40 | `0x300B {cell 1 → cell 0}` | `0x3431` SPLIT_N_MERGE, cells 0 / 1 = 50 / 20 (§26.2) |
+| 192.1 | 1 the x20 onto the full x50 | `0x300B {cell 1 → cell 0}` | `0x342B` EXCHANGE: the two swap, cells 0 / 1 = 20 / 50 |
+| 205.8–255.6 | 2 Raina | x20 to storage cell 3, `0x301C {1000}` | `0x3428` (owner 11 → 103), `0x345F` → storage 1 000, purse 0 (§20.1 pattern) |
+| 268.9–292.7 | 3 James, sell / buy back the boots | `0x3006 {2, 1}`, `0x3059 {0}` | SELLALL price 2; **`0x34B9` REPURCHASE_ALL** onto cell 0 (§26.3) |
+| 340.8–349.7 | 4 sell the Broad Sword, buy a Short Sword | `0x3006 {4, 1}`, `0x3003 {250, 1}` | SELLALL price 50; `0x340A` BUYALL price 12 → purse 38 |
+| — | 4 buy the Broad Sword back | **nothing** | the client refuses by itself (§26.4) |
+| 418.0–426.7 | 5 sell / buy back the Frozen Earrings | `0x3006 {3, 1}`, `0x3059 {2}` ×7 | SELLALL price 89 367; **`0x3004 {0x366B}`** ×7, no DB request (§26.4) |
+| 465.2–541.4 | 6 full inventory | 46 × `&makeitem LeatherBoots`, `0x3006 {47, 1}`, one more `&makeitem`, `0x3059 {3}` | 45 fill cells 3–47 (465.2–491.9), the 46th (520.5) gets no answer, SELLALL, cell 47 refilled, **`0x305A {0x366D}`** |
+| 571.6–589.3 | 7 Raina | `0x301C {89407}` | storage 90 407, purse 0 |
+| 612.1–635.7 | 7 Julia with 0 cen | **nothing** | `0x3C05` only; the client refuses (§26.5) |
+| 631.024 | — | — | auto-save `StoreType 10`, 600.014 s after the `0x1803` (§23.5) |
+| 659.5–678.8 | 7 Raina | `0x301E {90407}` | storage 0, purse 90 407 |
+| 706.5–715.1 | 7 Julia | `0x5001 {36}` | `0x3441 {flag 0, number 36, price 972}` → `0x5003 {51}`, `0x3004 {0x201}`; "Cannot purchase more" sent nothing |
+
+No other NPC was clicked while a shop or storage window was open: P02-B31 did not occur.
+
+### 26.2 Stacking onto a fuller stack: split-and-merge, then an exchange (step 1)
+
+`ItemReloc` @ FUN_00536780 (Z04 §4.1) picks the DB request by the two lots of the same stackable item (`b` = target lot):
+
+```pseudo
+    a + b ≤ MaxLot                      → irm_Merge                       (0x342E, §19.3)
+    b ≥ MaxLot (target already full)    → irm_Exchange if the item may move back (iba_CanInvenReloc), else 0x300C {0x24a}
+    otherwise                           → irm_Split_N_Merge(MaxLot − b)   @ FUN_00532a20
+```
+
+Z04 §4.1 lists only the first and the third branch; the `b ≥ MaxLot` exchange (FUN_00536780, the `MaxLot <= uVar12`
+test before `irm_Split_N_Merge`) is the one the second drag took.
+
+- **x30 onto x40** (HP Potion 3500, `MaxLot` 50): `0x3431 NC_ITEMDB_SPLIT_N_MERGE_REQ {ref, lockindex 8, Itemid 3500,
+  MoveLot 10, FromOwner 11, FromItemKey (cell 1), ToOwner 11, ToItemKey (cell 0), nFromItemLot 30, nToItemLot 40}` 3 ms
+  after the request (44 bytes = the 6-byte ref + the pdb2016 struct, D03 §3.3's offsets; P02.json) → `0x3432 {ref, lock
+  8, FromItemKey, ToItemKey, MoveLot 10, ResultLotFrom 20, ResultLotTo 50}` +7.6 ms with GameLog `0x0456 {11, "Need" 0 0,
+  3500, itemkeyadd = ToItemKey, itemkeysub = FromItemKey, itemlot 10 = MoveLot, itemlotadd 50 = target result,
+  itemlotsub 20 = source result}` in the same ms (D03-B11's "Need" again) → `0x3001` cell 1 (lot 20), `0x3001` cell 0
+  (lot 50), `0x300C {0x241}`. Confirms Z05 §4 (`0x3432` layout, RELOC_ACK) and D03 §3.3. D03 §3.3 writes the log tail as
+  "MoveLot, fromLot, toLot"; on the wire the target's result comes first (`itemlotadd`), the source's second.
+- **x20 onto the full x50**: `0x342B NC_ITEMDB_EXCHANGE_REQ {ownerA 11, ownerB 11, lock 9, relocA = the x20's key →
+  cell 0, relocB = the x50's key → cell 1, 3500 / 3500, lots 20 / 50}` (P02.json layout, §24.8) → `0x342C` +11 ms →
+  `0x3001` cell 0 (20), cell 1 (50), `0x300C {0x241}`. The notes' expectation (swap) holds; no GameLog row for an
+  exchange (as §24.8).
+- The keys travel with the stacks: the "after logout" snapshot has the x50 (`…039933440`, cell 0's original key) in cell 1
+  and the x20 (`…308631040`, cell 1's original key) in account storage cell 3.
+
+### 26.3 Buy-back onto an empty cell: `0x34B9` / `0x34BA` (step 3)
+
+The Leather Boots (item 0, `SellPrice` 2, `MaxLot` 1) were sold from cell 2 as SELLALL (`0x3422 price 2`, `0x305C {h 0}`,
+purse 2). Cells 0 (deposited in step 2) and 2 were empty. `0x3059 {0}` 292.710 → `sp_NC_ITEM_REPURCHASE_REQ` @
+FUN_00538580 finds no stack with room (not a lot item) → `ItemInventory::ii_RepurchaseAll` @ FUN_00537ca0 *(pdb2016)*:
+
+```pseudo
+ii_RepurchaseAll(p, handle, sellKey, iti, price):                         @ FUN_00537ca0
+    p null → so_SendErrorCode(12, 0x5A, 0x3669); iti null → 0x366A
+    cell = first empty unlocked inventory cell (ItemBoxIterEmpty over the bag, uii_Home, inven type 9)
+    none → so_SendErrorCode(12, 0x5A, 0x366D)                              # 0x305A "Inventory is full." (step 6)
+    no lock list / no map position → 0x3669
+    iti.iti_mkregnum(itemid, 1, zoneNo, worldNo)                          # a NEW key
+    gpp ← 0x34B9 { nHandleNum, nCharRegNum, nLockIndex, RepurchaseItem { owner charNo, map = p's map + x / y,
+                   location 0x2400 | cell, createitemregnum (new key), createitemid, attr = offset of the attribute },
+                   nPrice = price, nSellItemKey = sellKey, UserNo, Vendor = sp_NPCProcess.npcid, attribute }
+    send to the CharDB link; lock the cell (vt 0x48 / 0x40 / 0x78), lock index + 1, vt 0xb40
+```
+
+- On the wire: `0x34B9 {8004, 11, lock 13, {11, RouN 5693 / 8789, 0x2400 (cell 0), new key …679738085888, item 0, attr
+  64}, nPrice 2, nSellItemKey …665644437504 (the sold boots), UserNo 103, Vendor 28}` + the boots' 13 attribute bytes =
+  77 bytes (the pdb2016 struct is 64; P02.json) → `0x34BA {8004, 11, nError 0x3668, lock 13}` +10 ms with GameLog
+  `0x07FD {nType 0x7F8, 11, 0, nTargetID 0 (item id), nItemKey = the new key, nInt1 0, nInt2 0x2400, nInt3 2, nBigint1 =
+  the sold key}` and `0xC815 {103, 11, 0, BuyMoney 2, Vendor 28}` in the same ms → `0x1033 {0}`, `0x3001` cell 0 (the
+  boots), `0x305D {0}`, `0x305A {0x3668}` +5 ms. Confirms Z04 §2.5, Z05 §2.2 (`0x305D` before `0x305A`) and D03 §2.2
+  (`ItemBuy_Create` of a new row under the zone's key; the sold key only reaches the logs; the snapshot has cell 0 under
+  `…679738085888`).
+- **Which cell**: the first empty one (cell 0), not the cell the item was sold from (2). The notes expected "an empty
+  cell, e.g. 2" and corrected themselves.
+- `0x305C` for the boots: `itemattr` = the 13 attribute bytes + 88 stale `gpp` bytes (P02-B16 again).
+
+### 26.4 Buy-back refusals: money in the client, level as `0x3004`, full inventory (steps 4–6)
+
+- **Not enough money** (step 4): Broad Sword `SellPrice` 50, purse 38. **No `0x3059` on the wire**: the client's
+  repurchase window (FUN_0052acc0 and FUN_00555bf0, both before the only `0x3059` sender FUN_004a71b0) compares the purse
+  (u64 at 0xa8c040, FUN_00661bd0) with the entry's price (item data +0xd7, the `SellPrice` *(inferred)*) and shows text 0x304F413D (810 500 413) "Cannot make the
+  purchase due to insufficient money." instead. The notes' text is that one, not the `0x305A {0x366C}` text "Not enough
+  money to buy the item." the scenario expected: the zone's `p.money < price → 0x366C` branch (Z04 §2.5) is not reachable
+  from the 2016 client while its purse display is current *(inferred)*. The entry stayed in the list.
+- **Level** (step 5): Frozen Earrings `NormalEar117` (`DemandLv` / `BuyDemandLv` 117, `SellPrice` 89 367), X46A level
+  20, purse 89 405 (enough). Seven `0x3059 {2}` (424.813–426.717) → seven `0x3004 NC_ITEM_BUY_ACK {0x366B}` 0–17 ms later,
+  no DB request: **Z04-B2 captured** (the level refusal goes out under the buy opcode; `On_NC_ITEM_BUY_ACK` FUN_004ab770
+  has no case for `0x366B`, so the client shows nothing: notes "message: nothing", entry still listed). The level check
+  comes before the money check (the purse would have paid).
+- **Full inventory** (step 6): 48 cells (0–47); after 45 commands had filled cells 3–47, the 46th `&makeitem` (520.495) got no
+  answer and no DB request (Z11-B12, as §19.2). One boot sold from cell 47 (`0x305C {h 3}`), cell 47 refilled by
+  `&makeitem` (535.5), `0x3059 {3}` 541.385 → `0x305A {0x366D}` +8 ms, no DB request: `ii_RepurchaseAll`'s empty-cell
+  test; client "Inventory is full." (Z05 §10). Confirms the notes' text.
+
+### 26.5 Soul stones: both refusals are the client's (step 7)
+
+Healer Julia (17085, mob 29): `0x3C05 {hp.recover 279, hp.maxnum 51, hp.price 27, sp.recover 253, sp.maxnum 29, sp.price
+13}` for level 20 (s21's level 33: 443 / 100 / 55, §20.3). X46A held 15 HP stones (`0x1007 CurHPStone 15`).
+
+- **0 cen** (612.1–635.7): the window opened, then nothing on the wire until `0x200B`. The client's buy functions
+  (FUN_00558e00 one stone, FUN_00558ed0 a number; dispatcher FUN_00559080; senders FUN_0049f020 `0x5001` /
+  FUN_0049f070 `0x5002`) compute `purse / price` and show 0x3A4F4135 (978 272 565) "You have insufficient money." when it
+  is 0; the notes' text. The zone's `0x5005` / `0x3443` refusals (Z04 §13.1) were not reached.
+- **The limit**: FUN_00558ed0 offers `min(purse / price, maxnum − held)` = min(3 348, 36) = 36 through the number dialog
+  0xEDCBFCE1 "Number of HP Stones to purchase" (FUN_0048bfc0; shown when bit 2 of `DAT_00a81464 + 0x26` is set, else
+  it sends 1 or the maximum directly by bit 5 of `+0x24`; the option bits are not traced). Notes: "at most 36", the number
+  could not be typed. `0x5001 {36}` → `0x3441 {ref, 11, flag 0, number 36, price 972 = 36 × 27, lock 66}` +12 ms →
+  `0x3442` +6 ms → `0x1033 {89435}`, `0x5003 {51}`, `0x3004 {0x201}` "Item has been purchased." (§20.3 pattern).
+- **More than the limit**: held = `maxnum` → 0x640400E3 (1 677 983 971) "Cannot purchase more." from the client, nothing
+  sent (the notes' text).
+
+### 26.6 Storage money, the auto-save and the DB snapshots
+
+- Deposits and the withdrawal follow §20.1: `0x301C {1000}` → `0x345F` → `0x045E {11, 1000, 103, user_result_money 1000}`
+  + `0x3460 {storagemoney 1000, 0xF80}` → `0x1033 {0}`, `0x301D {1000, 0xF80}`; `0x301C {89407}` → result and
+  `storagemoney` 90 407 (the balance after, again); `0x301E {90407}` → `0x045F {…, 0}`, `0x3462 {cen 0, 0xF80}` →
+  `0x1033 {90407}`, `0x301F {0, 0xF80}`.
+- Auto-save at 631.024: the `ws_save2DB` set of §10.1 with `0x0410 StoreType 10` (RouN 7225 / 8959, money 0), 600.014 s
+  after the `0x1803`: a fifth interval for §23.5's 600 s auto-save. The newbie abstate 728 → 729 switch comes in the same
+  ms (§25.6 chain).
+- Snapshots against the wire: "after setup" cells 0–4 = 3500 ×40 / ×30, 0, 64663, 252 (as the `0x3001`s); "after logout"
+  money 89 435 (= 90 407 − 972), storage money 0, storage cell 3 = 3500 ×20, cell 0 = boots (new key), cell 1 = 3500 ×50,
+  cell 2 = Short Sword 250, cells 3–47 = boots (45), position 7226 / 8978 (saved by the logout after the capture).
+
+### 26.7 Opcodes
+
+The four new `s46` types; the two link requests needed P02.json layouts (the decoder had used the pdb2016 structs without
+the ref / attribute tail), after which `s46` decodes with 0 issue packets.
+
+| Dir | Opcode | Name | Seen | Size | Status | Notes |
+|---|---|---|---|---|---|---|
+| Z→CDB | 0x3431 | NC_ITEMDB_SPLIT_N_MERGE_REQ | 1 | 44 | **corrected** | ref + pdb2016 struct = D03 §3.3 (P02.json); `MoveLot` = MaxLot − target lot |
+| CDB→Z | 0x3432 | NC_ITEMDB_SPLIT_N_MERGESUC_ACK | 1 | 30 | confirmed | Z05 §4 |
+| Z→CDB | 0x34B9 | NC_ITEMDB_REPURCHASE_ALL_REQ | 1 | 77 | **corrected** | pdb2016 struct + attribute; new key, first empty cell (P02.json) |
+| CDB→Z | 0x34BA | NC_ITEMDB_REPURCHASE_ALL_ACK | 1 | 10 | confirmed | `0x3668` |
+
+Old types with new values: `0x3004 {0x366B}` ×7 (Z04-B2, first capture), `0x305A {0x366D}` (first capture), `0x0456`
+from a split-and-merge, `0x07FD` from a REPURCHASE_ALL, `0x3C05` at level 20, `0x0410 StoreType 10`. Not sent by the
+2016 client in `s46`: `0x3059` for an entry the purse cannot pay, `0x5001` with 0 cen or at the limit (§26.4, §26.5).
+
 ## 11. Message order against README §2 and the pseudocode
 
 README §2 is a sketch of the login → WM → zone chain. Against the sixteen captures (details in the sections cited;
@@ -3948,6 +4110,9 @@ P02, batch-4 sweep: `docs/plan/items/X06.md`, the README) and, when X02 owns the
 | Z09 / Z22 | `Z09-world.md` §23.9 (keep times above 2³¹ − 1 "not traced"), `Z22-abstate-actors.md` §10.7 (`so_SkillEnchant`) | answered: the skill path sends 1 385 447 ms and sets 1 345 294 tenths (P02-B39, §25.4) | extended → X06 |
 | Z03 | `Z03-combat.md` §7.3 (`so_ply_Revival` "adds an `isheal` result slot to the skill result packet") | the slot is added (FUN_0057ab90), yet Revive [01]'s `0x2452` has `targetnum 0` (`s24` 1950.518, §25.8); why is not traced | contradicted → X06 |
 | Z03 | `Z03-combat.md` §2.6 (`0x243E NC_BAT_ASSIST_REQ`) | the 2016 client's assist sent a plain `0x2401` to the target's target known from the order-1 `0x2402`; `0x243E` never seen (§25.5) | unconfirmed |
+| Z04 | `Z04-items.md` §4.1 (`ItemReloc_Do` branch list: merge / split-and-merge / exchange) | the list misses `b ≥ MaxLot` (target stack already full) → `irm_Exchange` when `iba_CanInvenReloc` allows the way back, else `0x300C {0x24a}`; captured as a swap (`0x342B`, `s46` 192.1; §26.2) | extended → batch-5 follow-up |
+| D03 | `D03-character-items.md` §3.3 (`0x3431`: "Log 0x0456 { …, MoveLot, fromLot, toLot }") | on the wire `itemlot` = MoveLot 10, `itemlotadd` = the target's result 50, `itemlotsub` = the source's result 20 (`s46` 175.913; §26.2) | corrected → batch-5 follow-up |
+| X05 | `docs/plan/capture-scenarios.md` scenario 46 (expected `0x305A {0x366C}` "Not enough money to buy the item.", the buy-back "onto an empty cell, e.g. 2", soul-stone refusals by the zone) | the 2016 client refuses the unaffordable buy-back itself (text 810 500 413 "Cannot make the purchase due to insufficient money.", no `0x3059`) and both soul-stone refusals (978 272 565 "You have insufficient money.", 1 677 983 971 "Cannot purchase more."; no `0x5001`); `ii_RepurchaseAll` takes the first empty cell (0); `0x366C`, `0x5005`, `0x3443` stay uncaptured (§26.3–§26.5) | corrected → batch-5 follow-up |
 
 In batch 1 (§3–§6) no discrepancy for Z03, Z07, Z09, Z11, Z12, Z13, Z16, Z17, Z18, Z22, W03: every statement of theirs that §3–§6 test held (batch 2's rows for Z03, Z09, Z12, Z13 and W03 are above). Part 12 (§9) confirms Z03 §3.1–§3.4 (swing
 timing with the 0.1-s `g_Now` step, stop paths), §5.4 (cast, `IsMovingSkill` blast), §7.2 (death order, 0x104D, no exp
@@ -3964,7 +4129,7 @@ conditions), D02 §6 (12-byte save headers, ACKs only for 0x4001 / 0x4007, 0x401
 §3.1 / §6.2 / §6.3, Z15 §3.3 / §3.4 (SAY with the clicked NPC), Z12 §5.2 (0xBC05 cap), Z13 §8.2 / §8.3 / §8.6 / §8.7 /
 §8.10 (summon order, hunger, speed formula, 0x1C1A), Z09 §5.4 (10-s corpse) and D05's GameLog layouts (0x040A, 0x040F,
 0x0410, 0xC806, 0xC809). The sweep (part 14) confirms Z02 §6.4 (the client's `0x200B` in the tick of `0x304D` runs `sp_EndOfTrade`,
-which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_LevelUp` re-marks type 9 on every level). Part 20 (§20) confirms Z04 §2.4 / §7.1 / §13.1, Z05 §2.2 / §2.4 (answer orders, `0x305D` before `0x305A`), D03 §2.2 / §2.4 / §5.1 layouts (with the ref), Z02 §6.5 (`0x3C05`), Z11 §7.3 (`CT_LevelUp`, the level-20 announcement), Z18 §6.2 (titles 46 / 0 and 1), W01 §7.6 (0x6401 relay), W04 §2.4 (0x2079 relay) and §6.2 / §6.4 (KQ skip: 0x5811, 0x5825, one 0x581E per client per second). Part 21 (§21) confirms D03 §1.2 / §2.1 (`ItemBuy_Create`'s attribute branch: item deleted, cen refunded, `0x340C {0x206}`), Z05 §2.1 (`0x340C` → `0x3004 {error}`) and §6.4 (`0x345A` → `0x3001` emptied), Z09 §1.2 / §2.4 (the per-minute block on the WM's `0x0821`), Z24 §6.7 / Z13 §2.7 (`sp_ChargedItemLimitCheck` → `sp_ItemDelete` → `sp_DestroyItem`, not at login), D03 §1.3 (boot option rows 800–803 / 820–822, `deletetime` at attribute +7) and the capture-scenarios predictions §8.14 (S13) and §8.17 (S16, its cen half). Part 24 (§22) confirms W01 §4.1 (0x1401 → 0x1403 → 0x1404 `0x181`, 0x140F → 0x1411 → 0x1412 → 0x1410 with the name stored on 0xD0, 0xB409 → 0xB40A), §4.2 (0x145 without a CharDB round trip when no zone serves the map), §5.4 (`CharacterLogout` order 0x1037, 0x081F, 0xC807), §6.2 (0xB40B 0x20C0 → `CharIDChange`), §7.2 (0x104B name check, state 3, `{−1, −1}`), Z01 §5.3 (`so_SetRegistNumber` → 0x689) and §8.1 (reason-9 save with 0x0C31), D02 §3.2 (`CharIDChangeData` default `{0, 0x64, 0}`), §3.5 and §14 (layouts; −3039 → 0x20D1), Z30 §1.2 (0xB40F) and D04 §5.1 (option saves). Part 25 (§23) confirms W01 §4.2 (`0x145` while the map's zone is down, six times), §5.4 and §7.3 (`0x0C31` checked by `charNo`), Z01 §8.1 (`0x0C18 {1}` ≥ 8 s after `0x1071` → logout at once), Z07 §3.3 (the 13-s `0x1071` timer: 12.97 / 12.99 s), Z11 §7.4 and Z05 (money committed in 15–22 ms, kept through zone kills), D02 §5 (`p_Char_Logout` takes only `charNo`, `playmin`), §17.4 at four zone restarts (P02-B25) and §19.2 (Z11-B32: the tester saw "[Leather Boots] has been obtained"). Part 26 (§24) confirms Z02 §6.5 (`0x3C0A` table form), Z03 §9.1 / §9.3 (`0x4811` → `0x4812` → `0x4814`, item release only with `bUseItem`; `0x4802` → `0x4804` + `0x1035`), Z04 §12.5 (`0x304B {0x30A8}` before the work, moves through `sp_ItemReloc`, a swap as `0x342B`), Z05 §4 / §6.1 / §9.8 (`0x342C` → `0x3001` + `0x300C`; book effect on `0x3440`; vault `0x349E` → `0x349F` → `0x3001` only), Z07 §2.2–§2.4 (INC / DEC sizes 15 / 27, full target array), Z08 §11 / Z23 §4 (`0x9005` / `0x9006` 21 bytes, `0x3016 {0x700}` first, `0x900C {130}`, `0x900D {49}`), Z12 §4.2 (`0x1035` free-stat flags, no STR total) and §7.1 (`0x4027` with the vault), Z23 §7.1 / §7.2 (incremental skill save: cooling skill, then once with 0), D02 §6 / §7.2, D03 §3 / §7.4 / §9 and D04 §2 (Character-server answers and logs) and Z01 §8.4 as corrected in §23.5 (auto-saves 599.99 / 599.97 s after `0x1803`). Part 27 (§25) confirms Z03 §5.4 (cast abort: `0x2438` to the sight including the caster, `0x2445 {0x20E8}`, `0x243D`, no cooldown; 0.3-s arming of a non-moving skill), §5.5 (`0x2441` → `0x2450` / `0x2451`), §6.2 / §6.3 (inform and broadcast order), §7.2 (death order; no exp loss on a map with `ExpLostAtDeadByMob` 0) and §7.3 (`0x4829` → `0x482A` → `0x481E` / `0x481F`, full HP, StaImmortal for `immortalsec`), Z09 §9.3 (`smo_WarpTo`: x + 5, a second `0x2450` with its own index, `0x4828`) and §28.3 (the `AbStateReset` rows of StaNeglect / StaHide / StaBuckler), Z22 §1.3 (`ase_Routine` → vt 0x650 + `0x2428`), §3.3 (BurnPainMe 20 ‰ of MaxHP; the flat DoT never kills: no tick at 1 HP), §4.2 (`0x245A` with `num 0`) and §7.3 (the newbie chain), Z23 §2.1–§2.5 (toggle on / off by cast, the three automatic switch-offs, `csl_Toggle_AllOff` on a link without removing the states, no state after the link), Z25 §6.3, Z01 §8.1 (`0x0C18` acts whatever its `LogoutType`, ≥ 8 s after `0x1071`) and Z07 §3.1 / §9.5's town revive (`0x104F` = the map's `RegenCity` point).
+which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_LevelUp` re-marks type 9 on every level). Part 20 (§20) confirms Z04 §2.4 / §7.1 / §13.1, Z05 §2.2 / §2.4 (answer orders, `0x305D` before `0x305A`), D03 §2.2 / §2.4 / §5.1 layouts (with the ref), Z02 §6.5 (`0x3C05`), Z11 §7.3 (`CT_LevelUp`, the level-20 announcement), Z18 §6.2 (titles 46 / 0 and 1), W01 §7.6 (0x6401 relay), W04 §2.4 (0x2079 relay) and §6.2 / §6.4 (KQ skip: 0x5811, 0x5825, one 0x581E per client per second). Part 21 (§21) confirms D03 §1.2 / §2.1 (`ItemBuy_Create`'s attribute branch: item deleted, cen refunded, `0x340C {0x206}`), Z05 §2.1 (`0x340C` → `0x3004 {error}`) and §6.4 (`0x345A` → `0x3001` emptied), Z09 §1.2 / §2.4 (the per-minute block on the WM's `0x0821`), Z24 §6.7 / Z13 §2.7 (`sp_ChargedItemLimitCheck` → `sp_ItemDelete` → `sp_DestroyItem`, not at login), D03 §1.3 (boot option rows 800–803 / 820–822, `deletetime` at attribute +7) and the capture-scenarios predictions §8.14 (S13) and §8.17 (S16, its cen half). Part 24 (§22) confirms W01 §4.1 (0x1401 → 0x1403 → 0x1404 `0x181`, 0x140F → 0x1411 → 0x1412 → 0x1410 with the name stored on 0xD0, 0xB409 → 0xB40A), §4.2 (0x145 without a CharDB round trip when no zone serves the map), §5.4 (`CharacterLogout` order 0x1037, 0x081F, 0xC807), §6.2 (0xB40B 0x20C0 → `CharIDChange`), §7.2 (0x104B name check, state 3, `{−1, −1}`), Z01 §5.3 (`so_SetRegistNumber` → 0x689) and §8.1 (reason-9 save with 0x0C31), D02 §3.2 (`CharIDChangeData` default `{0, 0x64, 0}`), §3.5 and §14 (layouts; −3039 → 0x20D1), Z30 §1.2 (0xB40F) and D04 §5.1 (option saves). Part 25 (§23) confirms W01 §4.2 (`0x145` while the map's zone is down, six times), §5.4 and §7.3 (`0x0C31` checked by `charNo`), Z01 §8.1 (`0x0C18 {1}` ≥ 8 s after `0x1071` → logout at once), Z07 §3.3 (the 13-s `0x1071` timer: 12.97 / 12.99 s), Z11 §7.4 and Z05 (money committed in 15–22 ms, kept through zone kills), D02 §5 (`p_Char_Logout` takes only `charNo`, `playmin`), §17.4 at four zone restarts (P02-B25) and §19.2 (Z11-B32: the tester saw "[Leather Boots] has been obtained"). Part 26 (§24) confirms Z02 §6.5 (`0x3C0A` table form), Z03 §9.1 / §9.3 (`0x4811` → `0x4812` → `0x4814`, item release only with `bUseItem`; `0x4802` → `0x4804` + `0x1035`), Z04 §12.5 (`0x304B {0x30A8}` before the work, moves through `sp_ItemReloc`, a swap as `0x342B`), Z05 §4 / §6.1 / §9.8 (`0x342C` → `0x3001` + `0x300C`; book effect on `0x3440`; vault `0x349E` → `0x349F` → `0x3001` only), Z07 §2.2–§2.4 (INC / DEC sizes 15 / 27, full target array), Z08 §11 / Z23 §4 (`0x9005` / `0x9006` 21 bytes, `0x3016 {0x700}` first, `0x900C {130}`, `0x900D {49}`), Z12 §4.2 (`0x1035` free-stat flags, no STR total) and §7.1 (`0x4027` with the vault), Z23 §7.1 / §7.2 (incremental skill save: cooling skill, then once with 0), D02 §6 / §7.2, D03 §3 / §7.4 / §9 and D04 §2 (Character-server answers and logs) and Z01 §8.4 as corrected in §23.5 (auto-saves 599.99 / 599.97 s after `0x1803`). Part 27 (§25) confirms Z03 §5.4 (cast abort: `0x2438` to the sight including the caster, `0x2445 {0x20E8}`, `0x243D`, no cooldown; 0.3-s arming of a non-moving skill), §5.5 (`0x2441` → `0x2450` / `0x2451`), §6.2 / §6.3 (inform and broadcast order), §7.2 (death order; no exp loss on a map with `ExpLostAtDeadByMob` 0) and §7.3 (`0x4829` → `0x482A` → `0x481E` / `0x481F`, full HP, StaImmortal for `immortalsec`), Z09 §9.3 (`smo_WarpTo`: x + 5, a second `0x2450` with its own index, `0x4828`) and §28.3 (the `AbStateReset` rows of StaNeglect / StaHide / StaBuckler), Z22 §1.3 (`ase_Routine` → vt 0x650 + `0x2428`), §3.3 (BurnPainMe 20 ‰ of MaxHP; the flat DoT never kills: no tick at 1 HP), §4.2 (`0x245A` with `num 0`) and §7.3 (the newbie chain), Z23 §2.1–§2.5 (toggle on / off by cast, the three automatic switch-offs, `csl_Toggle_AllOff` on a link without removing the states, no state after the link), Z25 §6.3, Z01 §8.1 (`0x0C18` acts whatever its `LogoutType`, ≥ 8 s after `0x1071`) and Z07 §3.1 / §9.5's town revive (`0x104F` = the map's `RegenCity` point). Part 30 (§26) confirms Z04 §2.5 (repurchase: the level check before the money check, Z04-B2's `0x3004 {0x366B}` silent in the client, `ii_RepurchaseAll` onto an empty cell with a new key, `0x366D` with none) and §4.1 (`a + b > MaxLot` → `irm_Split_N_Merge(MaxLot − b)`), Z05 §2.2 / §4 (`0x34BA` / `0x3432` → `0x3001` + `0x305D` / `0x300C`), D03 §2.2 / §3.3 (`0x34B9` / `0x3431` layouts and logs, the sold key only in `0x07FD`), Z11-B12 (`&makeitem` silent with a full inventory, again), Z02 §6.5 (`0x3C05` at level 20) and Z01 §8.4 as corrected in §23.5 (auto-save 600.01 s after `0x1803`).
 
 ## 14. Not reconstructed / uncertain
 
@@ -4109,6 +4274,10 @@ which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_Leve
   advances `bufferpoint`; `smo_SkillResultPacket` @ FUN_0057a630 hands the packet to a send object (vt 0x49c, + 0x40)
   whose `targetnum` source was not followed. The captured `targetnum 0` is the form a rebuild sends. The toggle's 23-min icon timer (P02-B39) was not
   waited out, and the toggle with a lower learned step (Z23-B1) was not tested.
+- **Batch 5, `s46` (§26)**: the client's repurchase price offset (item data +0xd7 = `SellPrice`) is *(inferred)*; the
+  option bits of the soul-stone number dialog (`DAT_00a81464` +0x24 bit 5, +0x26 bit 2) are not traced; the zone's
+  `0x366C` (repurchase money), `0x5005` / `0x3443` (soul-stone refusals) and `irm_Exchange`'s `0x24a` alternative stay
+  uncaptured; the logout of `s46` is not on the wire (the capture stops first).
 
 ## 15. Coverage boundary
 
