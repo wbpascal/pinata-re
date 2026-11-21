@@ -1652,7 +1652,23 @@ ITEMS = [
              "Record the changes in `docs/knowledge/X09.md`."],
       done="Scenarios 45, 46 and 52 have result lines for batch 5 and scenario 39 a not-captured line; the three §13 "
            "rows \"→ X09\" are fixed in the scenario texts; every §15 row naming X09 maps to a scenario number or a "
-           "stated reason in `docs/knowledge/X09.md`; confidence ratings re-run after batch 5."),
+           "stated reason in `docs/knowledge/X09.md`; confidence ratings re-run after batch 5."), dict(id="X10", phase=3, title="Superseded statement Z01 §3.2 (broadcast reach) into the README list: X09's code "
+                               "read, not in capture-validation §13 (added by X09)",
+      out="docs/pseudocode/README.md + docs/knowledge/X10.md", scope=[], deps=["X09", "X08"],
+      goal="X09 part 4 found by a code read (`docs/knowledge/X09.md` §4) that Z01 §3.2 is too general: it gives every "
+           "`so_AllInMap0..5` the sight cells and `AxialListPacketBroadcast::ali_Work` a sight check, while "
+           "`so_AllInMap` FUN_0054b8c0 / FUN_0054b9e0 → `so_AllInMapNomal` FUN_0054be00 / FUN_0054c370 walk the whole "
+           "map list with a layer filter only, FUN_0049ac70 in `ali_Work` FUN_00428b20 is `so_SubLayer_CanSee` (a "
+           "sub-layer matrix), and only `so_AllOfRange` FUN_0054baf0 / FUN_0054bc80 apply `MapInfo.Sight`; `s45`'s "
+           "shout reached a player out of sight (capture-validation §27.4). Z01 is done and X08 adds README §5 rows "
+           "only for capture-validation §13 rows \"→ X08\", which this is not. Add the superseded-statement row.",
+      steps=["Read `docs/knowledge/X09.md` §4, Z01 §3.2 and Z02 §3.2 (`sect.py`), and README §5's row format; confirm "
+             "the facts with `clean.py re-data/exports/zone-pdb - 0054b9e0 0054c370 00428b20 0049ac70 0054bc80`.",
+             "Add one README §5 row: owner Z01 §3.2, old statement (every `so_AllInMap` = sight cells, `ali_Work` checks "
+             "sight), correct statement with the `@ FUN_…` above, source `X09 §4; capture-validation §27.4`. Check that "
+             "no other README section (§3 sequence index, §2 sketches) repeats the old statement; fix it there too.",
+             "Run `tools/protocol-re/regen.sh`; record the row and every other place changed in `docs/knowledge/X10.md`."],
+      done="README §5 has the Z01 §3.2 row with `@ FUN_…` and source; `docs/knowledge/X10.md` lists every change."),
 ]
 
 

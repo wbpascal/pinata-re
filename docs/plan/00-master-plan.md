@@ -152,6 +152,7 @@ The DB items (D01–D05) don't depend on the zone/WM items and can fill gaps in 
 | [P06](items/P06.md) | Protocol README: the flows of capture batch 5 (rename onto a taken name, the second 0x1001 after a skip, zone kick 0x0C1A → 0x0C17, SHN refusal 0x1804, whisper fail 0x200E) (added by P02) | P05, P02 (batch 5) |
 | [X08](items/X08.md) | Integration update: P02's capture batch 5 (corrections, bugs P02-B41 … B44, captured evidence) into the README register, the superseded-statements list and the sequence index (added by P02) | X06, P02 (batch 5) |
 | [X09](items/X09.md) | Capture scenarios and ratings after capture batch 5: result lines for scenarios 45 / 46 / 52 (39 not captured), fixed scenario texts, scenarios for what is still open, confidence re-rating (X02's recurring re-run, added by P02) | P02 (batch 5), X07 |
+| [X10](items/X10.md) | Superseded statement Z01 §3.2 (broadcast reach) into the README list: X09's code read, not in capture-validation §13 (added by X09) | X09, X08 |
 
 Exact handler counts and line sizes per item: `docs/plan/items/_summary.json` and the scope table at the top
 of each item file.
@@ -177,7 +178,7 @@ follow-up session.
 7. The follow-ups X02 created, any order: Z31, Z32, W06, D08; then X03 for the register and the corrections
 8. X04 (P02's batches 2–3 into the README; after X03 or at least not alongside it) and X05 (X02's re-run after batch 3) → user records the new scenarios → P02 again
 9. P05 (batch 4 into the protocol README; after P04), X06 (P02's batch 4 into the README; after X04) and X07 (X02's re-run after batch 4) → user records the new scenarios → P02 again
-10. P06 (batch 5 into the protocol README; after P05), X08 (P02's batch 5 into the README; after X06) and X09 (X02's re-run after batch 5) → user records the new scenarios → P02 again
+10. P06 (batch 5 into the protocol README; after P05), X08 (P02's batch 5 into the README; after X06) and X09 (X02's re-run after batch 5), X10 (X09's Z01 §3.2 row; after X08) → user records the new scenarios → P02 again
 
 Large items (Z04, Z05, Z08, D03, D04) will probably need two or three sessions each. Starting a new session
 with the same plan file resumes from the status file.

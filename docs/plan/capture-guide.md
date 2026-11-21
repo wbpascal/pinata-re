@@ -92,11 +92,11 @@ Values you know (level, money, item names, coordinates shown in the UI) are what
 | 12 | Accept, progress and finish a quest | quests |
 | 13 | Level up; spend stat points | progression |
 
-Scenarios 14–52, with the database setups (SQL) and table experiments they need: `docs/plan/capture-scenarios.md` (X02).
-Recorded so far (capture batch 3): 14, 21 and 37; each has a result line there. What they left open is in scenarios 45–50
-(added by X05: 45 second client II, 46 / 47 / 49 items without and with a DB setup, 48 WM stop and start with its log,
-50 timing on the server PC), setups S17–S19 and test-client cases T15–T22; its §2 gives the order and the sessions that fit
-together.
+Scenarios 14–54, with the database setups (SQL) and table experiments they need: `docs/plan/capture-scenarios.md` (X02).
+Recorded so far: 14, 21 and 37 (capture batch 3), 24, 38 and a second run of 37 (batch 4), 45, 46 and 52 (batch 5); each
+has a result line there. What they left open is in scenarios 45–50 (added by X05), 51–52 (X07) and 53–54 (X09: 53 a
+stack that may not move back and the logout, 54 shared names, the emote keys, a refused rename), setups S17–S24 and
+test-client cases T15–T28; its §2 gives the order and the sessions that fit together.
 
 Two accounts on two clients (or two machines) are needed for 6, 10 and 11.
 
