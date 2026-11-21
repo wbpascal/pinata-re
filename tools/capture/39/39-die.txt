@@ -1,0 +1,6 @@
+# Scenario 39: get A ready to die to a mob (steps 1, 2, 8, 9). After this file A clicks the slime and attacks it:
+# A's hits deal 1 (the slime lives), the slime hits back and A at 1 HP dies.
+#   .\gmtype.ps1 -File .\39\39-die.txt -Client 1
+&staticdamage 1
+&mb Slime
+&sethp 1

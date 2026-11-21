@@ -1,0 +1,5 @@
+# Scenario 39, end of the run (A, still on RouVal02): damage back to normal, free PvP off on this map (memory only,
+# but it stays on until the zone restarts otherwise)
+#   .\gmtype.ps1 -File .\39\39-endA.txt -Client 1
+&staticdamage 0
+&pvp 0

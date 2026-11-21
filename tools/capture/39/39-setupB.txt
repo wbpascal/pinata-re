@@ -1,0 +1,5 @@
+# Scenario 39, client B (X39B, Guardian 40, GM), typed right after login, on the PC the clients run on:
+#   .\gmtype.ps1 -File .\39\39-setupB.txt -Client 2
+# Skill 2030 "Rebirth [01]" comes from 39-prep.sql. Equip the hammer by hand.
+&fullpoint
+&makeitem HorsemansHammer       # hammer, level 40, Guardian: Rebirth needs a hammer (DT_HAMMER)

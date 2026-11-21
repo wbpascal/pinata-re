@@ -1,0 +1,5 @@
+# Scenario 39 step 6: one boss with a MobKillAnnounce row (Helga, MobID 7000, text 0), killed by A's first hit.
+# Attack it AT ONCE: it is level 93. Right after the kill A types &staticdamage 0 (or 39-endA.txt).
+#   .\gmtype.ps1 -File .\39\39-helga.txt -Client 1
+&staticdamage 600000
+&mb Helga

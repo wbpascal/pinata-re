@@ -1,0 +1,6 @@
+# Scenario 39, client A (X39A, SharpShooter 40, GM), typed right after login, on the PC the clients run on:
+#   .\gmtype.ps1 -File .\39\39-setupA.txt -Client 1
+# Skills 4028 "Power Shot [09]" and 4500 "Distant Shot [01]" come from 39-prep.sql. Equip the bow by hand.
+&fullpoint
+&makeitem HeavyBow              # bow, level 40, SharpShooter: Distant Shot needs a bow (DT_BOW), Power Shot any weapon
+&makeitem JustRevival -l5       # "Tear of Legel" x5, the configured revive item (sii_JustReviveItem, ID 30168): steps 1a, 1

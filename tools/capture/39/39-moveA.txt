@@ -1,0 +1,6 @@
+# Scenario 39: A to the regen point of Burning Hill (RouVal02: EnemyGuild 1, ExpLostAtDeadByMob 1000, ByPly 0; its
+# RegenCity is itself, so the town revive stays on this map)
+#   .\gmtype.ps1 -File .\39\39-moveA.txt -Client 1
+&linkto RouVal02 6049 3948
+!sleep 8
+&fullpoint

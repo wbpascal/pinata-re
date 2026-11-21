@@ -1,0 +1,5 @@
+# Scenario 39: B next to A on Burning Hill (in sight: B records the bystander packets of every step)
+#   .\gmtype.ps1 -File .\39\39-moveB.txt -Client 2
+&linkto RouVal02 6150 3948
+!sleep 8
+&fullpoint
