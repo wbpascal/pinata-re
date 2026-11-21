@@ -133,7 +133,7 @@ Differences from the documented order:
 | C→S | 0x0C04 | NC_USER_XTRAP_REQ | 9 | 30 | confirmed | order: after the login request (§3.1) |
 | S→C | 0x0C05 | NC_USER_XTRAP_ACK | 9 | 1 | confirmed | `bSuccess = 1` always (the key is not checked, L00-B5) |
 | S→C | 0x0C09 | NC_USER_LOGINFAIL_ACK | 1 | 2 | confirmed | `0x45` for a wrong password (`login-server.md` §5.1) |
-| S→C | 0x0C0A | NC_USER_LOGIN_ACK | 8 | 19 | confirmed | 1 world: `{0, "INITIO", 6}`. The name is ServerInfo.txt `WORLD_NAME 0, "INITIO"`. The scenario notes say the tester saw "Enid", but neither `Fiesta.bin` (2016) nor its `TextData*.shn` contains that string, so the 2016 client cannot have shown it: unexplained (probably another client install or a slip in the notes); §14 |
+| S→C | 0x0C0A | NC_USER_LOGIN_ACK | 8 | 19 | confirmed | 1 world: `{0, "INITIO", 6}`. The name is ServerInfo.txt `WORLD_NAME 0, "INITIO"`. The scenario notes say the tester saw "Enid": the client never shows the name. `FUN_00682a60` stores it (`{name[16], world_no, status}` per world), but `WorldSelectWin` draws each row from the buttons `ServerNameNor_%.2d` / `ServerNameOver_%.2d` / `ServerNameClick_%.2d` of `\Account\LoginServerList.nif` (`FUN_004740e0`), and `WorldSelectWin::UpdatePageState` @ FUN_00475970 sets their texture coordinates to cell (`idx % 3`, `idx / 3`) of that texture, `idx` = the world's position in the list. Row 0 shows the art of cell 0, "Enid" in the test client *(captured: tester's screen)*; no string search finds it. The name is only used on world select: `FUN_0046ec90` (0x0C0B send) copies it with `Server::GetWorldName` @ FUN_0046f680 and writes the BugTrap log `%APPDATA%\FiestaOnline\ConnectWorldInfo.txt` *(captured: `WorldName [ INITIO ]`)* |
 | C→S | 0x0C1B | NC_USER_WORLD_STATUS_REQ | 10 | 0 | confirmed | every 10 s on the world list |
 | S→C | 0x0C1C | NC_USER_WORLD_STATUS_ACK | 10 | 19 | confirmed | same body as 0x0C0A |
 | C→S | 0x0C0B | NC_USER_WORLDSELECT_REQ | 6 | 1 | confirmed | `world_no = 0` |
@@ -3981,7 +3981,10 @@ which clears `AccountStorage_opened`) and Z18 §6.2 (title type 9 rule; `CT_Leve
   (W01 §2), at :42 in both batch-2 captures. Only the phase of that timer (WM start or the last forced send on a zone
   connect) is left *(inferred)*.
 - **Client `World::LoadMap` heartbeats** (§4.4): which of the 8 call points fire per map load *(not traced)*.
-- **World name "Enid"** in the scenario notes (§3.2): not in the 2016 client or its texts; unexplained.
+- **World name "Enid"** in the scenario notes (§3.2): **settled**. The world list shows a texture cell of
+  `\Account\LoginServerList.nif` chosen by the row (`WorldSelectWin::UpdatePageState` @ FUN_00475970), not the name
+  from 0x0C0A; the client logs the received name to `%APPDATA%\FiestaOnline\ConnectWorldInfo.txt` *(captured)*. Left
+  open: the texture's cells (the repo holds only the client's `ressystem` folder, not its UI art).
 - **0x7037 trailing 3 bytes** (batch 2, §4.2): the client sends `1 + 7n + 3` bytes for `n = 1`. The 2016 client sender
   was not located (the 2017 `ShortCutMgr` send functions are empty stubs; the sweep found no `0x7037` immediate in the
   2016 client, as `push`, `mov word` or decompiled constant, nor any of the other captured option-save opcodes 0x7011 /
