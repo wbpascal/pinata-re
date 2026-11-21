@@ -147,7 +147,7 @@ absence means "not re-read by anyone", not "confirmed": P02 lists what the captu
 
 ## 2. Ratings per document
 
-State: re-run after capture batch 5 (X09 parts 3 and 4). 49 pseudocode documents (2 249 headings: 149 high, 1 565
+State: re-run after capture batch 5 (X09 parts 3–5; part 5 = the review's fixes, totals unchanged). 49 pseudocode documents (2 249 headings: 149 high, 1 565
 medium, 209 low, 326 not rated) and 65 knowledge files (342 headings: 13 high, 253 medium, 28 low, 48 not rated; rated
 for the first time: `P05.md`, `X06.md` and `X09.md` §1–§7); 130 hand rows (125 + 5 of X09; Z01 §3.2's reason
 rewritten in part 4 after the code read of `docs/knowledge/X09.md` §4). Hand passes: Login, WM, the
@@ -411,9 +411,9 @@ revive on the same zone), the spam-filter set `0x0846` → `0x0847`, a whisper t
 procedure (P02-B42), `&kickout` on one zone (`0x0C1A` with a real user number → `0x0C17`) and across zones (Z11-B6),
 the SHN refusal `0x1804 {0x147, idx}` and the start-up crash on a table with one byte appended (P02-B43). Still in
 no capture: party, raid, guild, pet, silver wing, quest step, KQ play, scripted map, booth, mini-house, mob skills,
-`0x243E`, the zone refusals the 2016 client pre-empts (`0x366C`, `0x5005`; the money and soul-stone refusals of `s46`
-were the client's), `0x3443`, `irm_Exchange`'s `0x24A` and the `irm_Move` / `0x20A` branch, `0x2022` / `0x2023`,
-`0x2020 {6}`, lookups by a name two characters share (capture-scenarios 47, 53, 54, T18, T26–T28).
+`0x243E`, the zone refusals the 2016 client pre-empted in `s46` (`0x366C`, reachable with a stack's buy-back, and `0x5005`; the
+money and soul-stone refusals of `s46` were the client's), `0x3443`, `irm_Exchange`'s `0x24A` and the `irm_Move` / `0x20A` branch, `0x2022` / `0x2023`,
+`0x2020 {6}`, lookups by a name two characters share (capture-scenarios 47, 53 (steps 1–6), 54, T18, T26–T28).
 
 Of the sections that existed before, 6 changed their rating (`P05.md`, `X06.md`, `X09.md` are rated for the first
 time; the generator alone changed 8, two of which the hand rows below set back):
@@ -431,8 +431,8 @@ Hand rows of this pass (`X02-rate-hand.py`, block "X09 part 3": 5 new rows, 1 re
 | W04 §17.2 | medium (baseline: high) | only the set path `0x0846` → `0x0847` is captured (§27.4); the load `0x0844` and the push `0x0845` appeared in no capture (no `usp_SpamFilter_get` row, §7.4), so W04-B60 could not show. Raise by: set the filter, then a new character login and map login of the same account |
 | Z11 §4.2 | medium (baseline: low) | the baseline saw only `cv corr` (no opcode in the section), but `&mobbreed` / `&mb` are captured in `s45` ("Mob : 5989", §27.6): a captured section in which a class applies |
 | Z04 §4.1, Z02 §4 | medium (as the baseline) | the reason names the batch-5 paths and the "raise by" the scenario of the open branches: 53 (`0x24A`, `irm_Move` / `0x20A`), 54 and T27 (`0x2022` / `0x2023`, `0x2020 {6}`) |
-| Z01 §3.2 | medium (as the baseline) | sight delivery to a bystander is captured, but the section gives every `so_AllInMap0..5` the sight cells and `ali_Work` a sight check, while the shout of `s45` (`so_AllInMap1`, "receivers filtered as in Z01 §3.2" per Z02 §3.2) reached a player out of sight (§27.4): one of the two statements is too general *(inferred; not in §13)*. Raise by: re-read the rest (§3) |
-| Z05 §2.4 (reworded, stays medium) | medium | in `s46` the 2016 client refused both soul-stone cases itself (no `0x5001`, §26.5): `0x5005` needs test-client case T18, `0x3443` scenario 47 step 3 (S17) |
+| Z01 §3.2 | medium (as the baseline) | sight delivery to a bystander is captured, but the section gives every `so_AllInMap0..5` the sight cells and `ali_Work` a sight check, while the shout of `s45` (`so_AllInMap1`, "receivers filtered as in Z01 §3.2" per Z02 §3.2) reached a player out of sight (§27.4): settled in X09 part 4 by a code read (`docs/knowledge/X09.md` §4): Z01 §3.2 is the too general one (`so_AllInMap` walks the whole map, FUN_0049ac70 is `so_SubLayer_CanSee`); the hand row's reason was rewritten then. Raise by: the README §5 row (X10) |
+| Z05 §2.4 (reworded, stays medium) | medium | in `s46` the 2016 client refused both soul-stone cases itself (no `0x5001`, §26.5): `0x5005 {0x741}` scenario 53 step 6 *(inferred)*, `{0x742}` / `{0x743}` test-client case T18, `0x3443` scenario 47 step 3 (S17) |
 
 Kept as the baseline rates them after the check: Z05 §2.2 (sell and repurchase: the first empty cell, §26.3), Z04
 §13.1 (soul-stone purchase; its refusals are the client's), Z02 §2.4 (jump), Z03 §3.4 / §7.2, Z23 §3.1, W04 §2.1
@@ -943,7 +943,7 @@ Knowledge files (`docs/knowledge/`):
 | · 2.3 Data tables and their loaders | **low** | sup×1 (README §5.4) | re-read the rest (§3) |
 | 3. Network layer | **low** | no function cited; sup×2 (README §5.4) | re-read the rest (§3) |
 | · 3.1 Packet buffer and send primitives | medium | weak inf1 | second reading / client check |
-| · 3.2 Broadcast (who receives a packet) | medium | sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; capture-validation §27.2, §27.6, §27.7) and so is a whole-map shout to a player out of sight (§27.4); the section is too general there (code read in X09 part 4, docs/knowledge/X09.md §4): so_AllInMap FUN_0054b8c0 -> so_AllInMapNomal FUN_0054be00 walks the whole map list with a layer filter only, and FUN_0049ac70 in ali_Work is so_SubLayer_CanSee, not a sight check; the sight radius is so_AllOfRange FUN_0054baf0 (hand; baseline: medium) | the README §5 superseded-statement row (X08) and a capture of a so_AllOfRange broadcast not reaching a player just outside MapInfo.Sight |
+| · 3.2 Broadcast (who receives a packet) | medium | sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; capture-validation §27.2, §27.6, §27.7) and so is a whole-map shout to a player out of sight (§27.4); the section is too general there (code read in X09 part 4, docs/knowledge/X09.md §4): so_AllInMap FUN_0054b8c0 -> so_AllInMapNomal FUN_0054be00 walks the whole map list with a layer filter only, and FUN_0049ac70 in ali_Work is so_SubLayer_CanSee, not a sight check; the sight radius is so_AllOfRange FUN_0054baf0 / FUN_0054bc80 (hand; baseline: medium) | the README §5 superseded-statement row (X10) and a capture of a so_AllOfRange broadcast not reaching a player just outside MapInfo.Sight |
 | · 3.3 Server-to-server handshake and heartbeat | medium | cap 7/9; cv ok; sup×1 (README §5.4); cv corr; B×3 | re-read the rest (§3); read with P02 "Corrections"; follow the return value to the parser |
 | 4. Objects | **low** | no function cited; sup×7 (README §5.4) | re-read the rest (§3) |
 | · 4.1 Class hierarchy (RTTI) | **low** | no function cited; pre-S01 prose without a function | cite and re-read the function |
@@ -1161,7 +1161,7 @@ Knowledge files (`docs/knowledge/`):
 | · 2.1 Buy: `0x340B`/`0x340E` BUYALLSUC/BUYLOTSUC, `0x340C`/`0x340… | **high** | cap 5/10; cv ok; client×1; ours×1 |  |
 | · 2.2 Sell and repurchase | **high** | cap 8/10; cv ok |  |
 | · 2.3 Guild-token buy: `0x3491`/`0x3494` and fails | **low** | cap 1/6; B×1 | follow the return value to the parser |
-| · 2.4 Soul stones: `0x3442` / `0x3443` | medium | captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture: in batch 5 the 2016 client refused both soul-stone cases itself (0 cen, at the limit; no 0x5001 sent, capture-validation §26.5) (hand; baseline: high) | test-client case T18 (0x5005); capture-scenarios 47 step 3 with S17 (0x3443, the DB-side refusal) |
+| · 2.4 Soul stones: `0x3442` / `0x3443` | medium | captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture: in batch 5 the 2016 client refused both soul-stone cases itself (0 cen, at the limit; no 0x5001 sent, capture-validation §26.5) (hand; baseline: high) | capture-scenarios 53 step 6 (0x5005 {0x741}, a second purchase in flight); test-client case T18 (0x5005 {0x742} / {0x743}); capture-scenarios 47 step 3 with S17 (0x3443, the DB-side refusal) |
 | · 2.5 Capsule buy: `0x34A1` | medium | the captured opcodes are only mentioned here (the shared buy answer 0x3004); the subject of the section (0x34A1 capsule buy) is in no capture (hand; baseline: high) | capture 0x34A1 |
 | · 2.6 Item-money buy: `0x34B2` | medium | the captured opcodes are only mentioned here (the shared buy answer 0x3004); the subject of the section (0x34B2 item-money buy) is in no capture (hand; baseline: high) | capture 0x34B2 |
 | 3. Drop, pick-up, money (style 2: applied before the DB answer) | – | container (see its subsections) |  |
@@ -3704,10 +3704,10 @@ Knowledge files (`docs/knowledge/`):
 
 | § | Rating | Reason | Raise by |
 |---|---|---|---|
-| 1. Batch 5: result lines, corrected notes, run kits | medium | cap 11/14 | capture 0x5005 |
-| 2. What batch 5 left open → scenario | medium | cap 8/13; client×1 | capture 0x2023, 0x3807, 0x5005 |
+| 1. Batch 5: result lines, corrected notes, run kits | medium | cap 11/13 | capture 0x5005 |
+| 2. What batch 5 left open → scenario | medium | cap 10/15; client×1; pdb 1/1; weak inf1 | capture 0x2023, 0x3807, 0x5005 |
 | 3. Ratings after batch 5 | medium | cap 2/6; weak inf1 | capture 0x0845, 0x5005 |
-| 4. Which broadcasts stop at sight (Z01 §3.2 against `s45`'s sho… | medium | read in code | second reading / client check |
+| 4. Which broadcasts stop at sight (Z01 §3.2 against `s45`'s sho… | medium | weak inf1 | second reading / client check |
 | 5. Order of work and reach after batch 5 (`capture-scenarios.md… | medium | cap 25/30 | capture 0x2023, 0x3803, 0x3807 |
 | 6. Left open, uncertain | – | open points / boundary list, no claim to rate |  |
 | 7. Coverage boundary | – | open points / boundary list, no claim to rate |  |

@@ -110,7 +110,7 @@ OVERRIDE.update({
     ('W04', '2.5'): ('medium', 'the captured opcodes are only mentioned here (0x200D of a normal whisper, §2.1); the subject of the section (the gold-spammer alert from 0x085F) is in no capture', 'capture 0x085F (report a spammer with a GM online)'),
     ('Z02', '9.2'): ('medium', 'the captured opcodes are only mentioned here (0x0720, 0x300C); the subject of the section (0x204B / 0x204C roar) is in no capture', 'capture 0x204B, 0x204C (use a megaphone item)'),
     ('Z04', '7.2'): ('medium', 'the storage open 0x3444 is captured (capture-validation §7.6.1), but the 2016 client never sent 0x3028 in batch 2 or 3: all four pages come with the open (§20.1)', 'test-client case T16 (capture-scenarios §3.41)'),
-    ('Z05', '2.4'): ('medium', 'captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture: in batch 5 the 2016 client refused both soul-stone cases itself (0 cen, at the limit; no 0x5001 sent, capture-validation §26.5)', 'test-client case T18 (0x5005); capture-scenarios 47 step 3 with S17 (0x3443, the DB-side refusal)'),
+    ('Z05', '2.4'): ('medium', 'captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture: in batch 5 the 2016 client refused both soul-stone cases itself (0 cen, at the limit; no 0x5001 sent, capture-validation §26.5)', 'capture-scenarios 53 step 6 (0x5005 {0x741}, a second purchase in flight); test-client case T18 (0x5005 {0x742} / {0x743}); capture-scenarios 47 step 3 with S17 (0x3443, the DB-side refusal)'),
     ('Z09', '8.7'): ('medium', 'the captured opcodes are only mentioned here (0x2002 / 0x201F of player chat and shout); the subject of the section (a mob shout or scripted mob chat) is in no capture', 'a shouting mob in a capture'),
     ('Z09', '9.2'): ('medium', 'the captured opcodes are only mentioned here (0x2013, 0x2021, 0x2025 of a free player); the subject of the section (a blocked stop, emote or jump) is in no capture', 'capture a jump / emote on a blocked cell'),
     ('Z09', '16.6'): ('medium', 'the captured opcodes are only mentioned here (0x2448 / 0x2449 swings); the subject of the section (damage absorption) is in no capture', 'capture a swing against an absorb abstate'),
@@ -226,7 +226,7 @@ OVERRIDE.update({
                      '(§27.4); the section is too general there (code read in X09 part 4, docs/knowledge/X09.md §4): '
                      'so_AllInMap FUN_0054b8c0 -> so_AllInMapNomal FUN_0054be00 walks the whole map list with a layer '
                      'filter only, and FUN_0049ac70 in ali_Work is so_SubLayer_CanSee, not a sight check; the sight '
-                     'radius is so_AllOfRange FUN_0054baf0', 'the README §5 superseded-statement row (X08) and a '
+                     'radius is so_AllOfRange FUN_0054baf0 / FUN_0054bc80', 'the README §5 superseded-statement row (X10) and a '
                      'capture of a so_AllOfRange broadcast not reaching a player just outside MapInfo.Sight'),
     # corrected by batch 5; the open branches are scenarios of X09
     ('Z04', '4.1'): ('medium', 'captured: split-and-merge and the exchange onto a stack at MaxLot (capture-validation '

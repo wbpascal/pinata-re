@@ -150,13 +150,16 @@ SCEN = {
          R(0x1001, 0x1004) + R(0x1110, 0x1113) + R(0x1410, 0x1412) + O(0x0c1a, 0x0c17, 0x0c18, 0x2011, 0x1068)
          + O(0x1801, 0x1804)),
     # 53-54: added by X09 after capture batch 5 (what s45 / s46 / s52 left open)
-    53: ('Items VI: what `s46` left open: a stack that may not move back, and the logout', 10, 'GM, DB setup S22',
+    53: ('Items VI: what `s46` left open: a stack that may not move back, a stack\'s buy-back, a second soul-stone '
+         'purchase, and the logout', 15, 'GM, DB setup S22',
          R(0x300b, 0x300c) + R(0x3428, 0x3429) + O(0x3001, 0x3c08, 0x3444, 0x1071, 0x0c18, 0x0c31, 0x0410)
-         + R(0x4001, 0x4035)),
+         + R(0x4001, 0x4035)
+         # steps 5-6 (X09 review): 0x366C with a stack, 0x5005 {0x741} with a second purchase in flight
+         + O(0x3059, 0x305a, 0x305c, 0x305d, 0x3422, 0x3423, 0x5001, 0x5003, 0x5005, 0x3441, 0x3442)),
     54: ('Shared names, the emote keys and a refused rename: what `s45` / `s52` left open', 15,
          'GM, 3 clients, DB setups S23, S24, S20',
          R(0x2020, 0x2023) + O(0x1c06) + R(0x200c, 0x200f) + O(0x3802, 0x3803, 0x3805, 0x3807, 0x0c1a, 0x0c17,
-                                                               0x1068) + R(0x140f, 0x1412)),
+                                                               0x1068, 0x2011) + R(0x140f, 0x1412)),
 }
 
 # Recorded scenarios (capture batch): their row counts what the opcode set still leaves uncaptured.

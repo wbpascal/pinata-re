@@ -27,9 +27,10 @@ stand among the recorded rows of §2.
 State after capture batch 5 (X09): scenarios 45 (`s45`), 46 (`s46`) and 52 (`s52`) are recorded and carry a "Result
 (P02 batch 5)" line and a "Notes corrected" line (capture-validation §13, §26–§28); their setups name their run kits
 and their steps and predictions carry the fixes (46: the client's money and soul-stone refusals, the first empty
-cell; 45: four hits, 970 units, three aborts by a step, no `0x2022`; 52: a changed row, not an appended byte, the
+cell; 45: four hits, 970 units, three aborts by a step, no `0x2022`, the sit `{7}`, `0x1C0E` on leaving sight; 52: a changed row, not an appended byte, the
 decrypted buffer, the renamed character started). Scenario 39 has a notes template and a run kit but no capture.
-What batch 5 left open is in scenarios **53** (items: a stack that may not move back, the logout) and **54** (shared
+What batch 5 left open is in scenarios **53** (items: a stack that may not move back, a buy-back the purse covers
+for one unit only, a second soul-stone purchase, the logout) and **54** (shared
 names, the emote keys, a refused rename), placed after 52, before 41, setups **S22–S24**, test-client cases
 **T26–T28** and scenario 39 as written; the map from each open thing of batch 5 to its scenario is
 `docs/knowledge/X09.md` §2.
@@ -81,7 +82,7 @@ Common GM setups (Z11 §2; all persistent unless noted):
 The order is the order for the **rebuild** (decided 2026-11-16: the rebuild must match the 2016 client only, it
 does not replace the original processes one by one). Rank = what a wrong assumption would cost the rebuild, then
 how early the feature comes, then the capture cost; the ranking and its reasons are the `PRIORITY` list of
-`docs/plan/status/X02-scen.py`, which also holds each scenario's opcode set. Only ranks 1–3 belong before the
+`docs/plan/status/X02-scen.py`, which also holds each scenario's opcode set. Only ranks 1–2 belong before the
 rebuild starts; the rest is recorded shortly before its feature is implemented, and the ranks under "with its
 feature" follow the rebuild's own feature order. 48 and 50 are dropped: they test the original processes among
 themselves (a stop cause, timing). 47 and 49 are optional for the same reason: their refusals need a DB or table
@@ -104,7 +105,7 @@ and keeps its rank.
 |---|---|---|---|---|---|---|---|---|
 | 1 | 37 | Login side: idle heartbeat, refusals, character delete *(recorded, batches 3 and 4)* | before the rebuild starts | DB / config setup | 6 | 130 | 70 | its refusal steps 3–6 not yet run (S10, S11, X6) finish the login side; `s37b` ran only the character-select refusals |
 | 2 | 51 | Skills II: what `s24` left open | before the rebuild starts | GM, 2 clients for steps 2 (heals) and 4, DB setup S21 for steps 6–7 | 80 | 8 | 5 | the skill paths the client reached only with one learned step: empower wrap, toggle steps, skill-save columns |
-| 3 | 53 | Items VI: what `s46` left open: a stack that may not move back, and the logout | early: core gameplay | GM, DB setup S22 | 10 | 23 | 13 | closes what 46 left open: a stack that may not move back (`0x24A`, `0x20A`, `irm_Move`) and the logout saves |
+| 3 | 53 | Items VI: what `s46` left open: a stack that may not move back, a stack's buy-back, a second soul-stone purchase, and the logout | early: core gameplay | GM, DB setup S22 | 15 | 28 | 14 | closes what 46 left open: a stack that may not move back (`0x24A`, `0x20A`, `irm_Move`) and the logout saves |
 | 4 | 39 | Combat extras: death penalty, PK, revive item, knock-back | early: core gameplay | 2 clients, GM | 8 | 50 | 27 | party / PK death and exp loss are not captured at all; not captured in batch 5 either |
 | 5 | 54 | Shared names, the emote keys and a refused rename: what `s45` / `s52` left open | early: core gameplay | GM, 3 clients, DB setups S23, S24, S20 | 15 | 22 | 6 | closes what 45 / 52 left open: the emote pause key, lookups by a shared name, the refused rename |
 | 6 | 36 | Block list, reports, options, megaphone | early: core gameplay | 2 clients | 5 | 66 | 87 | cheap, high reach; settles the option-save tail of `0x7037` |
@@ -133,7 +134,7 @@ and keeps its rank.
 | 29 | 42 | Races: drop menu, two money pick-ups, link with a dead WM session | optional | 2 clients | 10 | 15 | 5 | original race behaviour; the rebuild designs its own locking |
 | 30 | 43 | OPTool listener (test tool) | optional | test tool | 15 | 60 | 59 | only if the original OPTool must work |
 | 31 | 49 | Items V: refusals by the Character server | optional | DB setup per step, a second client or drops | 25 | 33 | 11 | DB faults the rebuild's own persistence does not have |
-| 32 | 47 | Items IV: the zone and the DB disagree | optional | GM, DB / table setup per step, 2 clients for step 6 | 25 | 24 | 7 | every step tampers with the DB or tables under an online player |
+| 32 | 47 | Items IV: the zone and the DB disagree | optional | GM, DB / table setup per step, 2 clients for step 6 | 25 | 23 | 7 | every step tampers with the DB or tables under an online player |
 | – | 48 | WM stop and start with its log | dropped (original processes only) | server PC only | 10 | 0 | 0 | the WM's own stop cause and log |
 | – | 50 | Timing with one clock and without delayed ACKs | dropped (original processes only) | capture on the server PC, a registry change | 15 | 0 | 0 | timing between the original processes |
 | – | 14 | Second client in sight *(recorded, batch 3)* | recorded | 2 clients | 5 | 50 | 24 | continued by 45 |
@@ -997,8 +998,9 @@ online owner, one short capture per step, the SQL window open next to the client
   and stops (step 7 of 14). Run kit: `tools/capture/45/45-server.ps1` (`prep`, `capture-start`, `snapshot`,
   `cleanup -Dest`, `collect` with the server logs).
 - **Prediction:** (1) B `0x2017 {from, to}` → A `0x2018 NC_ACT_SOMEONEMOVEWALK_CMD` for B's handle, nothing to B;
-  the run steps `0x2019` → `0x201A` as captured. (2) B `0x2020 {6}` → `0x2021 {B, 6}` to A **and** B, then `{7}`
-  *(inferred from the captured stand)*; no `0x2009`. (3) none of the three ways sends `0x2022` (corrected after
+  the run steps `0x2019` → `0x201A` as captured. (2) the Sit sends `0x2020 {7}` → `0x2021 {B, 7}` to B **and** A,
+  the Stand sends nothing (the client stands B up locally); no `0x2009` (corrected after `s45`, capture-validation
+  §27.3: the 2016 client never sends `{6}`, that is test-client case T27). (3) none of the three ways sends `0x2022` (corrected after
   `s45`, capture-validation §27.3): the same emote again is a new `0x2020` → `0x2021` to both (the dance restarts),
   Esc sends nothing (the dance goes on), a step ends it on both screens through the move relay (`0x2019` → A
   `0x201A`). The 2016 client's only `0x2022` sender is its key function 0x6F (pause / resume an emote, "Open after
@@ -1009,8 +1011,9 @@ online owner, one short capture per step, the SQL window open next to the client
   Z03 §3.5 names the mob's normal attack as a caller of `so_Bash`, but every mob hit of batches 2–3 (28 `0x2448`,
   the killing blow included) came as a swing, so `0x242E` is left to the `&` test commands (which one was not looked up: knowledge X05 §6); the
   step stays as the check with a bystander and a player who does not hit back. (7) B `0x2444` → `0x2438 {caster B}`
-  to A and B, then B `0x2445 {0x20E8}`; the full cast gives A `0x244F` as captured. (8) A gets `0x1805` for B's
-  handle when B leaves the sight range *(inferred: the removal packet `&hide` produced in `s14`)*.
+  to A and B, then B `0x2445 {0x20E8}`; the full cast gives A `0x244F` as captured. (8) leaving the sight range gives
+  `0x1C0E` both ways (corrected after `s45`, capture-validation §27.4, result (8)); `0x1805` comes only with a
+  same-zone revive or teleport.
 - **Disproved by:** `0x2018` also to B; a `0x2009` for the sit; a shout that stops at sight range; `0x200F` or
   `0x6006` for the unknown receiver, or another `ErrorType`; a `0x242E` / `0x242D` for a mob's hit (then Z03 §3.5 holds for that mob: note its `MobInfo` row); a cast
   abort without `0x2438` to A.
@@ -1087,14 +1090,19 @@ online owner, one short capture per step, the SQL window open next to the client
   (`ii_RepurchaseAll` @ FUN_00537ca0; not the cell they were sold from); G `0x07FD {0x7F8, nInt3 = the price}`,
   `0xC815`; the after-snapshot has the boots under the new key only. (4) **nothing on the wire** (corrected after
   `s46`, capture-validation §26.4): the 2016 client compares its purse with the entry's price itself and shows
-  810 500 413 "Cannot make the purchase due to insufficient money."; no `0x3059`, so the zone's `0x305A {0x366C}`
-  "Not enough money to buy the item." is out of reach of the 2016 client ("Open after batch 5" below). (5) `0x3059` → **`0x3004 {0x366B}`** (a BUY_ACK,
+  810 500 413 "Cannot make the purchase due to insufficient money."; no `0x3059`. The client compares the purse with **one unit's**
+  `SellPrice` (item data +0xd7, client FUN_0052acc0 / FUN_00555bf0), the zone charges `SellPrice × min(lot, MaxLot)`
+  (`sp_NC_ITEM_REPURCHASE_REQ` @ FUN_00538580), so the zone's `0x305A {0x366C}` "Not enough money to buy the
+  item." is reached by a stack bought back with a purse between the two: scenario 53 step 5 (the weapon here is one
+  unit). (5) `0x3059` → **`0x3004 {0x366B}`** (a BUY_ACK,
   Z04-B2), no `0x305A`, no DB request, no text *(inferred: the buy handler has texts for its own codes only, Z05
   §2.4)*. (6) `0x305A {0x366D}` "Inventory is full.",
   no DB request. (7) both refusals are the **client's** (corrected after `s46`, capture-validation §26.5): with 0 cen
   978 272 565 "You have insufficient money.", at the limit (held = `maxnum`) 1 677 983 971 "Cannot purchase more.",
   no `0x5001` / `0x5002` for either; the number dialog offers at most `min(purse / price, maxnum − held)`. The zone's
-  `0x5005 NC_SOULSTONE_BUYFAIL_ACK` / `0x3443` refusals (Z04 §13.1) stay test-client case T18. The allowed purchase:
+  `0x5005 NC_SOULSTONE_BUYFAIL_ACK {0x741}` (the zone's purchase lock, Z04 §13.1) is left to a second purchase sent
+  before the first one's answer, scenario 53 step 6 *(inferred)*; `{0x742}` / `{0x743}` stay test-client case T18,
+  `0x3443` scenario 47 step 3. The allowed purchase:
   `0x5001 {n}` → D `0x3441 {flag 0, number n, price n × hp.price}` → `0x3442` → `0x1033`, `0x5003`, `0x3004 {0x201}`.
 - **Disproved by:** a `0x3431` or a refusal for the second drag (predicted: an exchange `0x342B`); `0x34BB` for the boots; the sold key
   coming back; `0x305A {0x366B}`; a DB request in (4)–(7); a refusal in (4)–(6) that removes the entry from the
@@ -1106,7 +1114,7 @@ online owner, one short capture per step, the SQL window open next to the client
 - **Notes corrected (`s46`, capture-validation §13, X09):** step 3: the bought-back boots went to the first empty
   cell (0, emptied by step 2's deposit), not the cell they were sold from (2; the notes had "an empty cell, e.g. 2" and
   corrected themselves). Step 4: the money refusal is the client's text 810 500 413 with no packet (the notes' text),
-  not the zone's `0x366C`. Step 7: both soul-stone refusals are the client's (978 272 565, 1 677 983 971), no
+  not the zone's `0x366C` (a one-unit weapon; a stack is scenario 53 step 5). Step 7: both soul-stone refusals are the client's (978 272 565, 1 677 983 971), no
   `0x5001`; the number could not be typed (the dialog offered 36). The capture ends at 751.3 s with X46A in the world:
   the logout is not on the wire, its save only in the "after logout" snapshot. The setup, steps and predictions
   above carry these fixes.
@@ -1439,7 +1447,7 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   (3) **Zone-initiated disconnect with a real `usrregnum` (`&kickout`).** A types `&kickout <B's name>`: Z → W
   **`0x0C1A NC_USER_CONNECTCUT2WORLDMANAGER_CMD {0xFFFF, −1, usrregnum = B's user number, wldmanhandle = B's WM
   handle, 0x68B}`** → W → B `0x0C17 {0x68B}` (W01 §5.2: sent only when the session's user number matches; `s37b`'s
-  `0x0C1A` had 0 and got none); A gets "<B> is banned" (`0x2011`, Z11 §4.5); the zone runs `so_banning` (B's save
+  `0x0C1A` had 0 and got none); A gets the notice `0x2011` " is banned" **without** the name (P02-B41, `s52`, capture-validation §28.4; Z11 §4.5); the zone runs `so_banning` (B's save
   burst) and drops B's socket; B's client logs out by itself (`0x0C18 {0}`, "Disconnected from the server.",
   capture-validation §23.4). Then B logs in on a map of **another** zone process and A kicks again: nothing reaches B;
   A gets "… is not in game" with the name read one byte early (Z11-B6); with the zone ↔ zone ports in the filter, the
@@ -1497,7 +1505,7 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   Of the "Disproved by" events only (2)'s first one occurred (`0x1412 {0xD0}` for the name in use; `sp_helpindex`
   showed no unique `sID` index, so this is the case the step named, not a contradiction of the unique-index rule).
 
-### 53. Items VI: what `s46` left open: a stack that may not move back, and the logout (added by X09)
+### 53. Items VI: what `s46` left open: a stack that may not move back, a stack's buy-back, a second soul-stone purchase, and the logout (added by X09)
 
 - **Claims:** Z04 §4.1 with its correction (`sp_ItemReloc` @ FUN_00536780: capture-validation §26.2's branch table;
   `docs/knowledge/X05.md`), `ItemBelongAttribute::iba_CanInvenReloc` @ FUN_00648910 → `CItemAuthorityBase::IA_CanInvenReloc`
@@ -1520,8 +1528,9 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   `0x3001`. If the storage page does not show the x20 at all, the zone or the client filtered it at load: note it and
   stop (not predicted).
   (2) **Inventory full, may not move back.** `&makeitem` until the inventory has no empty cell (the last one gets no
-  answer, Z11-B12); drag the storage x20 onto the inventory x40: **`0x300C {0x20A}`** (client FUN_004ab910: every
-  code other than `0x241` / `0x24A` is "Failed to move the item."), no DB request.
+  answer, Z11-B12); drag the storage x20 onto the inventory x40: **`0x300C {0x20A}`** (client `On_NC_ITEM_RELOC_ACK`
+  FUN_004ab910: `0x241` and `0x242`–`0x249` show nothing, `0x24A` and `0x24C` have their own texts, every other code
+  is "Failed to move the item."), no DB request.
   (3) **The `irm_Move` branch.** Drop or sell one filler item (one cell empty, note which), drag the storage x20 onto
   the x40 again: **no** `0x3431` and no merge: Z → D `0x3428 NC_ITEMDB_RELOC_REQ {ref, lock, ownerA = userNo (storage),
   ownerB = charNo, the x20's key → the first empty unlocked inventory cell, …}` (the layout of capture-validation
@@ -1533,9 +1542,27 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   10-s countdown, `0x0C18 {0}`, the zone's saves (StoreType 4, 7, 4, then 9 + `0x0C31` about 13 s after the
   `0x1071`, or one save when the zone handles the `0x0C18` before the WM's `0x0C19`; §23.3) and **no** item request:
   the "after logout" snapshot shows the cells of step 3 (the item moves were written when they happened, D03 check 3).
+  (5) **A stack's buy-back above the purse (`0x366C`, added by the X09 review).** Before the logout: `&makeitem
+  LowHpPotion -l10` (item 3501 "HP Potion (Tier 2)", `MaxLot` 50, `SellPrice` 120, `BuyDemandLv` met by every
+  level; 3203 cannot be used, its `SellPrice` is 0), at an item merchant sell the x10 (`0x305C`), then bring the purse
+  to between 120 and 1 199 cen (deposit the rest at the storage keeper; note the purse) and buy the x10 back: the
+  client compares the purse with one unit's price (item data +0xd7, FUN_0052acc0 / FUN_00555bf0) and sends
+  **`0x3059 {h}`**; the zone (`sp_NC_ITEM_REPURCHASE_REQ` @ FUN_00538580: price = `SellPrice × min(lot, MaxLot)`
+  = 1 200) answers **`0x305A {0x366C}`** "Not enough money to buy the item.", no DB request, the entry stays (no
+  `0x305D`).
+  (6) **A second soul-stone purchase before the first answer (`0x5005 {0x741}`, added by the X09 review).** At the
+  healer with cen for several stones: buy one HP stone and confirm a second purchase as fast as the dialog allows,
+  before the first `0x5003` arrives (two `0x5001` on the wire within a few ms; note the gap): the first goes
+  `0x3441` → `0x3442` → `0x5003`; the second, while the zone's purchase lock is held (Z04 §13.1 `sp_PointStoneBuy`
+  @ FUN_00588510), gets **`0x5005 {0x741}`** and no DB request *(inferred: whether the dialog allows a second
+  confirm before the answer was not read in the client)*. The client's own checks use only the shown purse and
+  stone count (FUN_00558e00 / FUN_00558ed0). If the client never puts two `0x5001` within the round trip, note it:
+  `0x5005` then stays test-client case T18.
 - **Disproved by:** (1) a `0x342B` exchange or a `0x3431` for the full target, or `0x300C {0x241}`; (2) any DB request
   or another code; (3) a `0x3431` / `0x342E`, the x20 landing in another cell than the lowest empty one, or the x40
-  changing; (4) an item DB request in the logout, or a save pattern §23.3 does not list.
+  changing; (4) an item DB request in the logout, or a save pattern §23.3 does not list; (5) the client's text
+  810 500 413 with no `0x3059` (then the client multiplies by the lot), or a `0x34B9` with the purse below 1 200;
+  (6) two `0x5001` within the round trip and both bought (`0x3441` twice).
 - If the 2016 client refuses the drags itself (no `0x300B` in steps 1–3; its drag checks were not read), use
   test-client case T28.
 
@@ -1556,8 +1583,10 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   (1) **Emote pause / resume (key function 0x6F).** B dances (Dance 2, `0x2020 {23}`), A beside it. In the client's
   key-setting window, find the entry whose key reaches function 0x6F (client FUN_00494890 → FUN_00490a00; the
   2016 `ressystem/KeyMapping.mco` holds the bindings, its index → function map was not read) and press it during the
-  dance: C → Z **`0x2022 NC_ACT_EMOTICONSTOP_CMD {23, frame}`** (FUN_0049e580, frame = the playing frame × the scale
-  `_DAT_0096fd40` *(inferred)*) → A **`0x2023 {B's handle, 23, frame}`**, nothing to B (capture-validation §27.3); B's
+  dance: B's client → Z **`0x2022 NC_ACT_EMOTICONSTOP_CMD {23, frame}`** (FUN_0049e580, frame = the playing frame × the scale
+  `_DAT_0096fd40` *(inferred)*) → B **and** A **`0x2023 {B's handle, 23, frame}`** (corrected by the X09 review: `sp_NC_ACT_EMOTICONSTOP_CMD`
+  @ FUN_00458a70 relays through `so_AllOfRange` @ FUN_0054bc80 with include-self 1 and range 0xffff, the arguments
+  of `sp_DoEmotion`'s `0x2020` relay @ FUN_00458860 that reached B in `s45`, capture-validation §27.3); B's
   dance freezes on both screens. Press it again: **`0x2020 {23}`** (resume *(inferred)*) → `0x2021` to B and A. Then
   let C walk into sight: C's brief info of B (`0x1C06`) carries emote 23 with the frozen frame (Z02 §4) *(inferred)*.
   Note the key's name. No key found: test-client case T19.
@@ -1575,7 +1604,7 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   (`0x3805`, W02 §2.3). Then `0x3802 {"b"}` (lower case): `0x3807 {0x4C5}` "You must select a character first."
   (exact compare, unlike the whisper).
   (5) **`&kickout` the shared name.** A `&kickout B`: the zone kicks the **first twin of `som_Player`** (Z → W `0x0C1A
-  {…, usrregnum = that twin's user number, 0x68B}` → that client `0x0C17 {0x68B}`, A "B is banned"); the other stays.
+  {…, usrregnum = that twin's user number, 0x68B}` → that client `0x0C17 {0x68B}`, A `0x2011` " is banned" without the name, P02-B41); the other stays.
   Which one is the zone's list order (not read), not necessarily the WM's of step 3. Wait 15 s (the kicked object is
   freed by `sp_Schedule_Kickout` after 10 s, capture-validation §23.3) and `&kickout B` again: the other twin. Then
   `&kickout b` (lower case) with a twin logged in again: the zone compares exactly, so nobody is found here and the
@@ -1584,7 +1613,7 @@ The client-side refusals are test-client cases T23 / T24 (scenario 41); `0x243E`
   and **S24** (a unique index on `tCharacter.sID`), rename a `-` character (S20's prep, §3.52 step 2) to A's name:
   W → D `0x1411` → **`0x1412 {0xD1}`** → C `0x1410 {slot, name, 0xD1}` "The name cannot be used." (the `UPDATE` fails,
   `@@ERROR` ≠ 0, D02 §3.5); the DB row and the WM's name unchanged; a free name then `0xD0`. Restore S24 and S20.
-- **Disproved by:** (1) a `0x2023` to B, or a key that sends `0x2022` but A gets nothing; (3) a whisper delivered to
+- **Disproved by:** (1) no `0x2023` to B (or to A) after a `0x2022`, or a key that sends `0x2022` but nobody gets an answer; (3) a whisper delivered to
   both twins, to neither, or `0x200E {0x0F69}`; (4) the invitation reaching the other twin than step 3's (note it: the two
   walks would then differ, not read), or a lower-case invitation that arrives; (5) both twins kicked by one command, or
   a lower-case `&kickout` that kicks; (6) `0x1412 {0xD0}` with the index in place, or the WM storing the refused name.
@@ -1621,7 +1650,7 @@ login plus one crafted packet is enough). One connection per case: several end i
 | T23 | Z03 §9.1, Z23 §4, Z23-B8 / B9 (added by X07: the 2016 client refused each first, capture-validation §24.3; use with scenario 51 step 1) | in game, Slice and Dice [01] (skill 0) learned with 1 damage point, no Skill Reset Scroll: (a) `0x4811 {0, plus 0, minus {damage 1}}`; (b) `{0, plus {damage 1}, minus {damage 1}}`; (c) `{0, plus {damage 5}}`; (d) `{0, plus {15, 15, 15, 15}}` (more than the level's points); (e) dead (mode 3, killed by a mob) `{0, plus {sp 1}}`; (f) after `&learnskill 1` and with one scroll: `{1, 0, minus {damage 1}}`; (g) **last test of the session**: `{0xFFFE (no such skill), 0, 0}` | (a) `0x4814 {0, 0x886}`; (b) `{0, 0x889}`; (c) `{0, 0x884}` (1 + 5 > 5); (d) `{0, 0x883}`; (e) `{0xFFFF, 0x882}`; none with a DB request, the client shows "Skill Empower failed." each time; (f) D `0x4812 {…, empower {damage 15}}` → `0x4813 {0x885}` → `0x4814 {1, 0x885}`, then `0x0C1A {A's user number, …, 0x68A}` → `0x0C17 {0x68A}` (Z23-B8); (g) the zone crashes (null `skilldatabox` entry, Z23-B9) | a DB request for (a)–(e); another code; (f) `0x881`; (g) any answer |
 | T24 | Z07 §2.2 / §2.3 (added by X07; complements T10: the 2016 client counts the points and sends nothing it would refuse, capture-validation §24.4) | in game with free stat points left: (a) `0x1062 {0}` without a Stat Reset Scroll; (b) with one scroll `0x1062 {s}` for a stat `s` with no free point in it; (c) two `0x105C {0}` in one segment; (d) dead (mode 3): `0x105C {0}`, then `0x1062 {0}` with a scroll | (a) `0x1067 {0xAC6}`; (b) `0x1067 {0xAC5}`; (c) one D `0x10D1`; `0x1061 {0xAC7}` for the second (free stats locked until `0x10D2`), then `0x105F {0}` for the first; (d) `0x1061 {0xAC7}`; **no reply** to the `0x1062` (Z07 §2.3 original bug); no DB request in (a), (b), (d); no client text for any (`StatPointReqTask`) | a DB request in (a), (b), (d); a second `0x10D1` in (c); a reply to the dead `0x1062` |
 | T25 | Z03 §2.6 (added by X07: **no client path**: the 2016 client export has no `0x243e` literal, and in the 2017 client `GameFrameWork::Assist` @ 0x4c8690 takes the target's last attack target locally and otherwise calls `GameFrameWork::NcBatAssistReq` @ 0x4a2130, an empty function *(pdb2017)*; capture-validation §25.5) | A, B and a mob; B targets the mob, the mob fights A: `0x243E {tanker = B's handle}`; `{tanker = the mob's handle}`; `{tanker = 0xFFFE}` (no object); B without a target: `{B's handle}` | `0x243F NC_BAT_ASSIST_ACK {target = the mob's handle}`; `{A's handle}` (the mob's current target); nothing; `{0xFFFF}`; the server changes no target (the client would follow with a TARGETTING_REQ) | an answer for the unknown handle; A's target changed by the server |
-| T26 | Z04 §2.5 (added by X09: the 2016 client refuses a buy-back it cannot pay with its own text 810 500 413, capture-validation §26.4) | at an item merchant (Merchant role "Item" / "Weapon"), after a sale (`0x305C` gives the entry handle `h`) and a purchase that leaves the purse below `SellPrice` × lot: `0x3059 {h}` | `0x305A {0x366C}` "Not enough money to buy the item.", no DB request, the entry stays (`0x305D` absent); the level check comes first (capture-validation §26.4), so use an entry whose `BuyDemandLv` the character meets | a `0x34B9` / `0x34BB`; another code for the money case |
+| T26 | Z04 §2.5 (added by X09: the 2016 client refuses a buy-back it cannot pay with its own text 810 500 413, capture-validation §26.4) | at an item merchant (Merchant role "Item" / "Weapon"), after a sale (`0x305C` gives the entry handle `h`) and a purchase that leaves the purse below `SellPrice` × lot: `0x3059 {h}` (the 2016 client reaches it too for a stack with a purse between one unit's price and the stack's: scenario 53 step 5; T26 is the one-unit case) | `0x305A {0x366C}` "Not enough money to buy the item.", no DB request, the entry stays (`0x305D` absent); the level check comes first (capture-validation §26.4), so use an entry whose `BuyDemandLv` the character meets | a `0x34B9` / `0x34BB`; another code for the money case |
 | T27 | Z02 §4 (added by X09: no 2016 client path sends `0x2020 {6}`, §3.54 step 2) | B in A's sight: `0x2020 {6}` (`sit`); `0x2020 {31}` (a charged dance, `eActionType` 2); `0x2020 {200}` (no row) | `0x2021 {B, 6}` to B and to A (`includeSelf` 1, as for every free row); nothing for 31 and 200 | no `0x2021` for 6; a `0x2021` for 31 or 200 |
 | T28 | Z04 §4.1 / capture-validation §26.2 (added by X09; use only if the 2016 client sent no `0x300B` in scenario 53 steps 1–3) | S22's state, storage open: `0x300B {from = the storage x20, to = the inventory x50}`; inventory full: `{… to the x40}`; one cell free: the same | `0x300C {0x24A}`; `{0x20A}`; `0x3428` into the lowest empty cell → `0x3429` → two `0x3001`, `{0x241}` | as scenario 53 |
 
