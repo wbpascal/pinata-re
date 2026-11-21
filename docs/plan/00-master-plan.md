@@ -150,7 +150,7 @@ The DB items (D01–D05) don't depend on the zone/WM items and can fill gaps in 
 | [X06](items/X06.md) | Integration update: P02's capture batch 4 (corrections, bugs P02-B33 … B40, captured evidence) into the README register, the superseded-statements list and the sequence index (added by P02) | X04, P02 (batch 4) |
 | [X07](items/X07.md) | Capture scenarios and ratings after capture batch 4: result lines for scenarios 24 / 37 / 38, fixed scenario texts, scenarios for what is still open, confidence re-rating (X02's recurring re-run, added by P02) | P02 (batch 4), X05 |
 | [P06](items/P06.md) | Protocol README: the flows of capture batch 5 (rename onto a taken name, the second 0x1001 after a skip, zone kick 0x0C1A → 0x0C17, SHN refusal 0x1804, whisper fail 0x200E) (added by P02) | P05, P02 (batch 5) |
-| [X08](items/X08.md) | Integration update: P02's capture batch 5 (corrections, bugs P02-B41 … B43, captured evidence) into the README register, the superseded-statements list and the sequence index (added by P02) | X06, P02 (batch 5) |
+| [X08](items/X08.md) | Integration update: P02's capture batch 5 (corrections, bugs P02-B41 … B44, captured evidence) into the README register, the superseded-statements list and the sequence index (added by P02) | X06, P02 (batch 5) |
 | [X09](items/X09.md) | Capture scenarios and ratings after capture batch 5: result lines for scenarios 45 / 46 / 52 (39 not captured), fixed scenario texts, scenarios for what is still open, confidence re-rating (X02's recurring re-run, added by P02) | P02 (batch 5), X07 |
 
 Exact handler counts and line sizes per item: `docs/plan/items/_summary.json` and the scope table at the top

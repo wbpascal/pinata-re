@@ -1582,14 +1582,14 @@ ITEMS = [
              "`docs/knowledge/P06.md` so X08 / X01 can cite it; run `tools/protocol-re/regen.sh`."],
       done="README §2.4 / §2.6 / §2.7 and §3 agree with capture-validation §27.5 and §28.2–§28.6; every changed statement "
            "is listed in `docs/knowledge/P06.md`."),
- dict(id="X08", phase=3, title="Integration update: P02's capture batch 5 (corrections, bugs P02-B41 … B43, captured "
+ dict(id="X08", phase=3, title="Integration update: P02's capture batch 5 (corrections, bugs P02-B41 … B44, captured "
                                "evidence) into the README register and the superseded-statements list (added by P02)",
       out="docs/pseudocode/README.md + docs/knowledge/X08.md", scope=[],
       deps=["X06", "P02 (batch 5)"],
       goal="X06 brought P02's batch 4 into `docs/pseudocode/README.md` (superseded statements §5, bug register §6, "
            "sequence index §3) and is done. Batch 5 (captures `s46`, `s45`, `s52`; capture-validation §26–§28) added "
-           "P02-B41 … B43, an extension of P02-B33, 7 correction rows for done items (capture-validation §13 rows with "
-           "status \"→ X08\": Z04 §4.1 exchange branch, D03 §3.3 log tail, Z11 §4.2 `&mb` count, Z02 §4 client emote "
+           "P02-B41 … B44, an extension of P02-B33, 8 correction rows for done items (capture-validation §13 rows with "
+           "status \"→ X08\": Z04 §4.1 exchange and move branches, D03 §3.3 log tail, D03 §2.2 `0x07FD` `nInt3` = price, Z11 §4.2 `&mb` count, Z02 §4 client emote "
            "sends, D02 §3.5 rename onto a taken name, Z11 §4.5 `&kickout` notice, Z01 §5.2 DataFail log and the "
            "wrong-length crash), captured evidence for other items' bugs (§12 second table, rows citing §26–§28) and 15 "
            "confirmed or corrected flows (§11 rows from \"Split-and-merge, onto a full stack\" on). Bring the README up "
@@ -1600,7 +1600,7 @@ ITEMS = [
              "not re-read code: P02's rows give the `@ FUN_…` and the evidence.",
              "Superseded statements (README §5): one row per §13 row with status \"→ X08\", in §5's row format (owner "
              "document and §, old statement, correct statement with `@ FUN_…`, source `P02; capture-validation §n`).",
-             "Bug register (README §6): add P02-B41 … P02-B43 from capture-validation §12 (first table) in the register's "
+             "Bug register (README §6): add P02-B41 … P02-B44 from capture-validation §12 (first table) in the register's "
              "row format and extend P02-B33's entry (the second `0x1001` of the session, §28.2). For each §12 "
              "second-table row citing §26–§28 (D03-B11, P02-B16, Z04-B2, Z11-B12, Z02-B2, P02-B29, P02-B19, P02-B36, "
              "P02-B28, P02-B35, Z09-B54, Z11-B6) set that entry's evidence to *(captured)* with the §.",
@@ -1614,7 +1614,7 @@ ITEMS = [
              "Run `tools/protocol-re/regen.sh`. Record per README table how many rows were added or changed, and every "
              "§13 row left out with the reason, in `docs/knowledge/X08.md`."],
       done="Every capture-validation §13 row with status \"→ X08\" has a README §5 row or a stated reason in "
-           "`docs/knowledge/X08.md`; P02-B41 … B43 are in the register and P02-B33 is extended; the batch-5 §12 "
+           "`docs/knowledge/X08.md`; P02-B41 … B44 are in the register and P02-B33 is extended; the batch-5 §12 "
            "second-table entries carry *(captured)*; the batch-5 §11 flows are marked in README §3."),
  dict(id="X09", phase=3, title="Capture scenarios and ratings after capture batch 5: X02's recurring re-run (added by P02)",
       out="docs/plan/capture-scenarios.md + docs/review/confidence.md (both updated in place) + docs/knowledge/X09.md",
@@ -1642,7 +1642,8 @@ ITEMS = [
              "Open after batch 5, one scenario (or a step added to an existing one) each, with setup, steps, prediction "
              "and what disproves it: the zone refusals the 2016 client pre-empts (`0x366C`, `0x5005`, `0x3443`: state it "
              "if no 2016 client path reaches them), `irm_Exchange`'s `0x24a` (an exchange whose way back "
-             "`iba_CanInvenReloc` refuses), `0x2022` / `0x2023` through the client's key function 0x6F (pause / resume "
+             "`iba_CanInvenReloc` refuses) and the `irm_Move` / `0x20a` branch (a move onto a fuller stack whose item "
+             "may not move back: the whole source goes to the first empty cell of the target box, capture-validation §26.2), `0x2022` / `0x2023` through the client's key function 0x6F (pause / resume "
              "an emote), `0x2020 {6}`, lookups by a name two characters share after P02-B42 (whisper, `&kickout`, party "
              "invite), the `s46` logout; scenario 39 again (record it).",
              "Ratings (`docs/review/confidence.md` §2): re-run `docs/plan/status/X02-rate.py`, then check by hand the "
