@@ -353,6 +353,8 @@ Handler `FUN_00417140`
 | 1 | u8 | bIsSpamBlock |  |
 | 2 | u8 | nSpamFilterRate |  |
 
+**Captured** (P02, `capture-validation.md`; s45): `bIsSpamSpread`: 0; `bIsSpamBlock`: 1; `nSpamFilterRate`: 55 (3 bytes, no answer)
+
 Handler `FUN_00417b90`
 
 | Off | Type | Checks in handler | Notes |
@@ -2868,7 +2870,7 @@ Sent in reply to `0x0c0f` NC_USER_LOGINWORLD_REQ on CParserClient (`FUN_00419860
 
 W01 name was 'kick reason (ours)'
 
-**Captured** (P02, `capture-validation.md`; login-errors): `reason`: 0x683 (Login-initiated duplicate-login kick)
+**Captured** (P02, `capture-validation.md`; login-errors, s52): `reason`: 0x683 (Login-initiated duplicate-login kick); s52: 0x68B after a zone 0x0C1A with the real user number (&kickout, §28.4)
 
 Sent from `FUN_004305a0` (`FUN_004305a0`) · payload 2 bytes · raw header
 
@@ -2913,7 +2915,7 @@ Sent in reply to `0x0c36` NC_USER_CREATE_OTP_ACK on CParserLogin (`FUN_00424a70`
 
 W01 name was 'character login failed (ours)'
 
-**Captured** (P02, `capture-validation.md`; s37b, s38): `error`: 0x145 after a tutorial skip of a listed character (P02-B33) and with all zones stopped (s38: six, §23.6)
+**Captured** (P02, `capture-validation.md`; s37b, s38, s52): `error`: 0x145 after a tutorial skip of a listed character (P02-B33) and with all zones stopped (s38: six, §23.6); s52: also the second 0x1001 of the same WM session, 4 ms, no CharDB round trip (§28.2)
 
 Sent in reply to `0x1006` NC_CHAR_CHARDATAFAIL_ACK on CParserCharDB (`FUN_00409e70`) · payload 2 bytes · raw header
 
@@ -3255,7 +3257,7 @@ Sent in reply to `0x140b` NC_AVATAR_ERASEDATASUC_ACK on CParserCharDB (`FUN_0040
 | 1 | char[20] | new_name |  |
 | 21 | u16 | result | 0xD0 ok, 0xD1 'The name cannot be used.' |
 
-**Captured** (P02, `capture-validation.md`; s37b): `slot`: 2; `new_name`: the requested name; `result`: 0xD0 (stored in the WM avatar copy)
+**Captured** (P02, `capture-validation.md`; s37b, s52): `slot`: 2; `new_name`: the requested name; `result`: 0xD0 (stored in the WM avatar copy); s52: 0xD0 for a name already in use with the 2016 p_Char_Rename (P02-B42, §28.3)
 
 Sent in reply to `0x1412` NC_AVATAR_RENAME_DB_ACK on CParserCharDB (`FUN_0040ff00`) · payload 23 bytes · raw header
 
@@ -3328,6 +3330,8 @@ Sent from `FUN_00432bb0` (`FUN_00432bb0`) · payload variable ((uint)(pcVar4 + (
 |---|---|---|---|
 | 0 | u16 | ErrorType |  |
 | 2 | char[20] | receiver | Name5 |
+
+**Captured** (P02, `capture-validation.md`; s45): `ErrorType`: 0x0F69 (3945) for a name not online; client 'Cannot find the recipient'; `receiver`: the request's receiver echoed ('X45Nobody')
 
 Sent in reply to `0x200c` NC_ACT_WHISPER_REQ on CParserClient (`FUN_0041c610`) · payload 22 bytes · raw header
 
@@ -11138,6 +11142,8 @@ size 0x48 + 6·n
 | 8 | u8 | bIsSpamSpread |  |
 | 9 | u8 | bIsSpamBlock |  |
 | 10 | u8 | nSpamFilterRate |  |
+
+**Captured** (P02, `capture-validation.md`; s45): `nUserNo`: 103 (session user); `nCharNo`: 15; `bIsSpamSpread / bIsSpamBlock / nSpamFilterRate`: the 0x0846 values, 4 ms later; no reply
 
 ### `0x0863` NC_MISC_SPAMMER_SET_DB_CHAT_BAN_REQ (WM→CharDB)
 

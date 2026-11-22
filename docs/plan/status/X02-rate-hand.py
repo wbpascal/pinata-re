@@ -110,7 +110,7 @@ OVERRIDE.update({
     ('W04', '2.5'): ('medium', 'the captured opcodes are only mentioned here (0x200D of a normal whisper, §2.1); the subject of the section (the gold-spammer alert from 0x085F) is in no capture', 'capture 0x085F (report a spammer with a GM online)'),
     ('Z02', '9.2'): ('medium', 'the captured opcodes are only mentioned here (0x0720, 0x300C); the subject of the section (0x204B / 0x204C roar) is in no capture', 'capture 0x204B, 0x204C (use a megaphone item)'),
     ('Z04', '7.2'): ('medium', 'the storage open 0x3444 is captured (capture-validation §7.6.1), but the 2016 client never sent 0x3028 in batch 2 or 3: all four pages come with the open (§20.1)', 'test-client case T16 (capture-scenarios §3.41)'),
-    ('Z05', '2.4'): ('medium', 'captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture', 'capture-scenarios 46 / 47 (0x5005, 0x3443)'),
+    ('Z05', '2.4'): ('medium', 'captured (two purchases, capture-validation §20.3), and the 0x3441 / 0x3442 layouts were corrected by that capture (§20.5: `{ref, lock}`); 0x3443 / 0x5005 are in no capture: in batch 5 the 2016 client refused both soul-stone cases itself (0 cen, at the limit; no 0x5001 sent, capture-validation §26.5)', 'capture-scenarios 53 step 6 (0x5005 {0x741}, a second purchase in flight); test-client case T18 (0x5005 {0x742} / {0x743}); capture-scenarios 47 step 3 with S17 (0x3443, the DB-side refusal)'),
     ('Z09', '8.7'): ('medium', 'the captured opcodes are only mentioned here (0x2002 / 0x201F of player chat and shout); the subject of the section (a mob shout or scripted mob chat) is in no capture', 'a shouting mob in a capture'),
     ('Z09', '9.2'): ('medium', 'the captured opcodes are only mentioned here (0x2013, 0x2021, 0x2025 of a free player); the subject of the section (a blocked stop, emote or jump) is in no capture', 'capture a jump / emote on a blocked cell'),
     ('Z09', '16.6'): ('medium', 'the captured opcodes are only mentioned here (0x2448 / 0x2449 swings); the subject of the section (damage absorption) is in no capture', 'capture a swing against an absorb abstate'),
@@ -205,4 +205,36 @@ OVERRIDE.update({
     ('Z23', '2.5'): ('medium', 'switching on and off by cast captured with one learned step (capture-validation §25.4); '
                      'two points of the section are not: the lower-step case Z23-B1 and the crafted field cast of a toggle '
                      'that is on, Z23-B20 (inferred)', 'capture-scenarios 51 step 3; a crafted 0x2440 (test client, 41)'),
+})
+
+# ---- X09 part 3: hand pass after capture batch 5 (s45, s46, s52; capture-validation §26–§28) ----------------------
+OVERRIDE.update({
+    # captured only in part: the set request, not the load and push
+    ('W04', '17.2'): ('medium', 'only the set path is captured (0x0846 -> CDB 0x0847, no reply; capture-validation '
+                      '§27.4); the load 0x0844 and the push 0x0845 appeared in no capture (no usp_SpamFilter_get row for '
+                      'any captured character, §7.4), so W04-B60 (the session copy not updated) could not show',
+                      'set the filter, then a new character login and map login of the same account (0x0844 -> 0x0845 '
+                      'with the set values or the old ones: W04-B60)'),
+    # captured and corrected: a captured section in which a class applies (baseline low: cv corr, no opcode)
+    ('Z11', '4.2'): ('medium', 'captured: `&mobbreed` and `&mb` in s45 (the wall "Mob : 5989", capture-validation '
+                     '§27.6), and the capture corrected the section (the value is the zone\'s mob count, not the mob ID; '
+                     '§13 -> X08): a captured section in which a class applies', 're-read the rest (§3); read with P02 '
+                     '"Corrections"'),
+    # captured beside a bystander; the shout of s45 reached a player out of sight (not in capture-validation §13)
+    ('Z01', '3.2'): ('medium', 'sight delivery to a bystander is captured (walk relay, swings, casts, 0x1805; '
+                     'capture-validation §27.2, §27.6, §27.7) and so is a whole-map shout to a player out of sight '
+                     '(§27.4); the section is too general there (code read in X09 part 4, docs/knowledge/X09.md §4): '
+                     'so_AllInMap FUN_0054b8c0 -> so_AllInMapNomal FUN_0054be00 walks the whole map list with a layer '
+                     'filter only, and FUN_0049ac70 in ali_Work is so_SubLayer_CanSee, not a sight check; the sight '
+                     'radius is so_AllOfRange FUN_0054baf0 / FUN_0054bc80', 'the README §5 superseded-statement row (X10) and a '
+                     'capture of a so_AllOfRange broadcast not reaching a player just outside MapInfo.Sight'),
+    # corrected by batch 5; the open branches are scenarios of X09
+    ('Z04', '4.1'): ('medium', 'captured: split-and-merge and the exchange onto a stack at MaxLot (capture-validation '
+                     '§26.2), and the capture extended the branch list (b >= MaxLot -> irm_Exchange; §13 -> X08); the '
+                     '0x24A refusal and the irm_Move / 0x20A branch are in no capture', 'capture-scenarios 53 (S22: a '
+                     'character-bound stack in the account storage)'),
+    ('Z02', '4'): ('medium', 'captured: Sit 0x2020 {7} -> 0x2021, the step that ends an emote, jump (capture-validation '
+                   '§27.3), and the client side was extended (Stand and Esc send nothing; §13 -> X08); 0x2022 / 0x2023 '
+                   'and 0x2020 {6} are in no capture', 'capture-scenarios 54 (key function 0x6F; /stand), test-client '
+                   'case T27 (0x2020 {6})'),
 })

@@ -502,5 +502,37 @@
   "P02 (batch 4), X05",
   "\u2013",
   "\u2013"
+ ],
+ [
+  "P06",
+  2,
+  "Protocol README: the flows of capture batch 5 (added by P02)",
+  "P05, P02 (batch 5)",
+  "\u2013",
+  "\u2013"
+ ],
+ [
+  "X08",
+  3,
+  "Integration update: P02's capture batch 5 (corrections, bugs P02-B41 \u2026 B44, captured evidence) into the README register and the superseded-statements list (added by P02)",
+  "X06, P02 (batch 5)",
+  "\u2013",
+  "\u2013"
+ ],
+ [
+  "X09",
+  3,
+  "Capture scenarios and ratings after capture batch 5: X02's recurring re-run (added by P02)",
+  "P02 (batch 5), X07",
+  "\u2013",
+  "\u2013"
+ ],
+ [
+  "X10",
+  3,
+  "Superseded statement Z01 \u00a73.2 (broadcast reach) into the README list: X09's code read, not in capture-validation \u00a713 (added by X09)",
+  "X09, X08",
+  "\u2013",
+  "\u2013"
  ]
 ]

@@ -1551,6 +1551,124 @@ ITEMS = [
       done="Scenarios 24, 37 and 38 have result lines for batch 4; the four §13 X02 rows of batch 4 are fixed in the "
            "scenario texts; every §15 row naming X07 maps to a scenario number or a stated reason in "
            "`docs/knowledge/X07.md`; confidence ratings re-run after batch 4."),
+ dict(id="P06", phase=2, title="Protocol README: the flows of capture batch 5 (added by P02)",
+      out="docs/protocol/README.md (corrected in place) + docs/knowledge/P06.md", scope=[], deps=["P05", "P02 (batch 5)"],
+      goal="P05 brought `docs/protocol/README.md` §2 in line with capture batch 4 and is done. Batch 5 (captures `s46`, "
+           "`s45`, `s52`; capture-validation §26–§28) contradicts one README statement and captured flows README §2 / §3 "
+           "describe only from the code or not at all: a rename onto a taken name goes through with `0xD0` (P02-B42; "
+           "README §2.6 says the CharDB refuses it, *inferred*), the second `0x1001` after a tutorial skip is refused "
+           "by the map lookup until a new list, a zone kick sends `0x0C1A` with the user number and the client gets "
+           "`0x0C17 {0x68B}`, the SHN refusal sends `0x1804 {0x147, idx}` with `0x0C1A {0, 0, 0x68E}` and the client "
+           "returns to the login screen, the unknown-name whisper gets `0x200E {0x0F69}`. Bring the README up to date "
+           "with batch 5.",
+      steps=["Read capture-validation §11 (rows from \"Split-and-merge, onto a full stack\" on), §27.5, §28.2–§28.6, "
+             "§12 rows P02-B41 … B43 and the \"(batch 5)\" rows of the Corrections table in `docs/knowledge/P02.md` "
+             "(outline with `sect.py`, then the sections); do not re-read code: P02's rows give the `@ FUN_…` and the "
+             "evidence.",
+             "README §2.6 (free rename): replace \"the CharDB answers it for a taken name *(inferred)*\" with the captured "
+             "2016 behaviour (no name check in the WM `fc_NC_AVATAR_RENAME_REQ` @ FUN_0041a640, the Character server's "
+             "`0x1411` handler @ FUN_00436030 or the 2016 `p_Char_Rename`; `0xD0` and two characters of one name, "
+             "**(original bug) P02-B42**, capture-validation §28.3).",
+             "README §2.7 (character login refused): add that every further `0x1001` of the same WM session after the "
+             "skip gets `0x1002 {0x145}` in 4 ms without the tutorial round trip (map lookup in "
+             "`fc_NC_CHAR_LOGIN_REQ` @ FUN_00422be0) until the list is reloaded in a new WM session (§28.2).",
+             "README §2.4 / §3.2: a zone-initiated kick of a logged-in player (`&kickout`: zone `0x0C1A {usrregnum, "
+             "wldmanhandle, 0x68B}` → WM `0x0C17 {0x68B}` → client \"Disconnected from the server.\", `0x0C18 {0}`, two "
+             "`0x0C19`; §28.4) and the SHN refusal at the map login (`0x1804 {0x147, idx}` with `0x0C1A {0, 0, 0x68E}`, "
+             "no `0x0C17`, the client closes the WM connection and returns to the login screen; idx = the "
+             "`CShnDataFileCheckSum` table index, 32 = MapViewInfo; §28.6); the `0x200E {0x0F69, receiver}` row if "
+             "§3.2 lists the chat packets (§27.5). Mark each *(captured)* with the capture-validation §.",
+             "Keep the README a sketch: link to the pseudocode for detail. Record every change (old → new, with source) in "
+             "`docs/knowledge/P06.md` so X08 / X01 can cite it; run `tools/protocol-re/regen.sh`."],
+      done="README §2.4 / §2.6 / §2.7 and §3 agree with capture-validation §27.5 and §28.2–§28.6; every changed statement "
+           "is listed in `docs/knowledge/P06.md`."),
+ dict(id="X08", phase=3, title="Integration update: P02's capture batch 5 (corrections, bugs P02-B41 … B44, captured "
+                               "evidence) into the README register and the superseded-statements list (added by P02)",
+      out="docs/pseudocode/README.md + docs/knowledge/X08.md", scope=[],
+      deps=["X06", "P02 (batch 5)"],
+      goal="X06 brought P02's batch 4 into `docs/pseudocode/README.md` (superseded statements §5, bug register §6, "
+           "sequence index §3) and is done. Batch 5 (captures `s46`, `s45`, `s52`; capture-validation §26–§28) added "
+           "P02-B41 … B44, an extension of P02-B33, 8 correction rows for done items (capture-validation §13 rows with "
+           "status \"→ X08\": Z04 §4.1 exchange and move branches, D03 §3.3 log tail, D03 §2.2 `0x07FD` `nInt3` = price, Z11 §4.2 `&mb` count, Z02 §4 client emote "
+           "sends, D02 §3.5 rename onto a taken name, Z11 §4.5 `&kickout` notice, Z01 §5.2 DataFail log and the "
+           "wrong-length crash), captured evidence for other items' bugs (§12 second table, rows citing §26–§28) and 15 "
+           "confirmed or corrected flows (§11 rows from \"Split-and-merge, onto a full stack\" on). Bring the README up "
+           "to date with batch 5, as X06 did for batch 4. This item edits X01's README sections in place; it does not "
+           "touch the owners' pseudocode.",
+      steps=["Read capture-validation §11 (batch-5 rows), §12, §13 (rows with status \"→ X08\") and the \"(batch 5)\" "
+             "rows of the Corrections table in `docs/knowledge/P02.md` (outline with `sect.py`, then the sections); do "
+             "not re-read code: P02's rows give the `@ FUN_…` and the evidence.",
+             "Superseded statements (README §5): one row per §13 row with status \"→ X08\", in §5's row format (owner "
+             "document and §, old statement, correct statement with `@ FUN_…`, source `P02; capture-validation §n`).",
+             "Bug register (README §6): add P02-B41 … P02-B44 from capture-validation §12 (first table) in the register's "
+             "row format and extend P02-B33's entry (the second `0x1001` of the session, §28.2). For each §12 "
+             "second-table row citing §26–§28 (D03-B11, P02-B16, Z04-B2, Z11-B12, Z02-B2, P02-B29, P02-B19, P02-B36, "
+             "P02-B28, P02-B35, Z09-B54, Z11-B6) set that entry's evidence to *(captured)* with the §.",
+             "Sequence index (README §3): add *(captured)* and the capture-validation § to the steps §11's batch-5 rows "
+             "confirm (split-and-merge and exchange, buy-back onto an empty cell, buy-back refusals, the bystander view "
+             "of walk / emotes / shout / mob swings / cast abort / same-zone revive, whisper fail, spam filter, the "
+             "second `0x1001` after a skip, the zone kick on one and across zones, the SHN refusal), and apply the "
+             "corrected ones (D02 §3.5 rename onto a taken name, Z01 §5.2 DataFail).",
+             "Check every README citation of capture-validation still points at the right section (batch 5 put §26–§28 "
+             "before §11; §11–§15 kept their numbers).",
+             "Run `tools/protocol-re/regen.sh`. Record per README table how many rows were added or changed, and every "
+             "§13 row left out with the reason, in `docs/knowledge/X08.md`."],
+      done="Every capture-validation §13 row with status \"→ X08\" has a README §5 row or a stated reason in "
+           "`docs/knowledge/X08.md`; P02-B41 … B44 are in the register and P02-B33 is extended; the batch-5 §12 "
+           "second-table entries carry *(captured)*; the batch-5 §11 flows are marked in README §3."),
+ dict(id="X09", phase=3, title="Capture scenarios and ratings after capture batch 5: X02's recurring re-run (added by P02)",
+      out="docs/plan/capture-scenarios.md + docs/review/confidence.md (both updated in place) + docs/knowledge/X09.md",
+      scope=[], deps=["P02 (batch 5)", "X07"],
+      goal="X07 re-ran X02 after capture batch 4 and is done. The fifth batch recorded scenarios 46 (items: stacking, "
+           "buy-back onto an empty cell, refusals; X05), 45 (second client in sight II; X05) and 52 (character select "
+           "and session II: stale tutorial copy, rename onto a taken name, `&kickout`, SHN refusal; X07); scenario 39 "
+           "has a notes file but no capture. P02 checked them (capture-validation §26–§28), found scenario texts that "
+           "did not match what was recorded (§13 rows with status \"→ X09\") and listed what is still open (§14 "
+           "bullets starting \"Batch 5\", §15 rows naming X09). Do X02's re-run for batch 5: result lines, fixed "
+           "scenario texts, scenarios for what is still open, ratings. This item edits X02's two output files in "
+           "place; it does not touch the owners' pseudocode.",
+      steps=["Read capture-validation §1 (batch-5 rows and paragraph), the §13 rows with status \"→ X09\" (3 rows: "
+             "scenarios 46, 45, 52), the §14 bullets starting \"Batch 5\" and the §15 rows naming X09 (outline with "
+             "`sect.py`); do not re-derive them.",
+             "Results: under scenarios 45, 46 and 52 (`capture-scenarios.md` §45, §46, §52) add a line \"Result (P02 "
+             "batch 5)\": each prediction confirmed / disproved / not reached, with the capture-validation §; under "
+             "scenario 39 state that it was not captured (notes only).",
+             "Fix the scenario texts §13 names: scenario 46's money refusal and soul-stone refusals are the client's "
+             "(texts 810 500 413, 978 272 565, 1 677 983 971; no `0x3059` / `0x5001`), the buy-back goes to the first "
+             "empty cell; scenario 45: four hits, 970 units apart, three aborts each by a step, no way of the three "
+             "sends `0x2022`; scenario 52: one appended byte crashes the zone at start (only a changed byte inside a "
+             "row gives `0x1804 {0x147, idx}`), the zone hashes the decrypted buffer, step 2 started the renamed "
+             "character.",
+             "Open after batch 5, one scenario (or a step added to an existing one) each, with setup, steps, prediction "
+             "and what disproves it: the zone refusals the 2016 client pre-empts (`0x366C`, `0x5005`, `0x3443`: state it "
+             "if no 2016 client path reaches them), `irm_Exchange`'s `0x24a` (an exchange whose way back "
+             "`iba_CanInvenReloc` refuses) and the `irm_Move` / `0x20a` branch (a move onto a fuller stack whose item "
+             "may not move back: the whole source goes to the first empty cell of the target box, capture-validation §26.2), `0x2022` / `0x2023` through the client's key function 0x6F (pause / resume "
+             "an emote), `0x2020 {6}`, lookups by a name two characters share after P02-B42 (whisper, `&kickout`, party "
+             "invite), the `s46` logout; scenario 39 again (record it).",
+             "Ratings (`docs/review/confidence.md` §2): re-run `docs/plan/status/X02-rate.py`, then check by hand the "
+             "sections batch 5 confirms or corrects (§11 rows from \"Split-and-merge, onto a full stack\" on, §13 rows "
+             "\"→ X08\" / \"→ X09\") and update the hand ratings (`X02-rate-hand.py`).",
+             "Record the changes in `docs/knowledge/X09.md`."],
+      done="Scenarios 45, 46 and 52 have result lines for batch 5 and scenario 39 a not-captured line; the three §13 "
+           "rows \"→ X09\" are fixed in the scenario texts; every §15 row naming X09 maps to a scenario number or a "
+           "stated reason in `docs/knowledge/X09.md`; confidence ratings re-run after batch 5."), dict(id="X10", phase=3, title="Superseded statement Z01 §3.2 (broadcast reach) into the README list: X09's code "
+                               "read, not in capture-validation §13 (added by X09)",
+      out="docs/pseudocode/README.md + docs/knowledge/X10.md", scope=[], deps=["X09", "X08"],
+      goal="X09 part 4 found by a code read (`docs/knowledge/X09.md` §4) that Z01 §3.2 is too general: it gives every "
+           "`so_AllInMap0..5` the sight cells and `AxialListPacketBroadcast::ali_Work` a sight check, while "
+           "`so_AllInMap` FUN_0054b8c0 / FUN_0054b9e0 → `so_AllInMapNomal` FUN_0054be00 / FUN_0054c370 walk the whole "
+           "map list with a layer filter only, FUN_0049ac70 in `ali_Work` FUN_00428b20 is `so_SubLayer_CanSee` (a "
+           "sub-layer matrix), and only `so_AllOfRange` FUN_0054baf0 / FUN_0054bc80 apply `MapInfo.Sight`; `s45`'s "
+           "shout reached a player out of sight (capture-validation §27.4). Z01 is done and X08 adds README §5 rows "
+           "only for capture-validation §13 rows \"→ X08\", which this is not. Add the superseded-statement row.",
+      steps=["Read `docs/knowledge/X09.md` §4, Z01 §3.2 and Z02 §3.2 (`sect.py`), and README §5's row format; confirm "
+             "the facts with `clean.py re-data/exports/zone-pdb - 0054b9e0 0054c370 00428b20 0049ac70 0054bc80`.",
+             "Add one README §5 row: owner Z01 §3.2, old statement (every `so_AllInMap` = sight cells, `ali_Work` checks "
+             "sight), correct statement with the `@ FUN_…` above, source `X09 §4; capture-validation §27.4`. Check that "
+             "no other README section (§3 sequence index, §2 sketches) repeats the old statement; fix it there too.",
+             "Run `tools/protocol-re/regen.sh`; record the row and every other place changed in `docs/knowledge/X10.md`."],
+      done="README §5 has the Z01 §3.2 row with `@ FUN_…` and source; `docs/knowledge/X10.md` lists every change."),
 ]
 
 

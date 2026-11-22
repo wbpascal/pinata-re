@@ -4,7 +4,7 @@
 # usage (from the item's worktree): tools/protocol-re/item.sh <ID> [--auto]
 #   default: one interactive session for the next part
 #   --auto:  one session per part until the status file says "**State:** done" or a session commits nothing;
-#            inside Herdr each part is an interactive session in its own tab, elsewhere a headless `claude -p`
+#            inside Herdr or Orca each part is an interactive session in its own tab, elsewhere a headless `claude -p`
 # env: AGENT (claude | omp), MODEL (opus; omp: fuzzy or provider/model), EFFORT (high; omp: off..max, auto),
 #      PERM (claude: auto; omp: yolo = --approval-mode)
 set -eu
@@ -54,6 +54,34 @@ if [ -n "${HC_TERMINAL_ID:-}" ] && command -v herdr-app >/dev/null; then
     fi
     echo "   $(git log -1 --format=%s)"
     herdr-app do tab.close --id "$tab" --confirmed true >/dev/null
+    grep -q 'awaiting review' "$st" && { echo "awaiting review: run the review session, then item.sh again" >&2; exit 0; }
+  done
+  echo "$id done"; exit 0
+fi
+
+# Inside Orca: same, one tab per part in this worktree. A part is finished once the TUI is idle and HEAD has moved;
+# an exited session or 2 h without a commit leaves the tab open and stops the loop.
+if [ -n "${ORCA_TERMINAL_HANDLE:-}${ORCA_CLI_COMMAND:-}" ] && command -v orca >/dev/null; then
+  cmd="exec $(jq -rn --args '$ARGS.positional | @sh' -- "$agent" "$prompt" "$@")"
+  n=0
+  until grep -q '^\*\*State:\*\* done' "$st" 2>/dev/null; do
+    n=$((n + 1)); [ $n -le 15 ] || { echo "15 sessions without reaching done; stopping" >&2; exit 1; }
+    head=$(git rev-parse HEAD)
+    echo "== $id session $n ($(date +%H:%M)), state: $(head -1 "$st" 2>/dev/null || echo none)"
+    t=$(orca terminal create --worktree "path:$PWD" --title "$id part $n" --command "$cmd" --json | jq -r '.result.terminal.handle')
+    start=$(date +%s)
+    while :; do
+      orca terminal wait --terminal "$t" --for exit --timeout-ms 1 --json 2>/dev/null | jq -e '.ok or .error.code != "timeout"' >/dev/null && { s=exited; break; }
+      w=$(orca terminal wait --terminal "$t" --for tui-idle --timeout-ms 600000 --json 2>/dev/null) || w='{}'
+      if echo "$w" | jq -e '.ok' >/dev/null && [ "$(git rev-parse HEAD)" != "$head" ]; then s=idle; break; fi
+      [ $(($(date +%s) - start)) -lt 7200 ] || { s=timeout; break; }
+      sleep 30  # tui-idle returns at once while the session sits idle before committing
+    done
+    if [ "$s" != idle ]; then
+      echo "session in tab \"$id part $n\" ($t) ended as '$s' without finishing a part; tab left open" >&2; exit 1
+    fi
+    echo "   $(git log -1 --format=%s)"
+    orca terminal close --terminal "$t" --tab --json >/dev/null || true
     grep -q 'awaiting review' "$st" && { echo "awaiting review: run the review session, then item.sh again" >&2; exit 0; }
   done
   echo "$id done"; exit 0

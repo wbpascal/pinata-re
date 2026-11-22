@@ -911,7 +911,7 @@ Handler `FUN_00530a50`
 | 0 | ITEM_INVEN | from |  |
 | 2 | ITEM_INVEN | to |  |
 
-**Captured** (P02, `capture-validation.md`; shop): `from`: 0x2406 / 0x2405 / 0x2404 (inventory); `to`: 0x1800 / 0x1801 / 0x1802 (account storage page 0)
+**Captured** (P02, `capture-validation.md`; shop, s46): `from`: 0x2406 / 0x2405 / 0x2404 (inventory); s46: cell 1 onto cell 0 (split-and-merge, exchange), cell 0 to account storage 0x1803; `to`: 0x1800 / 0x1801 / 0x1802 (account storage page 0)
 
 Handler `FUN_00537170`
 
@@ -1370,7 +1370,7 @@ Handler `FUN_0051e580`
 |---|---|---|---|
 | 0 | u16 | nHaldle | repurchase list handle |
 
-**Captured** (P02, `capture-validation.md`; s21): `nHaldle`: repurchase handle of 0x305C
+**Captured** (P02, `capture-validation.md`; s21, s46): `nHaldle`: repurchase handle of 0x305C; s46: 0, 2 ×7, 3; never sent for an entry the purse cannot pay (the client refuses, text 810500413)
 
 Handler `FUN_00538580`
 
@@ -1710,7 +1710,7 @@ Handler `FUN_005936b0`
 |---|---|---|---|
 | 0 | u16 | number |  |
 
-**Captured** (P02, `capture-validation.md`; s21): `number`: 3
+**Captured** (P02, `capture-validation.md`; s21, s46): `number`: 3; s46: 36 = maxnum 51 − 15 held (the client caps it)
 
 Handler `FUN_00588d20`
 
@@ -3543,6 +3543,8 @@ Fill: +0: ShineObjectClass::ShinePlayer::vfunc[0x664] = FUN_005a3140 (assumed cl
 
 Z01 name was 'map login failed (ours)'
 
+**Captured** (P02, `capture-validation.md`; s52): `code`: 0x147 (SHN checksum mismatch; client: 'The client has been illegally manipulated. Please reinstall the client.'); `index`: 32 = MapViewInfo.shn in the CShnDataFileCheckSum table (FUN_00631450), §28.6
+
 Sent in reply to `0x101e` NC_CHAR_ZONE_CHARDATAFAIL_ACK on WorldManagerSession (`FUN_005a3440`, WorldManagerSession::wms_NC_CHAR_ZONE_CHARDATAFAIL_ACK) · payload 3 bytes
 
 | Off | Type | Value / source |
@@ -3827,7 +3829,7 @@ Sent from `ShineObjectClass::ShineMobileObject::so_mobile_StopHere` (`FUN_0045a0
 | 18 | u16 | speed | GetWalkSpeed / GetRunSpeed |
 | 20 | u16 | moveattr.direct | bit 0 cleared, rest stale |
 
-**Captured** (P02, `capture-validation.md`; idle_in_world, walk-run-portals): `handle`: mob handles only (single player); `speed`: MobInfo.WalkSpeed of the mob; `moveattr`: low byte always even, ASCII stale bytes (Z02-B2)
+**Captured** (P02, `capture-validation.md`; idle_in_world, walk-run-portals, s45): `handle`: mob handles; s45: also a player (8005), relayed 16–23 ms after its 0x2017; `speed`: MobInfo.WalkSpeed of the mob; the player's walk speed 33 (0x203E); `moveattr`: low byte always even, ASCII stale bytes (Z02-B2); `from`: the server's position, not the client's
 
 Sent from `ShineObjectClass::ShineMobileObject::so_mobile_SpeedChange` (`FUN_00435ec0`) · payload 22 bytes
 
@@ -3923,7 +3925,7 @@ Sent from `ShineObjectClass::ShinePlayer::InteractWithNPC` (`FUN_004c4660`) · p
 | 22 | u8 | len |  |
 | 23 | u8[len] | content | variable length |
 
-**Captured** (P02, `capture-validation.md`; s14): `speaker`: Test1235; `flag`: 0x78 / 0x74: bit 0 GMColor 0, bit 1 isMob 0, bits 2–7 stale gpp byte (P02-B29); `content`: echo of 0x201E, also to the shouter
+**Captured** (P02, `capture-validation.md`; s14, s45): `speaker`: Test1235; `flag`: 0x78 / 0x74 (s14), 0x64 (s45): bit 0 GMColor 0, bit 1 isMob 0, bits 2–7 stale gpp byte (P02-B29); `content`: echo of 0x201E, also to the shouter; `receivers`: the shouter and every player of the map, also out of sight (s45 348.866)
 
 Sent from `ShineObjectClass::ShineMobileObject::smo_Shout` (`FUN_00459080`) · payload variable (iVar1)
 
@@ -3970,7 +3972,7 @@ Sent from `FUN_005e5150` (`FUN_005e5150`) · payload variable (byte)
 | 0 | u16 | handle |  |
 | 2 | u8 | emoticonid |  |
 
-**Captured** (P02, `capture-validation.md`; s14): `handle`: sender (8001); `emoticonid`: 7, 9, 10, 23–26 (ActionViewInfo stand, laugh, cry, dances); also sent to the sender itself (includeSelf 1)
+**Captured** (P02, `capture-validation.md`; s14, s45): `handle`: sender (8001); `emoticonid`: 7, 9, 10, 23–26 (ActionViewInfo stand, laugh, cry, dances); s45: 7 for the Sit action, 23 twice in a row (restart); also sent to the sender itself (includeSelf 1)
 
 Sent from `ShineObjectClass::ShinePlayer::sp_DoEmotion` (`FUN_00458860`) · payload 3 bytes
 
@@ -5120,7 +5122,7 @@ Sent from `ShineObjectClass::ShineMobileObject::so_Bash` (`FUN_0042e950`) · pay
 |---|---|---|---|
 | 0 | u16 | caster |  |
 
-**Captured** (P02, `capture-validation.md`; s24): `caster`: 8002, sent to the caster and to the other client
+**Captured** (P02, `capture-validation.md`; s24, s45): `caster`: s45: also after an abort caused by the client's step (0x2012 + 0x2444 + 0x2019 in one ms); the bystander gets it with the 0x2013 / 0x201A in one frame
 
 Sent from `ShineObjectClass::ShineMobileObject::sp_castabort` (`FUN_00579d50`) · payload 2 bytes
 
@@ -5315,7 +5317,7 @@ Sent from `ShineObjectClass::ShineMobileObject::smo_SwingDamage` (`FUN_00432f30`
 
 broadcast to sight except attacker and defender; carries no damage number
 
-**Captured** (P02, `capture-validation.md`; s14): `attacker / defender`: B (8001) ↔ Slime 5375, both directions; `resthp`: defender HP after the hit; `damageindex`: = the 0x2447 of the same swing
+**Captured** (P02, `capture-validation.md`; s14, s45): `attacker / defender`: B (8001) ↔ Slime 5375 (s14); mob 6731 → B 8005 to the bystander A (s45); `resthp`: defender HP after the hit; `damageindex`: = the 0x2447 of the same swing; `hpchangeorder`: s45: the value between the defender's 0x2448 (n) and 0x240E (n + 2)
 
 Sent from `ShineObjectClass::ShineMobileObject::smo_SwingDamage` (`FUN_00432f30`) · payload 13 bytes
 
@@ -5486,7 +5488,7 @@ Sent from `ShineObjectClass::ShineMobileObject::smo_SkillBash_Casting` (`FUN_005
 
 flag: bit0 isdamage, 1 iscritical, 2 ismissed, 3 isshieldblock, 4 isheal, 5 isenchant, 6 isresist, 7 IsCostumWeapon, 8 isDead, 9 isImmune, 10 IsCostumShield. 2016 header is 5 bytes; the 2017 struct adds kSkillID and pTarget before the array.
 
-**Captured** (P02, `capture-validation.md`; shop, combat): `(layout)`: pdb2016: 5-byte header + 14 n (Z03 annotation type not decodable); `target.flag`: 0x2801 hit / 0x2901 kill; bits 11 and 13 stack garbage (P02-B19)
+**Captured** (P02, `capture-validation.md`; shop, combat, s45): `(layout)`: pdb2016: 5-byte header + 14 n (Z03 annotation type not decodable); `target.flag`: 0x2801 hit / 0x2901 kill; s45 also 0x2903 (iscritical); bits 11 and 13 stack garbage (P02-B19); `target.hpchange`: s45: HP actually lost (841 and 27 = the mobs' whole HP)
 
 Sent from `SkillEffectApply::SkillDamageSender::sds_Finish` (`FUN_00437110`) · payload variable ((byte)
 
@@ -6386,7 +6388,7 @@ Fill: +1: FUN_0050e6b0 (no direct writes found)
 | 2 | u16 | ItemInfo.itemid |  |
 | 4 | byte[101] | ItemInfo.itemattr | SHINE_ITEM_ATTRIBUTE (union: blot, wlot, dlot, qstitm, amulet, weapon, armor, shield, boot, furniture, decorate, skillscroll, recallscroll, binditem, upsource, itemchest, weapontitlelicence, kingdomquest, minihouseskin, upgraderedgem, upgradebluegem, upgradegoldgem, kqstep, feed, riding, amount, costumweapon, costumshield, actionitem, Enchant, GBCoin, Capsule, MobCard_Unident, MobCard, NoEffect, ActiveSkill, Pet, Bracelet) |
 
-**Captured** (P02, `capture-validation.md`; shop, s21): `nHandle`: 0, 1 (repurchase slots); s21: 0…5 in sale order; `ItemInfo.itemid`: 3000 / 3001; `ItemInfo.itemattr`: 1 byte lot, then 100 stale bytes of the global send buffer (P02-B16); s21: lot sold (1 / 3), then the previous 0x3001 / 0x3425 bytes of gpp (P02-B16)
+**Captured** (P02, `capture-validation.md`; shop, s21, s46): `nHandle`: 0, 1 (repurchase slots); s21: 0…5 in sale order; s46: 0–3 in sale order; `ItemInfo.itemid`: 3000 / 3001; `ItemInfo.itemattr`: 1 byte lot, then 100 stale bytes of the global send buffer (P02-B16); s21: lot sold (1 / 3), then the previous 0x3001 / 0x3425 bytes of gpp (P02-B16)
 
 Sent from `FUN_00537a20` (`FUN_00537a20`) · payload 105 bytes
 
@@ -6404,7 +6406,7 @@ Fill: +2: FUN_006406c0 (no direct writes found)
 |---|---|---|---|
 | 0 | u16 | nHandle | repurchase list entry |
 
-**Captured** (P02, `capture-validation.md`; s21): `nHandle`: the bought-back handle, before 0x305A
+**Captured** (P02, `capture-validation.md`; s21, s46): `nHandle`: the bought-back handle, before 0x305A; s46: 0
 
 Sent from `FUN_00537a20` (`FUN_00537a20`) · payload 2 bytes
 
@@ -6705,7 +6707,7 @@ Sent from `ShineObjectClass::ShinePlayer::sp_partylogout` (`FUN_0056dd80`) · pa
 | 16 | u32 | sp.maxnum | row × p+0x2a5a4 / 1000 |
 | 20 | u32 | sp.price |  |
 
-**Captured** (P02, `capture-validation.md`; s21): `hp.recover`: 443; `hp.maxnum`: 100; `hp.price`: 55; `sp.recover`: 590; `sp.maxnum`: 114; `sp.price`: 37
+**Captured** (P02, `capture-validation.md`; s21, s46): `hp.recover`: 443; s46: 279; `hp.maxnum`: 100; s46: 51; `hp.price`: 55; s46: 27; `sp.recover`: 590; s46: 253; `sp.maxnum`: 114; s46: 29; `sp.price`: 37; s46: 13
 
 Sent from `NPCRole_Merchant::nrm_PortionStone` (`FUN_004c2d60`) · payload 24 bytes
 
@@ -7297,7 +7299,7 @@ Sent from `ShineObjectClass::ShinePlayer::sp_HPStoneUse` (`FUN_00589180`) · pay
 |---|---|---|---|
 | 0 | u16 | player |  |
 
-**Captured** (P02, `capture-validation.md`; s21): `player`: 8003 to the other player only
+**Captured** (P02, `capture-validation.md`; s21, s45): `player`: s45: 8005 to the bystander A, 27 ms after the user's 0x500A
 
 Sent from `ShineObjectClass::ShinePlayer::sp_SPStoneUse` (`FUN_00588a40`) · payload 2 bytes
 
@@ -10776,6 +10778,14 @@ P02: empty body. evidence: capture size 0
 
 PDB struct name not checked; fields = STOPEMOTICON_DESCRIPT as echoed in 0x2023
 
+### `0x2024` NC_ACT_JUMP_CMD (C→S)
+
+**Verified layout** (basis: zone sp_NC_ACT_JUMP_CMD FUN_0045a250 reads no payload (Z02 §2.4); client sender FUN_0049e430 writes only the opcode)
+
+Empty payload.
+
+P02 batch 5: empty body. evidence: capture size 0 (s14 151.4–193.4, s45 209.591)
+
 ### `0x205e` NC_ACT_WEDDING_DIVORCE_REFUSE_CMD (C→S)
 
 **Verified layout** (basis: client WeddingTask::DirectMessage FUN_006dcba0 (SendNetMsgZoneMgr(8, 0x5e, null, 0), answer to the 0x205D 0x1384 dialog); zone FUN_005a0440 reads no payload)
@@ -12154,7 +12164,7 @@ player tick, on change; also sent to every object targeting the player (so_ply_S
 |---|---|---|---|
 | 0 | u16 | code | 0x201 ok, 0x20a full, 0x20c fame, 0x20d bind item owned, 0x20f item-money short, 0x211 buy level |
 
-**Captured** (P02, `capture-validation.md`; shop, s21b): `code`: 0x201 success, after the 0x340B apply (Z05 §2.1); `s21b`: 0x206 ×2 right after 0x340C (Z05 §2.1); the client shows nothing (default case of On_NC_ITEM_BUY_ACK, Z04-B6)
+**Captured** (P02, `capture-validation.md`; shop, s21b, s46): `code`: 0x201 success, after the 0x340B apply (Z05 §2.1); s46: 0x366B ×7 = the repurchase level refusal (Z04-B2), silent; 0x201 after BUYALL and the soul-stone buy; `s21b`: 0x206 ×2 right after 0x340C (Z05 §2.1); the client shows nothing (default case of On_NC_ITEM_BUY_ACK, Z04-B6)
 
 ### `0x3005` NC_ITEM_SELL_ACK (S→C)
 
@@ -12184,7 +12194,7 @@ player tick, on change; also sent to every object targeting the player (so_ply_S
 |---|---|---|---|
 | 0 | u16 | code | 0x241 ok, 0x24a bound item |
 
-**Captured** (P02, `capture-validation.md`; shop): `code`: 0x241 success ×3
+**Captured** (P02, `capture-validation.md`; shop, s46): `code`: 0x241 success ×3; s46: 0x241 after 0x3432 and 0x342C
 
 ### `0x300e` NC_ITEM_SPLIT_ACK (S→C)
 
@@ -12452,6 +12462,16 @@ Empty payload.
 empty payload
 
 **Captured** (P02, `capture-validation.md`; shop): `(payload)`: empty, 11 ms after 0x5007; 0x240E heal next tick; no 0x500B to self
+
+### `0x500A` NC_SOULSTONE_SP_USESUC_ACK (hand-named) (S→C)
+
+**Verified layout** (basis: zone so_SendProtocol(20, 10) without payload (Z30 §3))
+
+Empty payload.
+
+P02 batch 5: empty body. evidence: capture size 0 (shop, s45 573.684)
+
+**Captured** (P02, `capture-validation.md`; shop): `(payload)`: empty, 1 ms after 0x5009; 0x240F next tick
 
 ### `0x5812` NC_KQ_COMPLETE_CMD (S→C)
 
@@ -15939,7 +15959,7 @@ Z01 name was 'map login done (ours)'
 
 ### `0x0456` NC_LOG_GAME_ITEM_MERGE (Character→GameLog)
 
-**Captured** (P02, `capture-validation.md`; s21): `mappos`: 'Need', 0, 0 (D03-B11); `itemlot`: sub lot (4, 9); `itemlotadd`: result 10; `itemlotsub`: 0
+**Captured** (P02, `capture-validation.md`; s21, s46): `mappos`: 'Need', 0, 0 (D03-B11); s46: 'Need' again; `itemlot`: sub lot (4, 9); s46 split-and-merge: MoveLot 10; `itemlotadd`: result 10; s46: target result 50; `itemlotsub`: 0; s46: source result 20
 
 ### `0x0457` NC_LOG_GAME_ITEM_SPLIT (Character→GameLog)
 
@@ -15963,7 +15983,7 @@ Z01 name was 'map login done (ours)'
 
 ### `0x07fd` NC_LOG_GAME_DATA_TYPE_L (Character→GameLog)
 
-**Captured** (P02, `capture-validation.md`; s21): `nType`: 0x7F8 (2040) repurchase; `nTargetID`: item id; `nItemKey`: target stack key; `nInt1`: lot after; `nInt2`: cell; `nInt3`: price; `nBigint1`: nSellItemKey
+**Captured** (P02, `capture-validation.md`; s21, s46): `nType`: 0x7F8 (2040) repurchase; `nTargetID`: item id; s46: 0 (LeatherBoots); `nItemKey`: target stack key; s46 REPURCHASE_ALL: the new key; `nInt1`: lot after; s46: 0 (not a stack); `nInt2`: cell; s46: 0x2400 (cell 0); `nInt3`: price; s46: 2; `nBigint1`: nSellItemKey
 
 ### `0x0c18` NC_USER_NORMALLOGOUT_CMD (C→S)
 
@@ -16023,7 +16043,7 @@ Z01 name was 'map login done (ours)'
 
 ### `0x305a` NC_ITEM_REPURCHASE_ACK (S→C)
 
-**Captured** (P02, `capture-validation.md`; s21): `nError`: 0x3668 success; 0x3671 = current NPC is no Item / Weapon merchant (so_ply_CanItemRepurchase), silent in the client
+**Captured** (P02, `capture-validation.md`; s21, s46): `nError`: 0x3668 success; 0x3671 = current NPC is no Item / Weapon merchant (so_ply_CanItemRepurchase), silent in the client; s46: 0x3668 after REPURCHASE_ALL; 0x366D 'Inventory is full.' (ii_RepurchaseAll, no empty cell)
 
 ### `0x340a` NC_ITEMDB_BUYALL_REQ (Zone→CharDB)
 
@@ -16060,6 +16080,10 @@ Z01 name was 'map login done (ours)'
 ### `0x342f` NC_ITEMDB_MERGESUC_ACK (CharDB→Zone)
 
 **Captured** (P02, `capture-validation.md`; s21): `MergeResultLot`: 10 = the target cell's lot after the apply
+
+### `0x3432` NC_ITEMDB_SPLIT_N_MERGESUC_ACK (CharDB→Zone)
+
+**Captured** (P02, `capture-validation.md`; s46): `MoveLot`: 10; `ResultLotFrom`: 20 (the dragged stack); `ResultLotTo`: 50 (MaxLot)
 
 ### `0x3434` NC_ITEMDB_SPLIT_REQ (Zone→CharDB)
 
@@ -16121,6 +16145,10 @@ Z01 name was 'map login done (ours)'
 
 **Captured** (P02, `capture-validation.md`; s24): `itemLockIndex`: 3; `err`: 0x2140
 
+### `0x34ba` NC_ITEMDB_REPURCHASE_ALL_ACK (CharDB→Zone)
+
+**Captured** (P02, `capture-validation.md`; s46): `nError`: 0x3668 success
+
 ### `0x34bc` NC_ITEMDB_REPURCHASE_LOT_ACK (CharDB→Zone)
 
 **Captured** (P02, `capture-validation.md`; s21): `nError`: 0x3668
@@ -16155,15 +16183,11 @@ Z01 name was 'map login done (ours)'
 
 ### `0x5003` NC_SOULSTONE_HP_BUY_ACK (S→C)
 
-**Captured** (P02, `capture-validation.md`; s21): `totalnumber`: 15 = 12 held + 3
+**Captured** (P02, `capture-validation.md`; s21, s46): `totalnumber`: 15 = 12 held + 3; s46: 51 = 15 + 36
 
 ### `0x5004` NC_SOULSTONE_SP_BUY_ACK (S→C)
 
 **Captured** (P02, `capture-validation.md`; s21): `totalnumber`: 51 = 9 held + 42
-
-### `0x500a` NC_SOULSTONE_SP_USESUC_ACK (S→C)
-
-**Captured** (P02, `capture-validation.md`; shop): `(payload)`: empty, 1 ms after 0x5009; 0x240F next tick
 
 ### `0x6005` NC_CT_DB_SET_CMD (Zone→CharDB)
 
