@@ -1068,7 +1068,7 @@ def main(argv):
             out, i = argv[i + 1], i + 1
         elif a == "--transcript":
             server = os.path.join(ROOT, "../pinata")
-            if i + 1 < len(argv) and os.path.isdir(argv[i + 1]):
+            if i + 1 < len(argv) and not argv[i + 1].startswith("--") and not argv[i + 1].endswith((".pcap", ".pcapng")):
                 server, i = argv[i + 1], i + 1
             if not os.path.isdir(server):
                 print(f"--transcript: no server checkout at {server}", file=sys.stderr)

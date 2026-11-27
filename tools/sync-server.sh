@@ -6,6 +6,7 @@ set -euo pipefail
 re=$(cd "$(dirname "$0")/.." && pwd)
 server=${1:-$re/../pinata}
 [ -d "$server" ] || { echo "no server checkout at $server" >&2; exit 1; }
+! grep -rlq "^version https://git-lfs" "$re/Files/Server/2016/9Data" || { echo "9Data holds LFS pointers: run git lfs pull" >&2; exit 1; }
 mkdir -p "$server/original-data/9Data" "$server/test/fixtures"
 for d in Shine ServerInfo; do
   rm -rf "${server:?}/original-data/9Data/$d"

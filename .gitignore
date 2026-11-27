@@ -7,6 +7,9 @@ __pycache__/
 *.py[cod]
 .venv
 
+### Secrets ###
+.env
+
 ### Ghidra temporary files ###
 # ~index.dat, *.prp and db.*.gbf are the project itself and stay tracked
 *.lock
