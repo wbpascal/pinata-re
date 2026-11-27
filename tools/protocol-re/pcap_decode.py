@@ -1,7 +1,8 @@
 """Decode Fiesta client<->server traffic from a .pcap/.pcapng capture and check it against docs/protocol.
 
 usage: python3 -I pcap_decode.py <capture.pcapng|.pcap> [--port 9010=login ...] [--show-secrets] [--out DIR]
-       python3 -I pcap_decode.py --transcript DIR <capture> ...   # only <name>.txt per capture: ADR 0008 transcript, passwords not masked
+       python3 -I pcap_decode.py --transcript [SERVER] <capture> ...   # only SERVER/test/replay/transcripts/<name>.txt per capture:
+                                                                       # ADR 0008 transcript, passwords not masked; SERVER = server checkout, default ../pinata
        python3 -I pcap_decode.py --selftest
 outputs: <capture>.decoded.txt, <capture>.report.md, <capture>.json   (next to the capture, or in --out)
 
@@ -1066,7 +1067,13 @@ def main(argv):
         elif a == "--out":
             out, i = argv[i + 1], i + 1
         elif a == "--transcript":
-            tdir, i = argv[i + 1], i + 1
+            server = os.path.join(ROOT, "../pinata")
+            if i + 1 < len(argv) and os.path.isdir(argv[i + 1]):
+                server, i = argv[i + 1], i + 1
+            if not os.path.isdir(server):
+                print(f"--transcript: no server checkout at {server}", file=sys.stderr)
+                return 1
+            tdir = os.path.join(server, "test/replay/transcripts")
         else:
             files.append(a)
         i += 1

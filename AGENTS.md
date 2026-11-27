@@ -1,8 +1,8 @@
 # Fiesta server reconstruction: shared context for every session
 
-## Working on the Elixir server (`server/`)
-
-For work on the Elixir server read `server/AGENTS.md` first. The repository map, the tools and the context budget below apply to that work; the conventions for work items do not.
+The Elixir server that uses this work lives in its own repo, [`wbpascal/pinata`](https://github.com/wbpascal/pinata),
+cloned next to this one (`../pinata`). `tools/sync-server.sh [<server-checkout>]` copies the data it needs (`9Data`,
+`opcodes.json`) into it; `pcap_decode.py --transcript [<server-checkout>]` writes replay transcripts there.
 
 The source code of our server is lost; only binaries remain. We are reconstructing a behavioural
 specification (protocol + pseudocode) from those binaries, split into work items. If you were given a
@@ -155,12 +155,8 @@ The files here are big: `decomp.c` 15 MB with lines up to 6,700 chars, `strings.
 
 ### Issue tracker
 
-Issues and specs live in this repo's GitHub Issues (`gh` CLI); the `docs/plan/` work items are separate and keep their own workflow. See `docs/agents/issue-tracker.md`.
+Issues and specs live in the GitHub Issues of `wbpascal/pinata`, the only issue tracker (`gh -R wbpascal/pinata`); the `docs/plan/` work items are separate and keep their own workflow. See `../pinata/docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
-The five default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root, created lazily. See `docs/agents/domain.md`.
+The five default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `../pinata/docs/agents/triage-labels.md`.
