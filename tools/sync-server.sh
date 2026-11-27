@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Copy the data the server needs from this repo into a server checkout, then print the RE commit
 # so the server commit can name what it was copied from.
-# usage: tools/sync-server.sh [<server-checkout>]   (default: ../pinata next to this repo)
+# usage: tools/sync-server.sh [<server-checkout>]   (default: ../pinata next to this repo's main checkout, also from a worktree)
 set -euo pipefail
 re=$(cd "$(dirname "$0")/.." && pwd)
-server=${1:-$re/../pinata}
+# the main checkout, also when this runs from a worktree elsewhere
+main=$(dirname "$(git -C "$re" rev-parse --path-format=absolute --git-common-dir)")
+server=${1:-$main/../pinata}
 [ -d "$server" ] || { echo "no server checkout at $server" >&2; exit 1; }
 ! grep -rlq "^version https://git-lfs" "$re/Files/Server/2016/9Data" || { echo "9Data holds LFS pointers: run git lfs pull" >&2; exit 1; }
 mkdir -p "$server/original-data/9Data" "$server/test/fixtures"

@@ -2,13 +2,13 @@
 
 usage: python3 -I pcap_decode.py <capture.pcapng|.pcap> [--port 9010=login ...] [--show-secrets] [--out DIR]
        python3 -I pcap_decode.py --transcript [SERVER] <capture> ...   # only SERVER/test/replay/transcripts/<name>.txt per capture:
-                                                                       # ADR 0008 transcript, passwords not masked; SERVER = server checkout, default ../pinata
+                                                                       # ADR 0008 transcript, passwords not masked; SERVER = server checkout, default ../pinata next to the main checkout
        python3 -I pcap_decode.py --selftest
 outputs: <capture>.decoded.txt, <capture>.report.md, <capture>.json   (next to the capture, or in --out)
 
 stdlib only. Framing / XOR-499 cipher / seed rules: docs/protocol/README.md section 1. Usage and limits: docs/knowledge/P01.md.
 """
-import bisect, collections, glob, json, os, re, struct, sys
+import bisect, collections, glob, json, os, re, struct, subprocess, sys
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))
 DOCS = os.path.join(ROOT, "docs/protocol")
@@ -1067,7 +1067,10 @@ def main(argv):
         elif a == "--out":
             out, i = argv[i + 1], i + 1
         elif a == "--transcript":
-            server = os.path.join(ROOT, "../pinata")
+            # next to the main checkout, also when this runs from a worktree elsewhere
+            common = subprocess.run(["git", "-C", ROOT, "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                                    capture_output=True, text=True).stdout.strip()
+            server = os.path.join(os.path.dirname(common) if common else ROOT, "../pinata")
             if i + 1 < len(argv) and not argv[i + 1].startswith("--") and not argv[i + 1].endswith((".pcap", ".pcapng")):
                 server, i = argv[i + 1], i + 1
             if not os.path.isdir(server):

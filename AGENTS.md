@@ -4,6 +4,12 @@ The Elixir server that uses this work lives in its own repo, [`wbpascal/pinata`]
 cloned next to this one (`../pinata`). `tools/sync-server.sh [<server-checkout>]` copies the data it needs (`9Data`,
 `opcodes.json`) into it; `pcap_decode.py --transcript [<server-checkout>]` writes replay transcripts there.
 
+**Worktrees.** `../pinata` means next to the *main* checkout of this repo, not next to a worktree (worktrees live
+elsewhere, e.g. `~/.herdr/worktrees/…` or `.claude/worktrees/…`). From a worktree, find it with
+`"$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/../pinata"`; the `../pinata/…` paths below
+mean that directory. Both scripts resolve their default this way, so it is pinata's main checkout: to write into a
+pinata worktree instead, pass that worktree as the argument.
+
 The source code of our server is lost; only binaries remain. We are reconstructing a behavioural
 specification (protocol + pseudocode) from those binaries, split into work items. If you were given a
 plan file (`docs/plan/items/<ID>.md`), follow it. This file holds the shared conventions.
